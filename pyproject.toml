@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skymediator"
+version = "0.1.0"
+description = "Predictive Multi-Agent System for Airline Disruption Recovery"
+authors = [
+    { name = "Athish Raj", email = "athish@example.com" },
+    { name = "Dinesh K", email = "dinesh@example.com" },
+    { name = "Sanchit Rajesh", email = "sanchit@example.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.8.0",
+    "pydantic-settings>=2.4.0",
+    "langgraph>=0.2.20",
+    "langchain-core>=0.3.0",
+    "scikit-learn>=1.4.0",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "rich>=13.7.0"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+pythonpath = ["."]
+addopts = "-v --strict-markers -p no:warnings"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["skymediator*"]

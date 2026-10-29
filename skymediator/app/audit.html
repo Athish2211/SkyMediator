@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyMediator OCC — Decision History & Audit Trail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-highlight: #cbd5e1;
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --primary-light: #e0f2fe;
+            --navy-dark: #0f172a;
+            --navy-muted: #1e293b;
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #ecfdf5;
+            --accent-emerald-border: #a7f3d0;
+            --accent-rose: #dc2626;
+            --accent-rose-bg: #fef2f2;
+            --accent-rose-border: #fecaca;
+            --accent-amber: #d97706;
+            --accent-amber-bg: #fffbeb;
+            --accent-amber-border: #fde68a;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-subtle: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        header {
+            padding: 0.85rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-surface);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: var(--navy-dark);
+            color: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .brand-title h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hub-tag {
+            background: var(--primary-light);
+            border: 1px solid #bae6fd;
+            color: var(--primary-hover);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+        }
+
+        nav.nav-links {
+            display: flex;
+            gap: 0.35rem;
+            margin-left: 1rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--navy-dark);
+            background: var(--bg-subtle);
+        }
+
+        .nav-link.active {
+            color: var(--primary-hover);
+            background: var(--primary-light);
+            border-color: #bae6fd;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-action {
+            background: var(--navy-dark);
+            color: #ffffff;
+            border: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            background: var(--navy-muted);
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface);
+            color: var(--navy-dark);
+            border: 1px solid var(--border);
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-subtle);
+            border-color: var(--border-highlight);
+        }
+
+        /* Filter Toolbar */
+        .toolbar {
+            padding: 0.75rem 2rem;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .ctrl-select, .ctrl-input {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.4rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .ctrl-select:focus, .ctrl-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Main Audit Layout */
+        .audit-layout {
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            flex: 1;
+            height: calc(100vh - 110px);
+            overflow: hidden;
+        }
+
+        .table-panel {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            background: var(--bg-base);
+            overflow: hidden;
+        }
+
+        .table-container {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--bg-surface);
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .audit-table th {
+            background: var(--bg-subtle);
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .audit-table td {
+            padding: 0.65rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .audit-table tr {
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .audit-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .audit-table tr.selected {
+            background: #e0f2fe;
+        }
+
+        .badge-action {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .badge-APPROVED { background: var(--accent-emerald-bg); color: var(--accent-emerald); border: 1px solid var(--accent-emerald-border); }
+        .badge-REJECTED { background: var(--accent-rose-bg); color: var(--accent-rose); border: 1px solid var(--accent-rose-border); }
+        .badge-REVISION_REQUESTED { background: var(--accent-amber-bg); color: var(--accent-amber); border: 1px solid var(--accent-amber-border); }
+        .badge-PENDING { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+
+        /* Detail Inspector Panel */
+        .detail-panel {
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 1.25rem;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-header h3 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.45rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.82rem;
+        }
+
+        .detail-row .lbl {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .detail-section-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--navy-dark);
+            margin: 0.85rem 0 0.35rem;
+        }
+
+        .diff-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--navy-dark);
+            max-height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Modal: Revision Comparator */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 920px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .modal-body {
+            padding: 1.25rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .compare-col {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-cluster">
+            <a href="/" class="brand">
+                <div class="brand-logo">SM</div>
+                <div class="brand-title">
+                    <h1>SkyMediator OCC <span class="hub-tag">HUB: VOBL</span></h1>
+                </div>
+            </a>
+            <nav class="nav-links" id="main-nav-links">
+                <a href="/" class="nav-link" id="nav-dashboard">Operations Dashboard</a>
+                <a href="/console" class="nav-link" id="nav-console">Agent Operations Console</a>
+                <a href="/audit" class="nav-link active" id="nav-audit">Decision Audit Trail</a>
+            </nav>
+        </div>
+
+        <div class="header-meta">
+            <button class="btn-secondary" onclick="openCompareModal()">Compare Plan Revisions</button>
+            <a href="/api/audit/export?format=csv" class="btn-secondary" target="_blank">Export CSV</a>
+            <a href="/api/audit/export?format=json" class="btn-action" target="_blank">Export JSON</a>
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <label style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Duty Manager Action:</label>
+            <select id="filter-action" class="ctrl-select" onchange="loadDecisions()">
+                <option value="">All Human Actions</option>
+                <option value="APPROVED">Approved</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="REVISION_REQUESTED">Revision Requested</option>
+                <option value="PENDING">Pending Review</option>
+            </select>
+
+            <input type="text" id="filter-scenario" class="ctrl-input" placeholder="Filter Scenario ID..." onchange="loadDecisions()">
+        </div>
+
+        <div class="toolbar-group">
+            <input type="text" id="filter-search" class="ctrl-input" placeholder="Search Decision ID, Run ID, Notes..." oninput="filterLocalTable()" style="width: 260px;">
+            <span id="record-count" style="font-size: 0.78rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">0 records</span>
+        </div>
+    </div>
+
+    <main class="audit-layout">
+        <section class="table-panel">
+            <div class="table-container">
+                <table class="audit-table">
+                    <thead>
+                        <tr>
+                            <th>Decision ID</th>
+                            <th>Run ID</th>
+                            <th>Plan ID</th>
+                            <th>Round</th>
+                            <th>Action</th>
+                            <th>Statutory State</th>
+                            <th>Duty Manager</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="decisions-tbody">
+                        <tr><td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-subtle);">Loading audit trail...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <aside class="detail-panel" id="detail-panel">
+            <div class="panel-header">
+                <h3>Decision Audit Record</h3>
+                <span id="record-id-badge" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--primary);">Standby</span>
+            </div>
+            <div id="audit-detail-body">
+                <div style="text-align: center; color: var(--text-subtle); padding: 4rem 1rem; font-size: 0.85rem;">
+                    Select any decision record from the table to view recorded evidence, statutory compliance notes, and Duty Manager operational rationale.
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Modal: Plan Revision Comparator -->
+    <div id="compare-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Plan Revision Side-by-Side Comparator</h3>
+                <button onclick="closeCompareModal()" style="background: none; border: none; font-size: 1.1rem; cursor: pointer;">X</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 1rem; align-items: flex-end; background: var(--bg-subtle); padding: 0.85rem; border-radius: 6px; border: 1px solid var(--border);">
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Deliberation Run ID:</label>
+                        <select id="cmp-run-id" class="ctrl-select" style="width: 100%;" onchange="loadRunRevisionsForCompare()"></select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Plan A (Baseline):</label>
+                        <select id="cmp-plan-a" class="ctrl-select" style="width: 100%;"></select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Plan B (Counter-Proposal):</label>
+                        <select id="cmp-plan-b" class="ctrl-select" style="width: 100%;"></select>
+                    </div>
+                    <button class="btn-action" onclick="executeComparison()">Compare</button>
+                </div>
+
+                <div id="compare-results" style="display: none;">
+                    <div class="compare-grid">
+                        <div class="compare-col" id="col-plan-a"></div>
+                        <div class="compare-col" id="col-plan-b"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cachedDecisions = [];
+        let selectedDecisionId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const runIdFromUrl = urlParams.get('run_id');
+            const storedRunId = localStorage.getItem('skymediator_active_run_id');
+            const targetRunId = runIdFromUrl || storedRunId;
+
+            syncNavigationLinks(targetRunId);
+
+            if (runIdFromUrl) {
+                document.getElementById('filter-search').value = runIdFromUrl;
+            }
+            loadDecisions(targetRunId);
+        });
+
+        function syncNavigationLinks(runId) {
+            if (!runId) return;
+            const q = '?run_id=' + encodeURIComponent(runId);
+            const navDash = document.getElementById('nav-dashboard');
+            const navConsole = document.getElementById('nav-console');
+            const navAudit = document.getElementById('nav-audit');
+            if (navDash) navDash.href = '/' + q;
+            if (navConsole) navConsole.href = '/console' + q;
+            if (navAudit) navAudit.href = '/audit' + q;
+        }
+
+        async function loadDecisions(filterRunId = null) {
+            const action = document.getElementById('filter-action').value;
+            const scen = document.getElementById('filter-scenario').value.trim();
+
+            let url = '/api/audit/decisions?limit=100';
+            if (action) url += `&action=${encodeURIComponent(action)}`;
+            if (scen) url += `&scenario_id=${encodeURIComponent(scen)}`;
+            if (filterRunId) url += `&run_id=${encodeURIComponent(filterRunId)}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                cachedDecisions = data.decisions || [];
+                document.getElementById('record-count').innerText = `${cachedDecisions.length} records`;
+                renderTable(cachedDecisions);
+            } catch (err) {
+                console.error('Failed to load audit records:', err);
+            }
+        }
+
+        function filterLocalTable() {
+            const q = document.getElementById('filter-search').value.toLowerCase().trim();
+            if (!q) {
+                renderTable(cachedDecisions);
+                return;
+            }
+            const filtered = cachedDecisions.filter(d => {
+                const text = `${d.decision_id} ${d.run_id} ${d.plan_id} ${d.duty_manager_action} ${d.duty_manager_notes || ''}`.toLowerCase();
+                return text.includes(q);
+            });
+            renderTable(filtered);
+        }
+
+        function renderTable(records) {
+            const tbody = document.getElementById('decisions-tbody');
+            tbody.innerHTML = '';
+
+            if (records.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--text-subtle);">No decision audit records found matching filters.</td></tr>';
+                return;
+            }
+
+            records.forEach(d => {
+                const tr = document.createElement('tr');
+                tr.id = `row-${d.decision_id}`;
+                if (d.decision_id === selectedDecisionId) tr.classList.add('selected');
+                tr.onclick = () => selectDecision(d);
+
+                const timeStr = d.decision_timestamp ? new Date(d.decision_timestamp).toLocaleString('en-IN') : 'N/A';
+                const isLegal = Boolean(d.is_feasible_at_decision);
+
+                tr.innerHTML = `
+                    <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--primary);">${d.decision_id}</td>
+                    <td style="font-family: 'JetBrains Mono', monospace;">${d.run_id}</td>
+                    <td><strong>${d.plan_id || 'N/A'}</strong></td>
+                    <td>Round ${d.round_number || 1}</td>
+                    <td><span class="badge-action badge-${d.duty_manager_action}">${d.duty_manager_action}</span></td>
+                    <td>${isLegal ? '<span style="color: var(--accent-emerald); font-weight: 600;">[LEGAL]</span>' : '<span style="color: var(--accent-rose); font-weight: 600;">[VETOED]</span>'}</td>
+                    <td>${d.duty_manager_id || 'Duty Manager'}</td>
+                    <td style="font-size: 0.75rem; color: var(--text-muted);">${timeStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (!selectedDecisionId && records.length > 0) {
+                selectDecision(records[0]);
+            }
+        }
+
+        function selectDecision(d) {
+            selectedDecisionId = d.decision_id;
+            document.querySelectorAll('#decisions-tbody tr').forEach(r => r.classList.remove('selected'));
+            const row = document.getElementById(`row-${d.decision_id}`);
+            if (row) row.classList.add('selected');
+
+            document.getElementById('record-id-badge').innerText = d.decision_id;
+            const body = document.getElementById('audit-detail-body');
+            const diffs = d.proposed_diff_json || [];
+            const vetoes = d.vetoed_by_json || [];
+
+            body.innerHTML = `
+                <div class="detail-row">
+                    <span class="lbl">Decision ID:</span>
+                    <strong style="font-family: 'JetBrains Mono', monospace;">${d.decision_id}</strong>
+                </div>
+                <div class="detail-row">
+                    <span class="lbl">Deliberation Run ID:</span>
+                    <strong style="font-family: 'JetBrains Mono', monospace;">${d.run_id}</strong>
+                </div>
+                <div class="detail-row">
+                    <span class="lbl">Recorded Action:</span>
+                    <span class="badge-action badge-${d.duty_manager_action}">${d.duty_manager_action}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="lbl">Selected Plan:</span>
+                    <strong>${d.plan_id} (Round ${d.round_number})</strong>
+                </div>
+                <div class="detail-row">
+                    <span class="lbl">Duty Manager ID:</span>
+                    <span>${d.duty_manager_id}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="lbl">Timestamp (UTC):</span>
+                    <span style="font-size: 0.78rem; font-family: 'JetBrains Mono', monospace;">${d.decision_timestamp}</span>
+                </div>
+
+                <div class="detail-section-title">Duty Manager Operational Memo</div>
+                <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.75rem; border-radius: 6px; font-size: 0.82rem; line-height: 1.45;">
+                    ${d.duty_manager_notes || 'No notes entered.'}
+                </div>
+
+                <div class="detail-section-title">Schedule Mutation Diff (PlanDiff)</div>
+                <div class="diff-box">${JSON.stringify(diffs, null, 2)}</div>
+
+                <div class="detail-section-title">Regulatory & Capacity Status</div>
+                <div style="font-size: 0.8rem; font-weight: 600; color: ${vetoes.length > 0 ? 'var(--accent-rose)' : 'var(--accent-emerald)'};">
+                    ${vetoes.length > 0 ? `VETO DETECTED: [${vetoes.join(', ').toUpperCase()}]` : '[COMPLIANT] Plan satisfies DGCA CAR Sec 7 and VOBL Runway Movement Windows.'}
+                </div>
+
+                <div style="margin-top: 1.25rem; display: flex; gap: 0.5rem;">
+                    <a href="/console?run_id=${d.run_id}" class="btn-action" style="flex: 1; justify-content: center;">
+                        Inspect in Operations Console
+                    </a>
+                </div>
+            `;
+        }
+
+        async function openCompareModal() {
+            document.getElementById('compare-modal').style.display = 'flex';
+            try {
+                const res = await fetch('/api/runs');
+                const data = await res.json();
+                const sel = document.getElementById('cmp-run-id');
+                sel.innerHTML = '';
+                (data.runs || []).forEach(r => {
+                    const opt = document.createElement('option');
+                    opt.value = r.run_id;
+                    opt.innerText = `${r.run_id} (${r.disruption_id || 'DISPATCH'})`;
+                    sel.appendChild(opt);
+                });
+                loadRunRevisionsForCompare();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function closeCompareModal() {
+            document.getElementById('compare-modal').style.display = 'none';
+        }
+
+        async function loadRunRevisionsForCompare() {
+            const runId = document.getElementById('cmp-run-id').value;
+            if (!runId) return;
+            try {
+                const res = await fetch(`/api/audit/revisions?run_id=${encodeURIComponent(runId)}`);
+                const data = await res.json();
+                const selA = document.getElementById('cmp-plan-a');
+                const selB = document.getElementById('cmp-plan-b');
+                selA.innerHTML = '';
+                selB.innerHTML = '';
+
+                (data.revisions || []).forEach(rev => {
+                    const optA = document.createElement('option');
+                    optA.value = rev.plan_id;
+                    optA.innerText = `${rev.plan_id} (Round ${rev.round_number}) — ${rev.is_feasible ? 'FEASIBLE' : 'VETOED'}`;
+                    selA.appendChild(optA);
+
+                    const optB = document.createElement('option');
+                    optB.value = rev.plan_id;
+                    optB.innerText = `${rev.plan_id} (Round ${rev.round_number}) — ${rev.is_feasible ? 'FEASIBLE' : 'VETOED'}`;
+                    selB.appendChild(optB);
+                });
+
+                if (data.revisions && data.revisions.length > 1) {
+                    selB.selectedIndex = 1;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function executeComparison() {
+            const runId = document.getElementById('cmp-run-id').value;
+            const planA = document.getElementById('cmp-plan-a').value;
+            const planB = document.getElementById('cmp-plan-b').value;
+            if (!runId || !planA || !planB) return;
+
+            try {
+                const res = await fetch(`/api/audit/revisions/compare?run_id=${encodeURIComponent(runId)}&plan_a=${encodeURIComponent(planA)}&plan_b=${encodeURIComponent(planB)}`);
+                const data = await res.json();
+                const compResults = document.getElementById('compare-results');
+                compResults.style.display = 'block';
+
+                const pA = data.plan_a || {};
+                const pB = data.plan_b || {};
+
+                document.getElementById('col-plan-a').innerHTML = `
+                    <h4 style="font-size: 0.85rem; color: var(--navy-dark);">${pA.plan_id || 'Plan A'} (Round ${pA.round_number || 1})</h4>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">${pA.operational_rationale || ''}</p>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem;">
+                        <div>Status: <strong>${pA.is_feasible ? 'FEASIBLE' : 'VETOED'}</strong></div>
+                        <div>Vetoes: ${JSON.stringify(pA.vetoed_by || [])}</div>
+                    </div>
+                `;
+
+                document.getElementById('col-plan-b').innerHTML = `
+                    <h4 style="font-size: 0.85rem; color: var(--navy-dark);">${pB.plan_id || 'Plan B'} (Round ${pB.round_number || 2})</h4>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">${pB.operational_rationale || ''}</p>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem;">
+                        <div>Status: <strong>${pB.is_feasible ? 'FEASIBLE' : 'VETOED'}</strong></div>
+                        <div>Vetoes: ${JSON.stringify(pB.vetoed_by || [])}</div>
+                    </div>
+                `;
+            } catch (err) {
+                alert('Comparison error: ' + err);
+            }
+        }
+    </script>
+</body>
+</html>

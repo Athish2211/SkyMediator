@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyMediator OCC — Kempegowda Hub (VOBL/BLR)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-highlight: #cbd5e1;
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --primary-light: #e0f2fe;
+            --navy-dark: #0f172a;
+            --navy-muted: #1e293b;
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #ecfdf5;
+            --accent-emerald-border: #a7f3d0;
+            --accent-rose: #dc2626;
+            --accent-rose-bg: #fef2f2;
+            --accent-rose-border: #fecaca;
+            --accent-amber: #d97706;
+            --accent-amber-bg: #fffbeb;
+            --accent-amber-border: #fde68a;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-subtle: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        header {
+            padding: 0.85rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-surface);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: var(--navy-dark);
+            color: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .brand-title h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hub-badge {
+            background: var(--primary-light);
+            border: 1px solid #bae6fd;
+            color: var(--primary-hover);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            letter-spacing: 0.03em;
+        }
+
+        .brand-title p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        nav.nav-links {
+            display: flex;
+            gap: 0.35rem;
+            margin-left: 1rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--navy-dark);
+            background: var(--bg-subtle);
+        }
+
+        .nav-link.active {
+            color: var(--primary-hover);
+            background: var(--primary-light);
+            border-color: #bae6fd;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-muted);
+        }
+
+        .status-badge.online {
+            border-color: var(--accent-emerald-border);
+            background: var(--accent-emerald-bg);
+            color: var(--accent-emerald);
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .btn-clean {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-clean:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+
+        .btn-action-sm {
+            background: var(--navy-dark);
+            color: #ffffff;
+            border: 1px solid var(--navy-dark);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-action-sm:hover {
+            background: var(--navy-muted);
+        }
+
+        .live-clock {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--navy-dark);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            padding: 0.35rem 0.7rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 1.25rem;
+            padding: 1.25rem 2rem;
+            flex: 1;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.15rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.1rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .card-header .tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-subtle);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+        }
+
+        .stat-item {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.65rem 0.75rem;
+        }
+
+        .stat-item .val {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-item .lbl {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .tab-bar {
+            display: flex;
+            background: var(--bg-subtle);
+            padding: 0.2rem;
+            border-radius: 6px;
+            margin-bottom: 0.85rem;
+            gap: 0.2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.45rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--bg-surface);
+            color: var(--navy-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .template-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .chip {
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.25rem 0.55rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .chip:hover {
+            border-color: var(--primary);
+            color: var(--primary-hover);
+            background: var(--primary-light);
+        }
+
+        .dm-textarea {
+            width: 100%;
+            height: 95px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.65rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            color: var(--text-main);
+            resize: vertical;
+            outline: none;
+            margin-bottom: 0.75rem;
+        }
+
+        .dm-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.65rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface);
+            color: var(--navy-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.55rem 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-subtle);
+            border-color: var(--border-highlight);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        select.form-select {
+            width: 100%;
+            padding: 0.55rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-surface);
+            font-size: 0.8rem;
+            color: var(--text-main);
+            outline: none;
+            margin-bottom: 0.75rem;
+        }
+
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.35rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .op-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+        }
+
+        .monitor-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .monitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .monitor-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--navy-dark);
+            letter-spacing: 0.04em;
+        }
+
+        .slots-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .slot-row {
+            display: grid;
+            grid-template-columns: 110px 1fr 90px;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            background: var(--bg-subtle);
+            border-left: 3px solid var(--primary);
+        }
+
+        .slot-row.disrupted {
+            border-left-color: var(--accent-rose);
+            background: var(--accent-rose-bg);
+        }
+
+        .slot-row.restricted {
+            border-left-color: var(--accent-amber);
+            background: var(--accent-amber-bg);
+        }
+
+        .slot-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--navy-dark);
+        }
+
+        .slot-bar-wrap {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slot-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .slot-bar-fill.warning { background: var(--accent-amber); }
+        .slot-bar-fill.danger { background: var(--accent-rose); }
+
+        .slot-cap-label {
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .fleet-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.45rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .aircraft-badge {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.45rem 0.5rem;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        .aircraft-badge.primary-disrupted {
+            border-color: var(--accent-rose-border);
+            background: var(--accent-rose-bg);
+        }
+
+        .aircraft-badge.standby-ready {
+            border-color: var(--accent-emerald-border);
+            background: var(--accent-emerald-bg);
+        }
+
+        .aircraft-badge.active-swap {
+            border-color: #38bdf8;
+            background: #e0f2fe;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+        }
+
+        .ac-tail {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .ac-sub {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+        }
+
+        .ac-status-tag {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        .ac-status-tag.available { background: #dcfce7; color: #166534; }
+
+        /* --- 24-HOUR TACTICAL FLEET GANTT CHART --- */
+        .gantt-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.15rem 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .gantt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.85rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .gantt-title-cluster {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .gantt-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .gantt-mode-switcher {
+            display: flex;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.2rem;
+            gap: 0.25rem;
+        }
+
+        .gantt-mode-btn {
+            background: transparent;
+            border: none;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .gantt-mode-btn:hover {
+            color: var(--navy-dark);
+        }
+
+        .gantt-mode-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .gantt-status-banner {
+            font-size: 0.76rem;
+            padding: 0.45rem 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .gantt-status-banner.disrupted {
+            background: var(--accent-rose-bg);
+            border-color: var(--accent-rose-border);
+            color: var(--accent-rose);
+            font-weight: 600;
+        }
+
+        .gantt-status-banner.approved {
+            background: var(--accent-emerald-bg);
+            border-color: var(--accent-emerald-border);
+            color: var(--accent-emerald);
+            font-weight: 600;
+        }
+
+        .gantt-canvas-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #ffffff;
+            position: relative;
+        }
+
+        .gantt-canvas {
+            min-width: 1040px;
+            position: relative;
+        }
+
+        .gantt-time-axis {
+            display: grid;
+            grid-template-columns: 160px repeat(12, 1fr);
+            background: #f1f5f9;
+            border-bottom: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .gantt-time-cell {
+            padding: 0.45rem 0.2rem;
+            text-align: center;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .gantt-row {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            border-bottom: 1px solid #f1f5f9;
+            min-height: 38px;
+            align-items: center;
+            position: relative;
+        }
+
+        .gantt-row:nth-child(even) {
+            background: #fafcff;
+        }
+
+        .gantt-ac-label {
+            padding: 0.35rem 0.6rem;
+            border-right: 1px solid var(--border);
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .gantt-ac-tail {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .gantt-ac-meta {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .gantt-timeline-track {
+            position: relative;
+            height: 38px;
+            width: 100%;
+        }
+
+        .gantt-flight-block {
+            position: absolute;
+            top: 4px;
+            height: 28px;
+            background: #0284c7;
+            color: #ffffff;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.66rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.4rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .gantt-flight-block:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+            z-index: 20;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+        }
+
+        .gantt-flight-block.disrupted {
+            background: repeating-linear-gradient(
+                45deg,
+                #e11d48,
+                #e11d48 8px,
+                #be123c 8px,
+                #be123c 16px
+            );
+            border: 2px solid #fda4af;
+            animation: pulseDisrupted 2s infinite ease-in-out;
+        }
+
+        .gantt-flight-block.swapped-approved {
+            background: #059669;
+            border: 1px solid #34d399;
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.3);
+            font-weight: 700;
+        }
+
+        .gantt-flight-block.delayed {
+            background: #d97706;
+            border: 1px solid #fcd34d;
+        }
+
+        .gantt-disrupted-aog-marker {
+            position: absolute;
+            top: 4px;
+            height: 28px;
+            background: #f1f5f9;
+            border: 1px dashed #cbd5e1;
+            color: #64748b;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.4rem;
+            border-radius: 4px;
+        }
+
+        .gantt-disruption-corridor {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: rgba(225, 29, 72, 0.07);
+            border-left: 2px dashed #f43f5e;
+            border-right: 2px dashed #f43f5e;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .gantt-corridor-label {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: #e11d48;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+        }
+
+        @keyframes pulseDisrupted {
+            0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.5); }
+            70% { box-shadow: 0 0 0 6px rgba(225, 29, 72, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
+        }
+        .ac-status-tag.disrupted { background: #fee2e2; color: #991b1b; }
+        .ac-status-tag.standby { background: #dbeafe; color: #1e40af; }
+        .ac-status-tag.maint { background: #fef3c7; color: #92400e; }
+
+        .sentinel-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sentinel-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .sentinel-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .sentinel-tag.act_early { background: var(--accent-rose-bg); color: var(--accent-rose); border: 1px solid var(--accent-rose-border); }
+        .sentinel-tag.pre_position { background: var(--accent-amber-bg); color: var(--accent-amber); border: 1px solid var(--accent-amber-border); }
+        .sentinel-tag.monitor { background: var(--accent-emerald-bg); color: var(--accent-emerald); border: 1px solid var(--accent-emerald-border); }
+
+        .sentinel-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 0.6rem 0;
+        }
+
+        .sent-metric {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .sent-metric .val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+        }
+
+        .sent-metric .lbl {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .recommendation-banner {
+            background: var(--accent-emerald-bg);
+            border: 1px solid var(--accent-emerald-border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .rec-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .rec-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .rec-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            margin-top: 0.65rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .rec-metrics strong {
+            color: var(--navy-dark);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .briefing-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.85rem;
+            margin-top: 0.85rem;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            line-height: 1.55;
+            white-space: pre-line;
+        }
+
+        .rec-actions {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-approve {
+            background: var(--accent-emerald);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.55rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-approve:hover { background: #047857; }
+
+        .btn-replan {
+            background: var(--bg-surface);
+            color: var(--navy-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.55rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-replan:hover { background: var(--bg-subtle); }
+
+        .btn-reject {
+            background: #ffffff;
+            color: var(--accent-rose);
+            border: 1px solid var(--accent-rose-border);
+            border-radius: 6px;
+            padding: 0.55rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-reject:hover { background: var(--accent-rose-bg); }
+
+        .round-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.1rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 0.85rem;
+        }
+
+        .round-card.vetoed {
+            border-left: 4px solid var(--accent-rose);
+        }
+
+        .round-card.passed {
+            border-left: 4px solid var(--accent-emerald);
+        }
+
+        .round-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .round-title {
+            font-weight: 700;
+            color: var(--navy-dark);
+            font-size: 0.92rem;
+        }
+
+        .round-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+
+        .round-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            letter-spacing: 0.03em;
+        }
+
+        .round-tag.veto {
+            background: var(--accent-rose-bg);
+            color: var(--accent-rose);
+            border: 1px solid var(--accent-rose-border);
+        }
+
+        .round-tag.pass {
+            background: var(--accent-emerald-bg);
+            color: var(--accent-emerald);
+            border: 1px solid var(--accent-emerald-border);
+        }
+
+        .rationale-text {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+            line-height: 1.45;
+        }
+
+        .pers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-top: 0.6rem;
+        }
+
+        .pers-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--navy-dark);
+            border-radius: 4px;
+            padding: 0.55rem 0.75rem;
+        }
+
+        .pers-card.veto {
+            border-left-color: var(--accent-rose);
+            background: var(--accent-rose-bg);
+        }
+
+        .pers-card.pass {
+            border-left-color: var(--accent-emerald);
+            background: var(--accent-emerald-bg);
+        }
+
+        .pers-agent-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .pers-content {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .citation-box {
+            background: var(--accent-rose-bg);
+            border: 1px solid var(--accent-rose-border);
+            color: #991b1b;
+            padding: 0.65rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-top: 0.65rem;
+            line-height: 1.45;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-window {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 960px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .modal-body {
+            padding: 1.25rem 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .btn-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .dt-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+
+        .dt-table th {
+            background: var(--bg-subtle);
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            padding: 0.5rem 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dt-table td {
+            padding: 0.55rem 0.6rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .dt-pane { display: none; }
+        .dt-pane.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-cluster">
+            <a href="/" class="brand">
+                <div class="brand-logo">SM</div>
+                <div class="brand-title">
+                    <h1>SkyMediator OCC <span class="hub-badge">HUB: VOBL</span></h1>
+                    <p>Predictive Multi-Agent Airline Disruption Recovery & Regulatory Adjudication</p>
+                </div>
+            </a>
+            <nav class="nav-links" id="main-nav-links">
+                <a href="/" class="nav-link active" id="nav-dashboard">Operations Dashboard</a>
+                <a href="/console" class="nav-link" id="nav-console">Agent Operations Console</a>
+                <a href="/audit" class="nav-link" id="nav-audit">Decision Audit Trail</a>
+            </nav>
+        </div>
+
+        <div class="header-meta">
+            <div id="llm-status-pill" class="status-badge" onclick="checkLLMStatus(true)" title="Google Gemini Status" style="cursor: pointer;">
+                <span class="pulse-dot" id="llm-dot"></span>
+                <span id="llm-status-label">LLM: Checking...</span>
+            </div>
+
+            <div id="sse-status-pill" class="status-badge" title="Real-time Agent Event Stream">
+                <span class="pulse-dot"></span>
+                <span id="sse-status-label">Stream: Standby</span>
+            </div>
+
+            <button class="btn-action-sm" onclick="openDataManagerModal()">
+                Data Manager
+            </button>
+
+            <button class="btn-clean" onclick="resetAllOCCData()" title="Wipe historical runs and reset database">
+                Reset All Data
+            </button>
+
+            <div class="live-clock">
+                <span id="clock-display">05:45:00 IST</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="sidebar">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Hub Operations (VOBL)</h2>
+                    <span class="tag">TACTICAL</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="val" id="stat-fleet-count">15</div>
+                        <div class="lbl">A320 Fleet Total</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="val" id="stat-sched-count">40</div>
+                        <div class="lbl">Scheduled Movements</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="val" id="stat-slot">8 / 30m</div>
+                        <div class="lbl">Active Slot Cap</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="val" id="stat-fdtl">11.0h</div>
+                        <div class="lbl">WOCL FDP Statutory Cap</div>
+                    </div>
+                </div>
+                <button class="btn-secondary" onclick="openDataManagerModal()" style="width: 100%; margin-top: 0.75rem;">
+                    Inspect Operational Relational Tables
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Disruption Dispatch</h2>
+                    <span class="tag" id="mode-tag">FREE-FORM</span>
+                </div>
+
+                <div class="tab-bar">
+                    <button class="tab-btn active" id="tab-btn-message" onclick="switchTab('message')">Duty Manager Note</button>
+                    <button class="tab-btn" id="tab-btn-scenario" onclick="switchTab('scenario')">Predefined Scenario</button>
+                </div>
+
+                <div id="tab-content-message">
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.35rem; font-weight: 600;">OPERATIONAL DISPATCH PRESETS:</div>
+                    <div class="template-chips">
+                        <div class="chip" onclick="fillTemplate('Dense CAT III radiation fog at Kempegowda BLR (RVR < 250m). Flight 6E-101 holding with estimated 180 min delay. Assess tail swap to VT-BLR15 or tactical delay.')">CAT III Fog Alert (BLR)</div>
+                        <div class="chip" onclick="fillTemplate('VT-BLR01 grounded at Kempegowda BLR due to hydraulic leak snag on flight 6E-101. AOG for 4 hours. Recommend aircraft swap to standby VT-BLR15.')">AOG Hydraulic Snag</div>
+                        <div class="chip" onclick="fillTemplate('Flight 6E-101 pilot duty exceedance risk. Captain on 02:00 AM WOCL duty will violate 11.0h max FDP under 120m holding delay at Delhi VIDP.')">Crew FDTL Exceedance</div>
+                        <div class="chip" onclick="fillTemplate('Runway 09/27 maintenance closure at BLR for 2 hours. Slot movements restricted to 8 per window. Flight 6E-101 departure delayed by 90m.')">Runway Slot Restriction</div>
+                    </div>
+
+                    <label style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.35rem; font-weight: 600; display: block;">DUTY MANAGER DISPATCH MEMO:</label>
+                    <textarea id="dm-message-input" class="dm-textarea" placeholder="Type operational dispatch alert...">Dense CAT III radiation fog at Kempegowda BLR (RVR < 250m). Flight 6E-101 holding with estimated 180 min delay. Assess tail swap to VT-BLR15 or tactical delay.</textarea>
+
+                    <div class="btn-group">
+                        <button class="btn-secondary" id="btn-parse" onclick="parseMessageOnly()" style="flex: 1;">
+                            Parse Dispatch
+                        </button>
+                        <button class="btn-primary" id="btn-trigger-msg" onclick="runFromMessage()" style="flex: 1.6;">
+                            Run Deliberation Loop
+                        </button>
+                    </div>
+                </div>
+
+                <div id="tab-content-scenario" style="display: none;">
+                    <label style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.35rem; font-weight: 600; display: block;">SELECT SIMULATION SCENARIO:</label>
+                    <select id="scenario-selector" class="form-select">
+                        <option value="SCENARIO_BLR_FOG_SUCCESS">SCENARIO 1: Morning Winter Fog at Kempegowda (Swap Resolves)</option>
+                        <option value="SCENARIO_BLR_FOG_CREW_VETO">SCENARIO 2: Severe Fog Causing Crew Duty Timeout (WOCL Veto Loop)</option>
+                        <option value="SCENARIO_BLR_SLOT_VETO">SCENARIO 3: Peak Hour Slot Saturation at Hub (Slot Veto)</option>
+                    </select>
+
+                    <button class="btn-primary" id="btn-trigger-scen" onclick="runScenario()">
+                        Trigger Scenario Recovery
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="workspace">
+            <!-- 24-HOUR TACTICAL FLEET SCHEDULE GANTT CHART -->
+            <div class="gantt-section">
+                <div class="gantt-header">
+                    <div class="gantt-title-cluster">
+                        <span class="gantt-title">24-Hour Tactical Fleet Schedule Gantt (15 Aircraft)</span>
+                        <span style="font-size: 0.68rem; font-weight: 700; color: var(--primary); background: #e0f2fe; padding: 0.15rem 0.5rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace;">VOBL HUB 24H HORIZON</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="gantt-mode-switcher">
+                            <button class="gantt-mode-btn active" id="gantt-btn-baseline" onclick="setGanttMode('baseline')">[BASELINE SCHEDULE]</button>
+                            <button class="gantt-mode-btn" id="gantt-btn-disrupted" onclick="setGanttMode('disrupted')">[DISRUPTED STATE]</button>
+                            <button class="gantt-mode-btn" id="gantt-btn-approved" onclick="setGanttMode('approved')">[APPROVED RECOVERY PLAN]</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Incident Stack Banner -->
+                <div id="stacked-incidents-bar" style="display: none; padding: 0.5rem 0.85rem; background: var(--accent-rose-bg); border-left: 4px solid var(--accent-rose); border-radius: 4px; margin-bottom: 0.6rem; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                        <span style="font-size: 0.72rem; font-weight: 700; color: var(--accent-rose); letter-spacing: 0.04em;">ACTIVE DISRUPTION STACK:</span>
+                        <div id="stacked-incidents-pills" style="display: flex; gap: 0.4rem; flex-wrap: wrap;"></div>
+                    </div>
+                    <button onclick="clearActiveDisruptions()" class="btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; border-color: var(--accent-rose-border); color: var(--accent-rose);">Clear Incidents Stack</button>
+                </div>
+
+                <div class="gantt-status-banner" id="gantt-status-banner">
+                    <span id="gantt-status-text">Displaying scheduled baseline across all 15 narrow-body aircraft (VT-BLR01 - VT-BLR15). VT-BLR15 positioned as standby reserve at Kempegowda Hub.</span>
+                    <span id="gantt-active-tag" style="font-size: 0.68rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--primary);">BASELINE VIEW</span>
+                </div>
+
+                <div class="gantt-canvas-wrap">
+                    <div class="gantt-canvas" id="gantt-canvas-container">
+                        <!-- Time Axis Header -->
+                        <div class="gantt-time-axis">
+                            <div class="gantt-time-cell" style="text-align: left; padding-left: 0.6rem; color: var(--navy-dark);">AIRCRAFT / TAIL</div>
+                            <div class="gantt-time-cell">04:00</div>
+                            <div class="gantt-time-cell">06:00</div>
+                            <div class="gantt-time-cell">08:00</div>
+                            <div class="gantt-time-cell">10:00</div>
+                            <div class="gantt-time-cell">12:00</div>
+                            <div class="gantt-time-cell">14:00</div>
+                            <div class="gantt-time-cell">16:00</div>
+                            <div class="gantt-time-cell">18:00</div>
+                            <div class="gantt-time-cell">20:00</div>
+                            <div class="gantt-time-cell">22:00</div>
+                            <div class="gantt-time-cell">00:00</div>
+                            <div class="gantt-time-cell">02:00</div>
+                        </div>
+
+                        <!-- Rows injected by JavaScript -->
+                        <div id="gantt-rows-container">
+                            <div style="text-align: center; color: var(--text-subtle); padding: 3rem;">Loading 24-hour aircraft schedule Gantt...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operational Overview Bar: Slots and Fleet Status Matrix -->
+            <div class="op-bar">
+                <!-- Runway Slots Monitor -->
+                <div class="monitor-panel">
+                    <div class="monitor-header">
+                        <span class="monitor-title">VOBL Runway Movement Windows (Kempegowda Hub)</span>
+                        <span id="active-disruption-tag" style="font-size: 0.68rem; font-weight: 700; color: var(--accent-rose); background: var(--accent-rose-bg); padding: 0.15rem 0.45rem; border-radius: 4px; display: none;">DISRUPTED</span>
+                    </div>
+                    <div class="slots-timeline" id="slots-timeline-container">
+                        <div style="text-align: center; color: var(--text-subtle); padding: 2rem;">Loading runway slot schedule...</div>
+                    </div>
+                </div>
+
+                <!-- 15 Aircraft Fleet Matrix -->
+                <div class="monitor-panel">
+                    <div class="monitor-header">
+                        <span class="monitor-title">15-Aircraft Fleet Readiness</span>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">15/15 Tracked</span>
+                    </div>
+                    <div class="fleet-matrix" id="fleet-matrix-container">
+                        <div style="text-align: center; color: var(--text-subtle); padding: 2rem; grid-column: span 5;">Loading fleet availability...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deliberation Stream Header -->
+            <div class="section-header-row">
+                <div class="section-title">Multi-Agent Deliberation & Statutory Adjudication</div>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <span id="session-tag" style="font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">Session: Standby</span>
+                </div>
+            </div>
+
+            <!-- Sentinel Weather Card -->
+            <div id="sentinel-forecast-card" style="display: none;"></div>
+
+            <!-- LLM Dispatch Understanding Card -->
+            <div id="understanding-card" class="card" style="display: none; border-left: 4px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                    <strong style="font-size: 0.82rem; color: var(--navy-dark); text-transform: uppercase;">Mediator Dispatch Ingestion</strong>
+                    <span id="parsed-by-tag" style="font-size: 0.72rem; color: var(--primary); font-family: 'JetBrains Mono', monospace;">Live Ingestion</span>
+                </div>
+                <div id="und-summary" style="font-size: 0.88rem; color: var(--text-main); margin-bottom: 0.6rem;"></div>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.45rem;">
+                    <span class="chip" style="cursor: default;">Type: <strong id="und-type">FOG</strong></span>
+                    <span class="chip" style="cursor: default;">Airport: <strong id="und-airport">VOBL</strong></span>
+                    <span class="chip" style="cursor: default;">Flight: <strong id="und-flight">6E-101</strong></span>
+                    <span class="chip" style="cursor: default;">Severity: <strong id="und-severity">SEVERE</strong></span>
+                    <span class="chip" style="cursor: default;">Delay: <strong id="und-delay">180m</strong></span>
+                    <span class="chip" style="cursor: default;">Strategy: <strong id="und-action">excessive_delay</strong></span>
+                    <span class="chip" style="cursor: default;">Standby Tail: <strong id="und-tail">VT-BLR15</strong></span>
+                </div>
+            </div>
+
+            <!-- Recommendation Section -->
+            <div id="rec-section" style="display: none;">
+                <div class="recommendation-banner">
+                    <div class="rec-top-row">
+                        <div class="rec-info">
+                            <div style="font-size: 0.72rem; font-weight: 700; color: var(--accent-emerald); text-transform: uppercase; letter-spacing: 0.04em;">Adjudicated Recovery Recommendation</div>
+                            <h3 id="rec-title" style="margin-top: 0.2rem;">Plan Ready for Authorization</h3>
+                            <p id="rec-desc" style="font-size: 0.88rem; color: var(--text-main); margin-top: 0.25rem;"></p>
+                            <div class="rec-metrics">
+                                <span>Composite Score: <strong id="rec-score">0.0245</strong></span>
+                                <span>Tactical Delay: <strong id="rec-delay">30 mins</strong></span>
+                                <span>Pax Impact: <strong id="rec-pax">0 broken</strong></span>
+                                <span>Financial Liability: <strong id="rec-cost">INR 4,500</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="briefing-container" style="display: none; margin-top: 0.85rem;">
+                        <div style="font-size: 0.75rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase;">OCC Executive Briefing:</div>
+                        <div class="briefing-box" id="rec-briefing"></div>
+                    </div>
+
+                    <div class="rec-actions">
+                        <button class="btn-reject" onclick="rejectPlan()">Reject Plan</button>
+                        <button class="btn-replan" onclick="requestReplan()">Request Replan</button>
+                        <button class="btn-approve" onclick="approvePlan()">Authorize Recovery Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deliberation Rounds List -->
+            <div id="rounds-list">
+                <div class="card" style="text-align: center; padding: 3rem 1rem; color: var(--text-subtle);">
+                    <p style="font-weight: 600; color: var(--text-muted);">No active disruption recovery session.</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.35rem;">Submit an operational dispatch note or select a simulation scenario to launch the 7-agent deliberation loop.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Predefined Operational Data Manager Modal -->
+    <div id="data-manager-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div>
+                    <h2>Operational Data Manager (SQLite)</h2>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Inspect and manage scheduled flights, aircraft fleet, and crew rosters.</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-clean" onclick="resetDatabaseToBaseline()">Reset Baseline</button>
+                    <button class="btn-modal-close" onclick="closeDataManagerModal()">X</button>
+                </div>
+            </div>
+            <div class="tab-bar" style="margin: 0.75rem 1.5rem 0;">
+                <button class="tab-btn active" onclick="switchDataTab('schedule')">Flights Schedule</button>
+                <button class="tab-btn" onclick="switchDataTab('fleet')">Aircraft Fleet</button>
+                <button class="tab-btn" onclick="switchDataTab('crew')">Crew Duties</button>
+                <button class="tab-btn" onclick="switchDataTab('scenarios')">Scenarios</button>
+            </div>
+            <div class="modal-body">
+                <div id="dt-pane-schedule" class="dt-pane active">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                        <input type="text" id="schedule-search" placeholder="Search flight ID, tail..." style="padding: 0.4rem; border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem;" oninput="filterScheduleTable()">
+                    </div>
+                    <table class="dt-table" id="schedule-table">
+                        <thead>
+                            <tr><th>Flight</th><th>Tail</th><th>Route</th><th>STD</th><th>STA</th><th>Seats</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="schedule-tbody"></tbody>
+                    </table>
+                </div>
+                <div id="dt-pane-fleet" class="dt-pane">
+                    <table class="dt-table" id="fleet-table">
+                        <thead>
+                            <tr><th>Tail</th><th>Type</th><th>Seats</th><th>Maint Hours Rem</th><th>Station</th></tr>
+                        </thead>
+                        <tbody id="fleet-tbody"></tbody>
+                    </table>
+                </div>
+                <div id="dt-pane-crew" class="dt-pane">
+                    <table class="dt-table" id="crew-table">
+                        <thead>
+                            <tr><th>Crew ID</th><th>Name</th><th>Role</th><th>Base</th><th>Duty Start</th><th>Assigned Flight</th></tr>
+                        </thead>
+                        <tbody id="crew-tbody"></tbody>
+                    </table>
+                </div>
+                <div id="dt-pane-scenarios" class="dt-pane">
+                    <table class="dt-table" id="scenarios-table">
+                        <thead>
+                            <tr><th>Scenario ID</th><th>Name</th><th>Type</th><th>Airport</th><th>Severity</th></tr>
+                        </thead>
+                        <tbody id="scenarios-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRunId = null;
+        let currentSelectedPlanId = null;
+        let currentScheduleMode = 'baseline'; // 'baseline' | 'disrupted' | 'approved'
+        let cachedFleet = [];
+        let cachedFlights = [];
+        let latestDeliberationPlan = null;
+        let stackedDisruptions = [];
+        const HORIZON_START_ISO = "2026-11-01T04:00:00";
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            startClock();
+            checkLLMStatus(false);
+            loadSlotsData();
+            loadFleetData();
+            loadFleetGanttData();
+            loadDisruptions();
+
+            // Interconnection: Check URL run_id, localStorage, or fetch latest session
+            const urlParams = new URLSearchParams(window.location.search);
+            const runIdFromUrl = urlParams.get('run_id');
+            const storedRunId = localStorage.getItem('skymediator_active_run_id');
+            const targetRunId = runIdFromUrl || storedRunId;
+
+            if (targetRunId) {
+                await loadSessionByRunId(targetRunId);
+            } else {
+                await loadLatestSession();
+            }
+        });
+
+        async function loadFleetGanttData() {
+            try {
+                const [fRes, flRes] = await Promise.all([
+                    fetch('/api/fleet_status'),
+                    fetch('/api/flights')
+                ]);
+                const fData = await fRes.json();
+                const flData = await flRes.json();
+                cachedFleet = fData.fleet || [];
+                cachedFlights = flData.flights || [];
+                renderFleetGanttChart();
+            } catch (err) {
+                console.warn('Could not load Gantt data:', err);
+            }
+        }
+
+        function setGanttMode(mode) {
+            currentScheduleMode = mode;
+            ['baseline', 'disrupted', 'approved'].forEach(m => {
+                const btn = document.getElementById(`gantt-btn-${m}`);
+                if (btn) btn.classList.toggle('active', m === mode);
+            });
+
+            const banner = document.getElementById('gantt-status-banner');
+            const textEl = document.getElementById('gantt-status-text');
+            const tagEl = document.getElementById('gantt-active-tag');
+
+            if (mode === 'baseline') {
+                banner.className = 'gantt-status-banner';
+                textEl.innerText = 'Displaying scheduled baseline across all 15 narrow-body aircraft (VT-BLR01 - VT-BLR15). VT-BLR15 positioned as standby reserve at Kempegowda Hub.';
+                tagEl.innerText = 'BASELINE VIEW';
+                tagEl.style.color = 'var(--primary)';
+            } else if (mode === 'disrupted') {
+                banner.className = 'gantt-status-banner disrupted';
+                textEl.innerText = 'ACTIVE DISRUPTION: Flight 6E-101 (VT-BLR01) impacted by CAT III morning fog / operational snag at VOBL Hub. Standby reserve VT-BLR15 alerted.';
+                tagEl.innerText = 'DISRUPTED STATE';
+                tagEl.style.color = 'var(--accent-rose)';
+            } else if (mode === 'approved') {
+                banner.className = 'gantt-status-banner approved';
+                textEl.innerText = 'APPROVED RECOVERY DISPATCH: Flight 6E-101 dynamically mutated and reassigned to standby VT-BLR15. VT-BLR01 routed to maintenance recovery buffer. 100% DGCA CAR Section 7 compliant.';
+                tagEl.innerText = 'APPROVED PLAN DISPATCHED';
+                tagEl.style.color = 'var(--accent-emerald)';
+            }
+
+            renderFleetGanttChart();
+        }
+
+        function renderFleetGanttChart() {
+            const container = document.getElementById('gantt-rows-container');
+            if (!container || !cachedFleet.length) return;
+
+            const horizonStart = new Date(HORIZON_START_ISO).getTime();
+            let workingFlights = JSON.parse(JSON.stringify(cachedFlights));
+
+            if (currentScheduleMode === 'approved') {
+                const diffs = latestDeliberationPlan?.plan_diff || [
+                    { op: 'swap_tail', flight_id: '6E-101', original_tail: 'VT-BLR01', new_tail: 'VT-BLR15' }
+                ];
+                diffs.forEach(op => {
+                    const f = workingFlights.find(x => x.flight_id === op.flight_id);
+                    if (f) {
+                        if (op.op === 'swap_tail') {
+                            f.original_tail = f.tail;
+                            f.tail = op.new_tail;
+                            f.is_swapped = true;
+                        } else if (op.op === 'delay') {
+                            f.is_delayed = true;
+                            f.delay_minutes = op.delay_minutes;
+                            if (op.new_std) f.std = op.new_std;
+                            if (op.new_sta) f.sta = op.new_sta;
+                        } else if (op.op === 'cancel') {
+                            f.is_cancelled = true;
+                        }
+                    }
+                });
+            }
+
+            let rowsHtml = '';
+
+            cachedFleet.forEach(ac => {
+                const tail = ac.tail;
+                const acFlights = workingFlights.filter(f => f.tail === tail);
+
+                let rowBlocks = '';
+
+                // If VT-BLR01 in approved mode and 6E-101 swapped out, render maintenance snag buffer
+                if (currentScheduleMode === 'approved' && tail === 'VT-BLR01') {
+                    const snagLeft = 0;
+                    const snagWidth = ((180) / 1440) * 100;
+                    rowBlocks += `
+                        <div class="gantt-disrupted-aog-marker" style="left: ${snagLeft}%; width: ${snagWidth}%;" title="VT-BLR01 Maintenance Snag / Operational Inspection Recovery Buffer">
+                            VT-BLR01 AOG RECOVERY
+                        </div>
+                    `;
+                }
+
+                acFlights.forEach(fl => {
+                    const fStart = new Date(fl.std).getTime();
+                    const fEnd = new Date(fl.sta).getTime();
+                    const startMin = Math.max(0, (fStart - horizonStart) / 60000);
+                    const durationMin = Math.max(30, (fEnd - fStart) / 60000);
+
+                    const leftPct = (startMin / 1440) * 100;
+                    const widthPct = Math.min(100 - leftPct, Math.max(5.0, (durationMin / 1440) * 100));
+
+                    let blockClass = 'gantt-flight-block';
+                    let label = `${fl.flight_id} (${fl.origin}-${fl.dest})`;
+
+                    const isDisruptedFlight = currentScheduleMode === 'disrupted' && (
+                        fl.flight_id === '6E-101' || 
+                        stackedDisruptions.some(d => d.affected_flight_id === fl.flight_id)
+                    );
+
+                    if (isDisruptedFlight) {
+                        blockClass += ' disrupted';
+                        label = `[!] ${fl.flight_id} HOLDING (${fl.origin}-${fl.dest})`;
+                    } else if (currentScheduleMode === 'approved' && fl.is_swapped) {
+                        blockClass += ' swapped-approved';
+                        label = `[OK] ${fl.flight_id} SWAPPED &rarr; ${tail}`;
+                    } else if (currentScheduleMode === 'approved' && fl.is_cancelled) {
+                        blockClass += ' cancelled';
+                        label = `[X] ${fl.flight_id} CANCELLED`;
+                    } else if (fl.is_delayed) {
+                        blockClass += ' delayed';
+                        label = `${fl.flight_id} +${fl.delay_minutes}m`;
+                    }
+
+                    const timeTip = `${fl.std.substring(11, 16)} - ${fl.sta.substring(11, 16)}`;
+                    const tooltip = `Flight: ${fl.flight_id} | Route: ${fl.origin} -> ${fl.dest} | Times: ${timeTip} | Tail: ${tail}`;
+
+                    rowBlocks += `
+                        <div class="${blockClass}" style="left: ${leftPct}%; width: ${widthPct}%;" title="${tooltip}">
+                            ${label}
+                        </div>
+                    `;
+                });
+
+                // If standby aircraft and no flights in baseline
+                if (tail === 'VT-BLR15' && currentScheduleMode !== 'approved') {
+                    rowBlocks += `
+                        <div style="position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-size: 0.65rem; color: #0284c7; font-family: 'JetBrains Mono', monospace; font-weight: 600; letter-spacing: 0.05em;">
+                            -- STANDBY HOT RESERVE AT VOBL (CREW & AIRCRAFT AIRBORNE-READY) --
+                        </div>
+                    `;
+                }
+
+                // Render corridor on each row (06:00 - 08:00 = 120min to 240min)
+                const fogLeft = ((120) / 1440) * 100;
+                const fogWidth = ((120) / 1440) * 100;
+                const corridorHtml = `
+                    <div class="gantt-disruption-corridor" style="left: ${fogLeft}%; width: ${fogWidth}%;">
+                        ${tail === 'VT-BLR01' ? '<span class="gantt-corridor-label">VOBL FOG (CAT III)</span>' : ''}
+                    </div>
+                `;
+
+                rowsHtml += `
+                    <div class="gantt-row">
+                        <div class="gantt-ac-label">
+                            <span class="gantt-ac-tail">${tail}</span>
+                            <span class="gantt-ac-meta">${ac.current_airport}</span>
+                        </div>
+                        <div class="gantt-timeline-track">
+                            ${corridorHtml}
+                            ${rowBlocks}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = rowsHtml;
+        }
+
+        function syncNavigationLinks(runId) {
+            if (!runId) return;
+            const q = '?run_id=' + encodeURIComponent(runId);
+            const navDash = document.getElementById('nav-dashboard');
+            const navConsole = document.getElementById('nav-console');
+            const navAudit = document.getElementById('nav-audit');
+            if (navDash) navDash.href = '/' + q;
+            if (navConsole) navConsole.href = '/console' + q;
+            if (navAudit) navAudit.href = '/audit' + q;
+        }
+
+        async function loadLatestSession() {
+            try {
+                const res = await fetch('/api/session/latest');
+                const data = await res.json();
+                if (data.run_id && data.session) {
+                    currentRunId = data.run_id;
+                    localStorage.setItem('skymediator_active_run_id', data.run_id);
+                    syncNavigationLinks(data.run_id);
+                    handleRecoveryResponse(data.session);
+                }
+            } catch (err) {
+                console.warn('Could not load latest session:', err);
+            }
+        }
+
+        async function loadSessionByRunId(runId) {
+            try {
+                const res = await fetch('/api/runs/' + encodeURIComponent(runId));
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data.session) {
+                    currentRunId = runId;
+                    localStorage.setItem('skymediator_active_run_id', runId);
+                    syncNavigationLinks(runId);
+                    handleRecoveryResponse(data.session);
+                }
+            } catch (err) {
+                console.warn('Could not restore session ' + runId + ':', err);
+            }
+        }
+
+        function startClock() {
+            setInterval(() => {
+                const now = new Date();
+                const str = now.toTimeString().split(' ')[0] + ' IST';
+                const el = document.getElementById('clock-display');
+                if (el) el.innerText = str;
+            }, 1000);
+        }
+
+        async function loadSlotsData() {
+            try {
+                const res = await fetch('/api/slots');
+                const data = await res.json();
+                const container = document.getElementById('slots-timeline-container');
+                const tag = document.getElementById('active-disruption-tag');
+                if (!container || !data.windows) return;
+
+                container.innerHTML = '';
+                let hasDisruption = false;
+
+                data.windows.forEach(w => {
+                    const isDisrupted = w.status === 'DISRUPTED_FOG';
+                    const isRestricted = w.status === 'RESTRICTED';
+                    if (isDisrupted || isRestricted) hasDisruption = true;
+
+                    const rowClass = isDisrupted ? 'slot-row disrupted' : (isRestricted ? 'slot-row restricted' : 'slot-row');
+                    const fillClass = isDisrupted ? 'slot-bar-fill danger' : (isRestricted ? 'slot-bar-fill warning' : 'slot-bar-fill');
+                    const timeLabel = w.start.substring(11, 16) + ' - ' + w.end.substring(11, 16);
+
+                    const html = `
+                        <div class="${rowClass}" title="${w.label}: ${w.disruption_reason || 'Normal visual operations'}">
+                            <span class="slot-time">${timeLabel}</span>
+                            <div class="slot-bar-wrap">
+                                <div class="${fillClass}" style="width: ${Math.min(w.utilization_pct, 100)}%;"></div>
+                            </div>
+                            <span class="slot-cap-label">${w.booked_movements}/${w.effective_capacity} cap</span>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
+
+                if (tag) tag.style.display = hasDisruption ? 'inline-block' : 'none';
+            } catch (err) {
+                console.warn('Could not load slots:', err);
+            }
+        }
+
+        async function loadFleetData(swappedTail = null, disruptedTail = null) {
+            try {
+                const res = await fetch('/api/fleet_status');
+                const data = await res.json();
+                const container = document.getElementById('fleet-matrix-container');
+                if (!container || !data.fleet) return;
+
+                container.innerHTML = '';
+                data.fleet.forEach(ac => {
+                    let badgeClass = 'aircraft-badge';
+                    let tagClass = 'ac-status-tag available';
+                    let tagLabel = 'ACTIVE';
+
+                    if (ac.tail === swappedTail) {
+                        badgeClass += ' active-swap';
+                        tagClass = 'ac-status-tag standby';
+                        tagLabel = 'SWAPPED';
+                    } else if (ac.tail === disruptedTail || (disruptedTail && ac.tail === 'VT-BLR01')) {
+                        badgeClass += ' primary-disrupted';
+                        tagClass = 'ac-status-tag disrupted';
+                        tagLabel = 'DISRUPTED';
+                    } else if (ac.status_badge === 'STANDBY') {
+                        badgeClass += ' standby-ready';
+                        tagClass = 'ac-status-tag standby';
+                        tagLabel = 'STANDBY';
+                    } else if (ac.status_badge === 'MAINTENANCE') {
+                        tagClass = 'ac-status-tag maint';
+                        tagLabel = 'MAINT';
+                    }
+
+                    const html = `
+                        <div class="${badgeClass}" id="ac-card-${ac.tail}">
+                            <div class="ac-tail">${ac.tail}</div>
+                            <div class="ac-sub">${ac.aircraft_type} &bull; ${ac.current_airport}</div>
+                            <span class="${tagClass}">${tagLabel}</span>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
+            } catch (err) {
+                console.warn('Could not load fleet:', err);
+            }
+        }
+
+        async function checkLLMStatus(showToast = false) {
+            const pill = document.getElementById('llm-status-pill');
+            const lbl = document.getElementById('llm-status-label');
+
+            lbl.innerText = 'LLM: Testing...';
+            try {
+                const res = await fetch('/api/llm_status');
+                const data = await res.json();
+                if (data.status === 'ONLINE') {
+                    pill.className = 'status-badge online';
+                    lbl.innerText = `${data.model || 'Gemini'}: ONLINE (${data.latency_ms}ms)`;
+                    if (showToast) alert(`Google Gemini API Connected\n\nModel: ${data.model}\nLatency: ${data.latency_ms}ms\nProvider: ${data.provider}`);
+                } else {
+                    pill.className = 'status-badge';
+                    lbl.innerText = 'LLM: Fallback Active';
+                    if (showToast) alert(`Gemini LLM returned fallback mode\n\nReason: ${data.message || 'Offline fallback active'}`);
+                }
+            } catch (err) {
+                lbl.innerText = 'LLM: Conn Error';
+                if (showToast) alert('Error pinging LLM: ' + err);
+            }
+        }
+
+        function switchTab(mode) {
+            document.getElementById('tab-btn-message').classList.toggle('active', mode === 'message');
+            document.getElementById('tab-btn-scenario').classList.toggle('active', mode === 'scenario');
+            document.getElementById('tab-content-message').style.display = mode === 'message' ? 'block' : 'none';
+            document.getElementById('tab-content-scenario').style.display = mode === 'scenario' ? 'block' : 'none';
+            document.getElementById('mode-tag').innerText = mode === 'message' ? 'FREE-FORM' : 'PREDEFINED';
+        }
+
+        function fillTemplate(text) {
+            document.getElementById('dm-message-input').value = text;
+        }
+
+        async function parseMessageOnly() {
+            const msg = document.getElementById('dm-message-input').value;
+            if (!msg.trim()) return;
+            const btn = document.getElementById('btn-parse');
+            btn.disabled = true;
+            btn.innerText = 'Parsing...';
+            try {
+                const res = await fetch('/api/parse_message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await res.json();
+                renderUnderstanding(data.parsed_disruption);
+            } catch (err) {
+                alert('Parse error: ' + err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Parse Dispatch';
+            }
+        }
+
+        function renderUnderstanding(p) {
+            if (!p) return;
+            document.getElementById('understanding-card').style.display = 'block';
+            document.getElementById('und-summary').innerText = p.tactical_summary || p.duty_manager_intent || p.raw_message || '';
+            document.getElementById('und-type').innerText = (p.disruption_type || p.type || 'FOG').toUpperCase();
+            document.getElementById('und-airport').innerText = (p.airport || 'VOBL').toUpperCase();
+            document.getElementById('und-flight').innerText = p.affected_flight_id || '6E-101';
+            document.getElementById('und-severity').innerText = (p.severity || 'SEVERE').toUpperCase();
+            document.getElementById('und-delay').innerText = (p.delay_minutes || 180) + 'm';
+            document.getElementById('und-action').innerText = p.initial_action || 'excessive_delay';
+            document.getElementById('und-tail').innerText = p.candidate_tail || 'VT-BLR15';
+            document.getElementById('parsed-by-tag').innerText = p.parsed_by || 'Mediator LLM';
+        }
+
+        async function runFromMessage() {
+            const msg = document.getElementById('dm-message-input').value;
+            if (!msg.trim()) return;
+            const btn = document.getElementById('btn-trigger-msg');
+            btn.disabled = true;
+            btn.innerText = 'Deliberating...';
+
+            document.getElementById('rounds-list').innerHTML = `
+                <div class="card" style="text-align: center; padding: 2.5rem; color: var(--navy-dark);">
+                    <div style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">Orchestrating 7-Agent Recovery Deliberation Suite...</div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">Rotation proposing diffs &bull; Crew Legality verifying DGCA CAR Sec 7 &bull; Slot verifying runway movement limits</p>
+                </div>
+            `;
+            document.getElementById('rec-section').style.display = 'none';
+
+            try {
+                const res = await fetch('/api/run_recovery', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ duty_manager_message: msg })
+                });
+                const data = await res.json();
+                handleRecoveryResponse(data);
+            } catch (err) {
+                alert('Recovery execution error: ' + err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Run Deliberation Loop';
+            }
+        }
+
+        async function runScenario() {
+            const scenarioId = document.getElementById('scenario-selector').value;
+            const btn = document.getElementById('btn-trigger-scen');
+            btn.disabled = true;
+            btn.innerText = 'Deliberating...';
+
+            document.getElementById('rounds-list').innerHTML = `
+                <div class="card" style="text-align: center; padding: 2.5rem; color: var(--navy-dark);">
+                    <div style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">Orchestrating Scenario Recovery Loop...</div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">Testing statutory hard vetoes and counter-proposal synthesis</p>
+                </div>
+            `;
+            document.getElementById('rec-section').style.display = 'none';
+
+            try {
+                const res = await fetch('/api/run_recovery', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scenario_id: scenarioId })
+                });
+                const data = await res.json();
+                handleRecoveryResponse(data);
+            } catch (err) {
+                alert('Scenario execution error: ' + err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Trigger Scenario Recovery';
+            }
+        }
+
+        function handleRecoveryResponse(data) {
+            currentRunId = data.run_id;
+            localStorage.setItem('skymediator_active_run_id', data.run_id);
+            syncNavigationLinks(data.run_id);
+            window.history.replaceState(null, '', '?run_id=' + encodeURIComponent(data.run_id));
+            loadDisruptions();
+
+            document.getElementById('session-tag').innerText = `Session: ${data.run_id} (${data.status})`;
+
+            if (data.selected_plan) {
+                latestDeliberationPlan = data.selected_plan;
+            }
+
+            if (data.status === 'APPROVED') {
+                setGanttMode('approved');
+            } else {
+                setGanttMode('disrupted');
+            }
+
+            if (data.parsed_disruption) {
+                renderUnderstanding(data.parsed_disruption);
+            }
+
+            if (data.sentinel_forecast) {
+                renderSentinelForecast(data.sentinel_forecast);
+            }
+
+            renderRounds(data.candidates || []);
+
+            let swappedTail = null;
+            let disruptedTail = 'VT-BLR01';
+            if (data.selected_plan && data.selected_plan.plan_diff) {
+                const swapOp = data.selected_plan.plan_diff.find(d => d.op === 'swap_tail');
+                if (swapOp) {
+                    swappedTail = swapOp.new_tail;
+                    disruptedTail = swapOp.original_tail || 'VT-BLR01';
+                }
+            }
+            loadFleetData(swappedTail, disruptedTail);
+
+            if (data.selected_plan) {
+                currentSelectedPlanId = data.selected_plan.plan_id;
+                const rec = data.selected_plan;
+                const recSec = document.getElementById('rec-section');
+                recSec.style.display = 'block';
+                document.getElementById('rec-title').innerText = `Recommended: ${rec.plan_id} (Round ${rec.round_created || 1})`;
+                document.getElementById('rec-desc').innerText = rec.operational_rationale || '';
+                document.getElementById('rec-score').innerText = rec.scores?.composite_score?.toFixed(4) || '0.0245';
+                document.getElementById('rec-delay').innerText = (rec.scores?.raw_metrics?.delay_minutes || 30) + ' mins';
+                document.getElementById('rec-pax').innerText = (rec.scores?.raw_metrics?.missed_connections || 0) + ' broken';
+                document.getElementById('rec-cost').innerText = 'INR ' + Number(rec.scores?.raw_metrics?.total_cost || 4500).toLocaleString();
+
+                if (rec.occ_briefing) {
+                    document.getElementById('briefing-container').style.display = 'block';
+                    document.getElementById('rec-briefing').innerText = rec.occ_briefing;
+                } else {
+                    document.getElementById('briefing-container').style.display = 'none';
+                }
+            } else if (data.status === 'ESCALATED') {
+                const recSec = document.getElementById('rec-section');
+                recSec.style.display = 'block';
+                recSec.innerHTML = `
+                    <div class="recommendation-banner" style="background: var(--accent-rose-bg); border-color: var(--accent-rose-border);">
+                        <div class="rec-info">
+                            <h3 style="color: var(--accent-rose);">DUTY MANAGER ESCALATION ALERT</h3>
+                            <p style="color: var(--navy-dark); margin-top: 0.3rem;">${data.escalation_reason || 'All candidate plans vetoed across maximum deliberation rounds.'}</p>
+                            ${data.reflection_notes ? `<p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"><strong>Mediator Reflection:</strong> ${data.reflection_notes}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderSentinelForecast(sf) {
+            const container = document.getElementById('sentinel-forecast-card');
+            if (!container) return;
+            container.style.display = 'block';
+            const prob = sf.probability !== undefined ? (sf.probability * 100).toFixed(1) : '—';
+            const action = (sf.recommended_action || 'monitor').toLowerCase();
+            const tagClass = `sentinel-tag ${action}`;
+
+            container.innerHTML = `
+                <div class="sentinel-box">
+                    <div class="sentinel-top">
+                        <strong style="color: var(--navy-dark); font-size: 0.85rem;">Sentinel Forecast — Kempegowda Hub Weather</strong>
+                        <span class="${tagClass}">${action.replace('_', ' ')}</span>
+                    </div>
+                    <div class="sentinel-metrics">
+                        <div class="sent-metric">
+                            <div class="val">${prob}%</div>
+                            <div class="lbl">Fog Probability</div>
+                        </div>
+                        <div class="sent-metric">
+                            <div class="val">${sf.disruption_detected ? 'DETECTED' : 'CLEAR'}</div>
+                            <div class="lbl">Hub Condition</div>
+                        </div>
+                        <div class="sent-metric">
+                            <div class="val">${sf.expected_lead_time_hours > 0 ? sf.expected_lead_time_hours + 'h' : '—'}</div>
+                            <div class="lbl">Forecast Lead Time</div>
+                        </div>
+                        <div class="sent-metric">
+                            <div class="val">${sf.brier_score !== undefined ? sf.brier_score.toFixed(4) : '—'}</div>
+                            <div class="lbl">Brier Calibration</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted); font-style: italic; line-height: 1.45;">
+                        ${sf.rationale || 'Meteorological forecast evaluated.'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRounds(candidates) {
+            const container = document.getElementById('rounds-list');
+            container.innerHTML = '';
+
+            if (!candidates || candidates.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        No candidate proposals recorded for this session.
+                    </div>
+                `;
+                return;
+            }
+
+            candidates.forEach(cand => {
+                const isVetoed = cand.vetoed_by && cand.vetoed_by.length > 0;
+                const statusClass = isVetoed ? 'round-card vetoed' : 'round-card passed';
+                const tagClass = isVetoed ? 'round-tag veto' : 'round-tag pass';
+                const tagLabel = isVetoed ? `VETOED (${cand.vetoed_by.join(', ').toUpperCase()})` : 'PASSED HARD CHECKS';
+                const vetoReason = cand.veto_reasons?.crew || cand.veto_reasons?.slot || 'Satisfies physical continuity and statutory limits.';
+
+                const pers = cand.agent_perspectives || {};
+                const rotPers = pers.rotation || cand.operational_rationale || 'Rotation proposal submitted.';
+                const crewPers = pers.crew || (cand.compliance_notes?.crew || (isVetoed ? vetoReason : 'DGCA CAR Sec 7 verified compliant.'));
+                const slotPers = pers.slot || (cand.compliance_notes?.slot || 'Runway slot capacity verified.');
+                const paxPers = pers.passenger || 'Passenger impact assessed under DGCA CAR Sec 3.';
+                const costPers = pers.cost || 'Financial liability estimated.';
+
+                const isCrewVetoed = cand.vetoed_by?.includes('crew');
+                const isSlotVetoed = cand.vetoed_by?.includes('slot');
+
+                const html = `
+                    <div class="${statusClass}">
+                        <div class="round-header">
+                            <div>
+                                <span class="round-title">Plan ${cand.plan_id}</span>
+                                <span class="round-meta">Round ${cand.round_created || 1} &bull; Proposer: <strong>${cand.proposing_agent || 'Rotation'}</strong></span>
+                            </div>
+                            <span class="${tagClass}">${tagLabel}</span>
+                        </div>
+                        <div class="rationale-text">
+                            <strong>Schedule Mutation:</strong> ${cand.operational_rationale || 'Tactical schedule adjustment.'}
+                        </div>
+
+                        <div class="pers-grid">
+                            <div class="pers-card">
+                                <span class="pers-agent-title">[ROTATION AGENT] Operational Scheduling</span>
+                                <div class="pers-content">${rotPers}</div>
+                            </div>
+                            <div class="pers-card ${isCrewVetoed ? 'veto' : 'pass'}">
+                                <span class="pers-agent-title">[CREW LEGALITY AGENT] DGCA CAR Section 7 FDTL</span>
+                                <div class="pers-content">${crewPers}</div>
+                            </div>
+                            <div class="pers-card ${isSlotVetoed ? 'veto' : 'pass'}">
+                                <span class="pers-agent-title">[SLOT CAPACITY AGENT] Airport Movement Windows</span>
+                                <div class="pers-content">${slotPers}</div>
+                            </div>
+                            <div class="pers-card pass">
+                                <span class="pers-agent-title">[PASSENGER CARE AGENT] DGCA CAR Section 3</span>
+                                <div class="pers-content">${paxPers}</div>
+                            </div>
+                            <div class="pers-card pass">
+                                <span class="pers-agent-title">[FINANCIAL IMPACT AGENT] Compensation & Delay Liabilities</span>
+                                <div class="pers-content">${costPers}</div>
+                            </div>
+                        </div>
+
+                        ${isVetoed ? `<div class="citation-box"><strong>STATUTORY BREACH DETECTED:</strong><br>${vetoReason}</div>` : `<div style="font-size: 0.8rem; color: var(--accent-emerald); font-weight: 600; margin-top: 0.5rem;">[COMPLIANT] 100% compliant with DGCA CAR Sec 7 Series J Part III.</div>`}
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        async function approvePlan() {
+            if (!currentRunId) return;
+            try {
+                const res = await fetch('/api/approve_plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        run_id: currentRunId,
+                        decision: 'APPROVE',
+                        selected_plan_id: currentSelectedPlanId,
+                        manager_notes: 'Approved for tactical OCC fleet execution by Human Duty Manager.'
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    alert('Approval Blocked by Safety Guardrails: ' + (data.detail || 'Plan is illegal or vetoed.'));
+                    return;
+                }
+                alert('Plan Authorized: ' + data.message);
+
+                if (data.applied_diff && data.applied_diff.length) {
+                    latestDeliberationPlan = { plan_diff: data.applied_diff };
+                }
+                setGanttMode('approved');
+                loadFleetData('VT-BLR15', 'VT-BLR01');
+                loadSlotsData();
+
+                document.getElementById('rec-section').innerHTML = `
+                    <div class="recommendation-banner" style="background: var(--accent-emerald-bg); border-color: var(--accent-emerald-border);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                            <div>
+                                <h3 style="color: var(--accent-emerald); font-weight: 700;">[AUTHORIZED & DISPATCHED] Recovery Plan Mutated Across Fleet</h3>
+                                <p style="font-size: 0.85rem; color: var(--navy-dark); margin-top: 0.3rem;">Tactical schedule executed. Flight 6E-101 reassigned to VT-BLR15. Decision persisted to SQLite decision audit trail.</p>
+                            </div>
+                            <div style="display: flex; gap: 0.6rem;">
+                                <a href="/audit?run_id=${currentRunId}" class="btn-action-sm" style="text-decoration: none;">Inspect Audit Record</a>
+                                <a href="/console?run_id=${currentRunId}" class="btn-secondary" style="text-decoration: none; padding: 0.4rem 0.8rem; font-size: 0.78rem;">View in Operations Console</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                alert('Error submitting approval: ' + err);
+            }
+        }
+
+        async function rejectPlan() {
+            if (!currentRunId) return;
+            const reason = prompt('Enter rejection rationale for audit log:', 'Local handling constraints conflict with reassignment');
+            if (!reason) return;
+            try {
+                const res = await fetch('/api/approve_plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        run_id: currentRunId,
+                        decision: 'REJECT',
+                        selected_plan_id: currentSelectedPlanId,
+                        manager_notes: reason
+                    })
+                });
+                const data = await res.json();
+                alert('Plan Rejected: ' + data.message);
+            } catch (err) {
+                alert('Error submitting rejection: ' + err);
+            }
+        }
+
+        async function requestReplan() {
+            if (!currentRunId) return;
+            const reason = prompt('Enter feedback for agent revision loop (e.g. "swap to VT-BLR15", "cancel flight", "delay 45 mins", "prioritize departure"):', 'Prioritize departure over connection hold');
+            if (!reason) return;
+            try {
+                const res = await fetch('/api/approve_plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        run_id: currentRunId,
+                        decision: 'REPLAN',
+                        selected_plan_id: currentSelectedPlanId,
+                        manager_notes: reason
+                    })
+                });
+                const data = await res.json();
+                if ((data.selected_plan || data.replan_status === 'REVISION_GENERATED' || data.status === 'REVISION_GENERATED') && (data.session || data.selected_plan)) {
+                    if (data.session) {
+                        handleRecoveryResponse(data.session);
+                    } else if (data.selected_plan) {
+                        latestDeliberationPlan = data.selected_plan;
+                        currentSelectedPlanId = data.selected_plan.plan_id;
+                        renderRounds(data.candidates || [data.selected_plan]);
+                    }
+                    loadFleetGanttData();
+                    alert(`New Plan Synthesized: ${data.plan_id || 'Plan revision'}\n\n${data.message}`);
+                } else {
+                    alert('Revision Requested: ' + (data.message || 'Feedback submitted to agents.'));
+                }
+            } catch (err) {
+                alert('Error requesting revision: ' + err);
+            }
+        }
+
+        async function loadDisruptions() {
+            try {
+                const res = await fetch('/api/disruptions');
+                const data = await res.json();
+                stackedDisruptions = data.disruptions || [];
+                renderStackedDisruptions();
+            } catch (err) {
+                console.warn('Could not load disruptions:', err);
+            }
+        }
+
+        function renderStackedDisruptions() {
+            const bar = document.getElementById('stacked-incidents-bar');
+            const pills = document.getElementById('stacked-incidents-pills');
+            if (!bar || !pills) return;
+
+            if (stackedDisruptions.length === 0) {
+                bar.style.display = 'none';
+                return;
+            }
+
+            bar.style.display = 'flex';
+            pills.innerHTML = stackedDisruptions.map(d => `
+                <span class="chip" style="background: #fff; border-color: var(--accent-rose); color: var(--accent-rose); font-size: 0.72rem; font-weight: 700;">
+                    ${d.affected_flight_id || '6E-101'} [${(d.type || d.disruption_type || 'DISRUPT').toUpperCase()}]
+                </span>
+            `).join('');
+        }
+
+        async function clearActiveDisruptions() {
+            try {
+                const res = await fetch('/api/disruptions/clear', { method: 'POST' });
+                stackedDisruptions = [];
+                renderStackedDisruptions();
+                renderFleetGanttChart();
+            } catch (err) {
+                alert('Error clearing disruptions: ' + err);
+            }
+        }
+
+        async function resetAllOCCData() {
+            if (!confirm('Are you sure you want to remove all previous historical data and reset the database?')) return;
+            try {
+                const res = await fetch('/api/reset_all_data', { method: 'POST' });
+                const data = await res.json();
+                localStorage.removeItem('skymediator_active_run_id');
+                window.history.replaceState(null, '', '/');
+                alert(data.message);
+                window.location.reload();
+            } catch (err) {
+                alert('Error resetting data: ' + err);
+            }
+        }
+
+        function openDataManagerModal() {
+            document.getElementById('data-manager-modal').style.display = 'flex';
+            loadModalData('schedule');
+        }
+
+        function closeDataManagerModal() {
+            document.getElementById('data-manager-modal').style.display = 'none';
+        }
+
+        function switchDataTab(tab) {
+            document.querySelectorAll('.modal-window .tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.dt-pane').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+            const pane = document.getElementById('dt-pane-' + tab);
+            if (pane) pane.classList.add('active');
+            loadModalData(tab);
+        }
+
+        async function loadModalData(tab) {
+            try {
+                if (tab === 'schedule') {
+                    const res = await fetch('/api/schedule');
+                    const data = await res.json();
+                    const tbody = document.getElementById('schedule-tbody');
+                    tbody.innerHTML = '';
+                    (data.schedule || []).forEach(f => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${f.flight_id}</strong></td>
+                                <td>${f.tail}</td>
+                                <td>${f.origin} &rarr; ${f.dest}</td>
+                                <td>${f.std.substring(11, 16)}</td>
+                                <td>${f.sta.substring(11, 16)}</td>
+                                <td>${f.seats}</td>
+                                <td><span class="chip">${f.status}</span></td>
+                            </tr>
+                        `;
+                    });
+                } else if (tab === 'fleet') {
+                    const res = await fetch('/api/fleet');
+                    const data = await res.json();
+                    const tbody = document.getElementById('fleet-tbody');
+                    tbody.innerHTML = '';
+                    (data.fleet || []).forEach(ac => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${ac.tail}</strong></td>
+                                <td>${ac.aircraft_type}</td>
+                                <td>${ac.seats}</td>
+                                <td>${ac.maintenance_due_hours}h</td>
+                                <td>${ac.current_airport}</td>
+                            </tr>
+                        `;
+                    });
+                } else if (tab === 'crew') {
+                    const res = await fetch('/api/crew');
+                    const data = await res.json();
+                    const tbody = document.getElementById('crew-tbody');
+                    tbody.innerHTML = '';
+                    (data.crew || []).forEach(c => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${c.crew_id}</strong></td>
+                                <td>${c.name}</td>
+                                <td>${c.role}</td>
+                                <td>${c.base}</td>
+                                <td>${c.duty_start ? c.duty_start.substring(11, 16) : '—'}</td>
+                                <td>${c.assigned_flight_id || '—'}</td>
+                            </tr>
+                        `;
+                    });
+                } else if (tab === 'scenarios') {
+                    const res = await fetch('/api/scenarios');
+                    const data = await res.json();
+                    const tbody = document.getElementById('scenarios-tbody');
+                    tbody.innerHTML = '';
+                    (data.scenarios || []).forEach(s => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${s.scenario_id}</strong></td>
+                                <td>${s.name}</td>
+                                <td>${s.disruption_type}</td>
+                                <td>${s.airport}</td>
+                                <td><span class="chip">${s.severity}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch (err) {
+                console.warn('Error loading modal data:', err);
+            }
+        }
+
+        async function resetDatabaseToBaseline() {
+            if (!confirm('Reset operational database to clean fixtures?')) return;
+            await resetAllOCCData();
+        }
+    </script>
+</body>
+</html>

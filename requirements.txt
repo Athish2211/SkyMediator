@@ -1,0 +1,10 @@
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+langgraph>=0.2.20
+langchain-core>=0.3.0
+scikit-learn>=1.4.0
+pandas>=2.2.0
+numpy>=1.26.0
+rich>=13.7.0
+pytest>=8.0.0
+pytest-asyncio>=0.23.0

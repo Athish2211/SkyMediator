@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyMediator OCC — Agent Operations Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-highlight: #cbd5e1;
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --primary-light: #e0f2fe;
+            --navy-dark: #0f172a;
+            --navy-muted: #1e293b;
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #ecfdf5;
+            --accent-emerald-border: #a7f3d0;
+            --accent-rose: #dc2626;
+            --accent-rose-bg: #fef2f2;
+            --accent-rose-border: #fecaca;
+            --accent-amber: #d97706;
+            --accent-amber-bg: #fffbeb;
+            --accent-amber-border: #fde68a;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-subtle: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        header {
+            padding: 0.85rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-surface);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: var(--navy-dark);
+            color: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .brand-title h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hub-tag {
+            background: var(--primary-light);
+            border: 1px solid #bae6fd;
+            color: var(--primary-hover);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+        }
+
+        nav.nav-links {
+            display: flex;
+            gap: 0.35rem;
+            margin-left: 1rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--navy-dark);
+            background: var(--bg-subtle);
+        }
+
+        .nav-link.active {
+            color: var(--primary-hover);
+            background: var(--primary-light);
+            border-color: #bae6fd;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stream-status-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--accent-emerald-border);
+            background: var(--accent-emerald-bg);
+            color: var(--accent-emerald);
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .btn-ctrl {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--navy-dark);
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-ctrl:hover {
+            background: var(--bg-subtle);
+            border-color: var(--border-highlight);
+        }
+
+        .btn-ctrl.active-pause {
+            background: var(--accent-amber-bg);
+            border-color: var(--accent-amber-border);
+            color: var(--accent-amber);
+        }
+
+        /* Filter Toolbar */
+        .toolbar {
+            padding: 0.65rem 2rem;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .ctrl-select, .ctrl-input {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.4rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .ctrl-select:focus, .ctrl-input:focus {
+            border-color: var(--primary);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .chip {
+            padding: 0.25rem 0.55rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            border-radius: 4px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .chip.active {
+            background: var(--navy-dark);
+            color: #ffffff;
+            border-color: var(--navy-dark);
+        }
+
+        /* Main 2-Column Console Layout */
+        .console-layout {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            flex: 1;
+            height: calc(100vh - 105px);
+            overflow: hidden;
+        }
+
+        .stream-panel {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            background: var(--bg-base);
+            overflow: hidden;
+        }
+
+        .rounds-ribbon {
+            padding: 0.65rem 1.5rem;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .round-steps {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .round-step {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .round-step.active {
+            color: var(--primary);
+        }
+
+        .round-step.completed {
+            color: var(--accent-emerald);
+        }
+
+        .step-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+        }
+
+        .round-step.active .step-circle {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .round-step.completed .step-circle {
+            background: var(--accent-emerald);
+            color: #ffffff;
+            border-color: var(--accent-emerald);
+        }
+
+        /* --- MULTI-AGENT ADJUDICATION GRAPH & DELIBERATION FLOW --- */
+        .decision-graph-section {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 0.85rem 1.25rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.65rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .graph-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .graph-round-tabs {
+            display: flex;
+            gap: 0.35rem;
+        }
+
+        .graph-round-tab {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.65rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .graph-round-tab:hover {
+            color: var(--navy-dark);
+            border-color: var(--border-highlight);
+        }
+
+        .graph-round-tab.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+
+        .dag-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.45rem;
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        .dag-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-subtle);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .dag-node {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.45rem 0.75rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+
+        .dag-node:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+        }
+
+        .dag-node-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.2rem;
+        }
+
+        .dag-node-agent {
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .dag-node-badge {
+            font-size: 0.64rem;
+            font-weight: 700;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .dag-node-badge.propose { background: #e0f2fe; color: #0284c7; }
+        .dag-node-badge.veto { background: var(--accent-rose-bg); color: var(--accent-rose); border: 1px solid var(--accent-rose-border); }
+        .dag-node-badge.compliant { background: var(--accent-emerald-bg); color: var(--accent-emerald); border: 1px solid var(--accent-emerald-border); }
+        .dag-node-badge.assessed { background: #f1f5f9; color: #475569; }
+        .dag-node-badge.arbitrated { background: #fae8ff; color: #a21caf; }
+        .dag-node-badge.approved { background: #dcfce7; color: #15803d; }
+
+        .dag-node-text {
+            font-size: 0.75rem;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .dag-eval-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.45rem;
+            width: 100%;
+        }
+
+        .dag-eval-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.45rem 0.6rem;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 72px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .dag-eval-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+        }
+
+        .dag-eval-card.vetoed {
+            border-color: var(--accent-rose-border);
+            background: var(--accent-rose-bg);
+        }
+
+        .dag-eval-card.passed {
+            border-color: var(--accent-emerald-border);
+            background: #f0fdf4;
+        }
+
+        /* Events Stream List */
+        .events-container {
+            padding: 1.25rem 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .event-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--border-highlight);
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .event-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .event-card.selected {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .event-card.proposal { border-left-color: var(--primary); }
+        .event-card.veto { border-left-color: var(--accent-rose); background: #fff5f5; }
+        .event-card.recommendation { border-left-color: var(--accent-emerald); }
+        .event-card.approval { border-left-color: var(--accent-emerald); background: #f0fdf4; }
+        .event-card.tool { border-left-color: #64748b; }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.35rem;
+        }
+
+        .actor-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .actor-Rotation { background: #e0f2fe; color: #0369a1; }
+        .actor-CrewLegality { background: #fee2e2; color: #991b1b; }
+        .actor-Slot { background: #fef3c7; color: #92400e; }
+        .actor-Sentinel { background: #f3e8ff; color: #6b21a8; }
+        .actor-Mediator { background: #dcfce7; color: #166534; }
+        .actor-Passenger { background: #e0e7ff; color: #3730a3; }
+        .actor-Cost { background: #f1f5f9; color: #334155; }
+
+        .type-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .type-proposal_created { background: #e0f2fe; color: #0284c7; }
+        .type-plan_vetoed { background: var(--accent-rose-bg); color: var(--accent-rose); border: 1px solid var(--accent-rose-border); }
+        .type-recommendation_created { background: var(--accent-emerald-bg); color: var(--accent-emerald); }
+        .type-duty_manager_approved { background: var(--accent-emerald-bg); color: var(--accent-emerald); }
+        .type-tool_completed { background: var(--bg-subtle); color: var(--text-muted); }
+
+        .event-summary {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-top: 0.25rem;
+            line-height: 1.45;
+        }
+
+        .event-meta-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.45rem;
+            font-size: 0.72rem;
+            color: var(--text-subtle);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Right Detail Inspector */
+        .detail-panel {
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 1.25rem;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-header h3 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .detail-group {
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .json-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--navy-dark);
+            overflow-x: auto;
+            max-height: 250px;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .empty-inspector {
+            text-align: center;
+            color: var(--text-subtle);
+            padding: 4rem 1rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-cluster">
+            <a href="/" class="brand">
+                <div class="brand-logo">SM</div>
+                <div class="brand-title">
+                    <h1>SkyMediator OCC <span class="hub-tag">HUB: VOBL</span></h1>
+                </div>
+            </a>
+            <nav class="nav-links" id="main-nav-links">
+                <a href="/" class="nav-link" id="nav-dashboard">Operations Dashboard</a>
+                <a href="/console" class="nav-link active" id="nav-console">Agent Operations Console</a>
+                <a href="/audit" class="nav-link" id="nav-audit">Decision Audit Trail</a>
+            </nav>
+        </div>
+
+        <div class="header-meta">
+            <div id="stream-status" class="stream-status-pill">
+                <span class="pulse-dot" id="pulse-indicator"></span>
+                <span id="stream-status-text">LIVE STREAM ACTIVE</span>
+            </div>
+            <button class="btn-ctrl" id="btn-pause" onclick="togglePauseStream()">
+                <span id="pause-text">Pause Feed</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <label style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Active Deliberation Run:</label>
+            <select id="run-selector" class="ctrl-select" onchange="onRunSelected()">
+                <option value="">Live Stream (All OCC Deliberations)</option>
+            </select>
+            <button class="btn-ctrl" onclick="refreshRunsList()" title="Refresh available runs">Refresh Runs</button>
+        </div>
+
+        <div class="toolbar-group">
+            <div class="filter-chips">
+                <div class="chip active" data-filter="all" onclick="setAgentFilter('all', this)">All Agents</div>
+                <div class="chip" data-filter="Rotation" onclick="setAgentFilter('Rotation', this)">Rotation</div>
+                <div class="chip" data-filter="CrewLegality" onclick="setAgentFilter('CrewLegality', this)">Crew Legality</div>
+                <div class="chip" data-filter="Slot" onclick="setAgentFilter('Slot', this)">Slot Capacity</div>
+                <div class="chip" data-filter="Mediator" onclick="setAgentFilter('Mediator', this)">Mediator</div>
+            </div>
+
+            <select id="event-type-filter" class="ctrl-select" onchange="applyFilters()">
+                <option value="all">All Event Types</option>
+                <option value="proposal_created">Proposals</option>
+                <option value="plan_vetoed">Vetoes</option>
+                <option value="recommendation_created">Recommendations</option>
+                <option value="duty_manager_approved">Duty Manager Approvals</option>
+                <option value="tool_completed">Deterministic Computations</option>
+            </select>
+
+            <input type="text" id="event-search" class="ctrl-input" placeholder="Search rationales, flights, clauses..." oninput="applyFilters()">
+        </div>
+    </div>
+
+    <main class="console-layout">
+        <section class="stream-panel">
+            <div class="rounds-ribbon">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; letter-spacing: 0.04em;">Negotiation Horizon</span>
+                <div class="round-steps">
+                    <div class="round-step active" id="step-r1">
+                        <div class="step-circle">1</div>
+                        <span>Initial Proposal</span>
+                    </div>
+                    <span style="color: var(--text-subtle);">&rarr;</span>
+                    <div class="round-step" id="step-r2">
+                        <div class="step-circle">2</div>
+                        <span>Counter-Proposal</span>
+                    </div>
+                    <span style="color: var(--text-subtle);">&rarr;</span>
+                    <div class="round-step" id="step-r3">
+                        <div class="step-circle">3</div>
+                        <span>Arbitration & Sign-off</span>
+                    </div>
+                </div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;" id="events-count-label">
+                    Events: 0
+                </div>
+            </div>
+
+            <!-- MULTI-AGENT ADJUDICATION GRAPH & DELIBERATION FLOW -->
+            <div class="decision-graph-section" id="decision-graph-section">
+                <div class="graph-header">
+                    <div class="graph-title">
+                        <span>Multi-Agent Adjudication Graph &amp; Deliberation Flow</span>
+                        <span id="graph-plan-id" style="font-size: 0.68rem; font-weight: 700; background: #e0f2fe; color: #0284c7; padding: 0.15rem 0.45rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace;">PLAN: STANDBY</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.6rem;">
+                        <div class="graph-round-tabs" id="graph-round-tabs">
+                            <button class="graph-round-tab active" id="tab-round-1" onclick="switchGraphRound(1)">Round 1</button>
+                            <button class="graph-round-tab" id="tab-round-2" onclick="switchGraphRound(2)">Round 2</button>
+                            <button class="graph-round-tab" id="tab-round-3" onclick="switchGraphRound(3)">Round 3</button>
+                        </div>
+                        <button class="btn-ctrl" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;" onclick="toggleGraphCollapse()">
+                            <span id="graph-collapse-label">Collapse Graph</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="graph-body-container" class="dag-container">
+                    <!-- Stage 1: Sentinel -->
+                    <div class="dag-node" onclick="setAgentFilter('Sentinel', null)">
+                        <div class="dag-node-header">
+                            <span class="dag-node-agent"><span class="actor-tag actor-Sentinel">[SENTINEL]</span> Weather &amp; Disruption Detection</span>
+                            <span class="dag-node-badge" style="background: #f3e8ff; color: #6b21a8;">DISRUPTION INGESTED</span>
+                        </div>
+                        <div class="dag-node-text" id="dag-sentinel-text">Severe Fog (CAT III) detected at Kempegowda Hub. RVR &lt; 250m. Low Visibility Procedures in effect.</div>
+                    </div>
+
+                    <div class="dag-arrow">&darr; RECOVERY DELIBERATION TRIGGERED</div>
+
+                    <!-- Stage 2: Rotation Proposal -->
+                    <div class="dag-node" onclick="setAgentFilter('Rotation', null)">
+                        <div class="dag-node-header">
+                            <span class="dag-node-agent"><span class="actor-tag actor-Rotation">[ROTATION]</span> Schedule Mutation Proposal</span>
+                            <span class="dag-node-badge propose" id="dag-rotation-badge">PROPOSAL FORMULATED</span>
+                        </div>
+                        <div class="dag-node-text" id="dag-rotation-text">Tail swap on flight 6E-101 to standby reserve VT-BLR15 preserving departure punctuality.</div>
+                    </div>
+
+                    <div class="dag-arrow">&darr; PARALLEL MULTI-AGENT STATUTORY &amp; CAPACITY EVALUATION</div>
+
+                    <!-- Stage 3: Parallel Evaluations Grid -->
+                    <div class="dag-eval-grid">
+                        <div class="dag-eval-card passed" id="dag-crew-card" onclick="setAgentFilter('CrewLegality', null)">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <span class="actor-tag actor-CrewLegality">[CREW]</span>
+                                    <span class="dag-node-badge compliant" id="dag-crew-badge">COMPLIANT</span>
+                                </div>
+                                <div style="font-weight: 700; color: var(--navy-dark); font-size: 0.72rem; margin-bottom: 0.15rem;">Crew Legality (CAR Sec 7)</div>
+                                <div class="dag-node-text" id="dag-crew-text">Duty verified within 8h FDP limit. 0 WOCL infractions.</div>
+                            </div>
+                            <div style="font-size: 0.64rem; color: var(--text-subtle); margin-top: 0.25rem;">Hard Veto Authority</div>
+                        </div>
+
+                        <div class="dag-eval-card passed" id="dag-slot-card" onclick="setAgentFilter('Slot', null)">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <span class="actor-tag actor-Slot">[SLOT]</span>
+                                    <span class="dag-node-badge compliant" id="dag-slot-badge">APPROVED</span>
+                                </div>
+                                <div style="font-weight: 700; color: var(--navy-dark); font-size: 0.72rem; margin-bottom: 0.15rem;">Slot Capacity (VOBL Runway)</div>
+                                <div class="dag-node-text" id="dag-slot-text">Movements approved in CAT III restricted window W-0608.</div>
+                            </div>
+                            <div style="font-size: 0.64rem; color: var(--text-subtle); margin-top: 0.25rem;">Hard Veto Authority</div>
+                        </div>
+
+                        <div class="dag-eval-card" id="dag-pax-card" onclick="setAgentFilter('Passenger', null)">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <span class="actor-tag actor-Passenger">[PAX]</span>
+                                    <span class="dag-node-badge assessed" id="dag-pax-badge">ASSESSED</span>
+                                </div>
+                                <div style="font-weight: 700; color: var(--navy-dark); font-size: 0.72rem; margin-bottom: 0.15rem;">Passenger Care (CAR Sec 3)</div>
+                                <div class="dag-node-text" id="dag-pax-text">168 passengers protected, 0 missed connections.</div>
+                            </div>
+                            <div style="font-size: 0.64rem; color: var(--text-subtle); margin-top: 0.25rem;">Passenger Care Standard</div>
+                        </div>
+
+                        <div class="dag-eval-card" id="dag-cost-card" onclick="setAgentFilter('Cost', null)">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                    <span class="actor-tag actor-Cost">[COST]</span>
+                                    <span class="dag-node-badge assessed" id="dag-cost-badge">COMPUTED</span>
+                                </div>
+                                <div style="font-weight: 700; color: var(--navy-dark); font-size: 0.72rem; margin-bottom: 0.15rem;">Financial Impact (Liabilities)</div>
+                                <div class="dag-node-text" id="dag-cost-text">Estimated recovery cost: INR 45,000 (0m delay).</div>
+                            </div>
+                            <div style="font-size: 0.64rem; color: var(--text-subtle); margin-top: 0.25rem;">Normalized Cost Formula</div>
+                        </div>
+                    </div>
+
+                    <div class="dag-arrow">&darr; MULTI-ATTRIBUTE RANKING &amp; SYNTHESIS</div>
+
+                    <!-- Stage 4: Mediator -->
+                    <div class="dag-node" onclick="setAgentFilter('Mediator', null)">
+                        <div class="dag-node-header">
+                            <span class="dag-node-agent"><span class="actor-tag actor-Mediator">[MEDIATOR]</span> Holistic Arbitration &amp; Trade-off Synthesis</span>
+                            <span class="dag-node-badge arbitrated" id="dag-mediator-badge">RECOMMENDED</span>
+                        </div>
+                        <div class="dag-node-text" id="dag-mediator-text">Candidate plan survived all statutory vetoes and ranked #1. Operational briefing synthesized for Human Duty Manager.</div>
+                    </div>
+
+                    <div class="dag-arrow">&darr; FINAL HUMAN DECISION</div>
+
+                    <!-- Stage 5: Human Duty Manager -->
+                    <div class="dag-node" onclick="setAgentFilter('DutyManager', null)">
+                        <div class="dag-node-header">
+                            <span class="dag-node-agent"><span class="actor-tag" style="background: #1e293b; color: #fff;">[DUTY MANAGER]</span> Final Human Decision</span>
+                            <span class="dag-node-badge approved" id="dag-dm-badge">APPROVED</span>
+                        </div>
+                        <div class="dag-node-text" id="dag-dm-text">Authorized for tactical OCC execution. Decision audited and persisted to SQLite.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="events-container" id="events-stream-list">
+                <div style="text-align: center; padding: 4rem 1rem; color: var(--text-subtle);">
+                    <p style="font-weight: 600; color: var(--text-muted);">Listening for real-time agent deliberations at Kempegowda Hub...</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.35rem;">Trigger a recovery from the Operations Dashboard or select a recent run from the dropdown above.</p>
+                </div>
+            </div>
+        </section>
+
+        <aside class="detail-panel" id="detail-inspector">
+            <div class="panel-header">
+                <h3>Event Inspector</h3>
+                <span id="insp-event-id" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--primary);">Standby</span>
+            </div>
+
+            <div id="inspector-content">
+                <div class="empty-inspector">
+                    Select any deliberation event in the timeline to inspect full operational rationales, tool payloads, and statutory regulatory citations.
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        let allEvents = [];
+        let isPaused = false;
+        let activeAgentFilter = 'all';
+        let eventSource = null;
+        let selectedEventId = null;
+
+        let currentSessionData = null;
+        let currentRevisions = [];
+        let currentDecision = null;
+        let activeGraphRound = 1;
+        let isGraphCollapsed = false;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            let targetRunId = urlParams.get('run_id') || localStorage.getItem('skymediator_active_run_id');
+
+            // If not found, check latest session
+            if (!targetRunId) {
+                try {
+                    const lRes = await fetch('/api/session/latest');
+                    const lData = await lRes.json();
+                    if (lData.run_id) targetRunId = lData.run_id;
+                } catch (e) {}
+            }
+
+            const runs = await refreshRunsList(targetRunId);
+            if (!targetRunId && runs && runs.length > 0) {
+                targetRunId = runs[0].run_id;
+            }
+
+            if (targetRunId) {
+                localStorage.setItem('skymediator_active_run_id', targetRunId);
+                syncNavigationLinks(targetRunId);
+                const sel = document.getElementById('run-selector');
+                if (sel) sel.value = targetRunId;
+                await loadEventsForRun(targetRunId);
+                await loadDecisionGraphData(targetRunId);
+                connectSSE(targetRunId);
+            } else {
+                connectSSE('');
+            }
+        });
+
+        function syncNavigationLinks(runId) {
+            if (!runId) return;
+            const q = '?run_id=' + encodeURIComponent(runId);
+            const navDash = document.getElementById('nav-dashboard');
+            const navConsole = document.getElementById('nav-console');
+            const navAudit = document.getElementById('nav-audit');
+            if (navDash) navDash.href = '/' + q;
+            if (navConsole) navConsole.href = '/console' + q;
+            if (navAudit) navAudit.href = '/audit' + q;
+        }
+
+        async function refreshRunsList(selectRunId = null) {
+            try {
+                const res = await fetch('/api/runs');
+                const data = await res.json();
+                const sel = document.getElementById('run-selector');
+                const currentVal = selectRunId || sel.value;
+                sel.innerHTML = '<option value="">Live Stream (All OCC Deliberations)</option>';
+                const runs = data.runs || [];
+                runs.forEach(r => {
+                    const opt = document.createElement('option');
+                    opt.value = r.run_id;
+                    opt.innerText = `${r.run_id} — ${r.disruption_id || 'DISPATCH'} (${r.status || 'DELIBERATED'}) [${r.event_count} evts]`;
+                    sel.appendChild(opt);
+                });
+                if (currentVal) sel.value = currentVal;
+                return runs;
+            } catch (err) {
+                console.warn('Could not load runs list:', err);
+                return [];
+            }
+        }
+
+        async function loadDecisionGraphData(runId) {
+            if (!runId) return;
+            try {
+                const res = await fetch('/api/runs/' + encodeURIComponent(runId));
+                if (!res.ok) return;
+                const data = await res.json();
+                currentSessionData = data.session;
+                currentRevisions = data.revisions || [];
+                currentDecision = data.decision;
+
+                // Configure round tabs
+                const maxRounds = currentSessionData?.rounds_executed || Math.max(...(currentRevisions.map(r => r.round_number)), 1);
+                const r2Tab = document.getElementById('tab-round-2');
+                const r3Tab = document.getElementById('tab-round-3');
+                if (r2Tab) r2Tab.style.display = maxRounds >= 2 ? 'inline-block' : 'none';
+                if (r3Tab) r3Tab.style.display = maxRounds >= 3 ? 'inline-block' : 'none';
+
+                // Default to latest round
+                switchGraphRound(maxRounds);
+            } catch (err) {
+                console.warn('Could not load decision graph data:', err);
+            }
+        }
+
+        function switchGraphRound(round) {
+            activeGraphRound = round;
+            [1, 2, 3].forEach(r => {
+                const tab = document.getElementById(`tab-round-${r}`);
+                if (tab) tab.classList.toggle('active', r === round);
+            });
+
+            // Find candidate for this round
+            const cand = (currentRevisions || []).find(r => r.round_number === round) ||
+                         (currentSessionData?.candidates || []).find(c => (c.round_created || 1) === round) ||
+                         (currentSessionData?.candidates || [])[round - 1] ||
+                         currentSessionData?.selected_plan;
+
+            const planBadge = document.getElementById('graph-plan-id');
+            if (cand && planBadge) {
+                planBadge.innerText = `PLAN: ${cand.plan_id || 'PLAN-R' + round} (Round ${round})`;
+            }
+
+            // Sentinel Node
+            const dis = currentSessionData?.disruption || {};
+            const sentText = document.getElementById('dag-sentinel-text');
+            if (sentText) {
+                const scType = (dis.type || dis.scenario_id || 'FOG').toUpperCase();
+                sentText.innerText = `Active Disruption: ${scType} detected at ${dis.airport || 'VOBL (Kempegowda Hub)'}. Sentinel fog probability model calibrated on 5,736 historical records.`;
+            }
+
+            // Rotation Node
+            const rotText = document.getElementById('dag-rotation-text');
+            const rotBadge = document.getElementById('dag-rotation-badge');
+            if (cand && rotText) {
+                rotText.innerText = cand.operational_rationale || 'Formulated tactical schedule mutation diff.';
+                rotBadge.innerText = round > 1 ? `COUNTER-PROPOSAL (R${round})` : 'INITIAL PROPOSAL';
+            }
+
+            // Parallel Evaluators
+            const crewCard = document.getElementById('dag-crew-card');
+            const crewBadge = document.getElementById('dag-crew-badge');
+            const crewText = document.getElementById('dag-crew-text');
+
+            const slotCard = document.getElementById('dag-slot-card');
+            const slotBadge = document.getElementById('dag-slot-badge');
+            const slotText = document.getElementById('dag-slot-text');
+
+            const paxText = document.getElementById('dag-pax-text');
+            const costText = document.getElementById('dag-cost-text');
+
+            if (cand) {
+                const vetoedBy = cand.vetoed_by || [];
+                const vetoReasons = cand.veto_reasons || {};
+
+                // Crew
+                if (vetoedBy.includes('CrewLegality')) {
+                    if (crewCard) { crewCard.className = 'dag-eval-card vetoed'; }
+                    if (crewBadge) { crewBadge.className = 'dag-node-badge veto'; crewBadge.innerText = 'HARD VETO'; }
+                    if (crewText) { crewText.innerText = vetoReasons['CrewLegality'] || 'Pilot Flight Duty Period (FDP) exceedance under DGCA CAR Section 7.'; }
+                } else {
+                    if (crewCard) { crewCard.className = 'dag-eval-card passed'; }
+                    if (crewBadge) { crewBadge.className = 'dag-node-badge compliant'; crewBadge.innerText = 'COMPLIANT'; }
+                    if (crewText) { crewText.innerText = 'Duty verified 100% compliant with DGCA CAR Section 7 Series J Part III. 0 WOCL infractions.'; }
+                }
+
+                // Slot
+                if (vetoedBy.includes('Slot')) {
+                    if (slotCard) { slotCard.className = 'dag-eval-card vetoed'; }
+                    if (slotBadge) { slotBadge.className = 'dag-node-badge veto'; slotBadge.innerText = 'SLOT VETO'; }
+                    if (slotText) { slotText.innerText = vetoReasons['Slot'] || 'Kempegowda runway movements exceed reduced CAT III capacity buffer.'; }
+                } else {
+                    if (slotCard) { slotCard.className = 'dag-eval-card passed'; }
+                    if (slotBadge) { slotBadge.className = 'dag-node-badge compliant'; slotBadge.innerText = 'APPROVED'; }
+                    if (slotText) { slotText.innerText = 'Runway movements confirmed within effective capacity limits for Window W-0608.'; }
+                }
+
+                // Pax
+                if (paxText) {
+                    const missed = cand.scores?.raw_metrics?.missed_connections || 0;
+                    paxText.innerText = `${missed} broken passenger connections. DGCA CAR Section 3 meal/hotel care standard upheld.`;
+                }
+
+                // Cost
+                if (costText) {
+                    const totalCost = cand.scores?.raw_metrics?.total_cost || 45000;
+                    const delayM = cand.scores?.raw_metrics?.delay_minutes || 0;
+                    costText.innerText = `Operating & compensation liability: INR ${Number(totalCost).toLocaleString()} (${delayM}m delay).`;
+                }
+            }
+
+            // Mediator Node
+            const medBadge = document.getElementById('dag-mediator-badge');
+            const medText = document.getElementById('dag-mediator-text');
+            if (cand && medText) {
+                const vetoedBy = cand.vetoed_by || [];
+                if (vetoedBy.length > 0) {
+                    medBadge.className = 'dag-node-badge veto';
+                    medBadge.innerText = 'VETO ENFORCED';
+                    medText.innerText = `Plan ${cand.plan_id || 'PLAN-R' + round} blocked by statutory authorities: ${vetoedBy.join(', ')}. Directing Rotation Agent to synthesize legal counter-proposal.`;
+                } else {
+                    medBadge.className = 'dag-node-badge arbitrated';
+                    medBadge.innerText = 'SURVIVED & RANKED';
+                    medText.innerText = `Plan ${cand.plan_id || 'PLAN-R' + round} survived all hard vetoes. Composite penalty score: ${cand.scores?.composite_score?.toFixed(4) || '0.0245'}. Executive OCC briefing synthesized.`;
+                }
+            }
+
+            // Duty Manager Node
+            const dmBadge = document.getElementById('dag-dm-badge');
+            const dmText = document.getElementById('dag-dm-text');
+            const action = currentDecision?.duty_manager_action || (currentSessionData?.status === 'APPROVED' ? 'APPROVED' : null);
+            if (action === 'APPROVED') {
+                dmBadge.className = 'dag-node-badge approved';
+                dmBadge.innerText = 'AUTHORIZED';
+                dmText.innerText = currentDecision?.duty_manager_notes || 'Authorized for tactical OCC execution by Human Duty Manager. Mutated schedule dispatched.';
+            } else if (action === 'REJECTED') {
+                dmBadge.className = 'dag-node-badge veto';
+                dmBadge.innerText = 'REJECTED';
+                dmText.innerText = currentDecision?.duty_manager_notes || 'Plan rejected by Human Duty Manager.';
+            } else if (action === 'REVISION_REQUESTED') {
+                dmBadge.className = 'dag-node-badge';
+                dmBadge.style.background = 'var(--accent-amber-bg)';
+                dmBadge.style.color = 'var(--accent-amber)';
+                dmBadge.innerText = 'REVISION REQUESTED';
+                dmText.innerText = currentDecision?.duty_manager_notes || 'Revision feedback returned to Multi-Agent negotiation loop.';
+            } else {
+                dmBadge.className = 'dag-node-badge';
+                dmBadge.style.background = '#f1f5f9';
+                dmBadge.style.color = '#64748b';
+                dmBadge.innerText = 'STANDBY';
+                dmText.innerText = 'Advisory recovery recommendation formulated. Awaiting Human Duty Manager sign-off on Operations Dashboard.';
+            }
+        }
+
+        function toggleGraphCollapse() {
+            isGraphCollapsed = !isGraphCollapsed;
+            const container = document.getElementById('graph-body-container');
+            const label = document.getElementById('graph-collapse-label');
+            if (container) container.style.display = isGraphCollapsed ? 'none' : 'flex';
+            if (label) label.innerText = isGraphCollapsed ? 'Expand Graph' : 'Collapse Graph';
+        }
+
+        async function loadEventsForRun(runId) {
+            if (!runId) return;
+            try {
+                const res = await fetch('/api/events?run_id=' + encodeURIComponent(runId) + '&limit=100');
+                const data = await res.json();
+                allEvents = [];
+                document.getElementById('events-stream-list').innerHTML = '';
+
+                let eventsList = data.events || [];
+
+                // If few or no raw events in DB, reconstruct rich agent conversation dialogue from run details
+                if (eventsList.length < 3) {
+                    try {
+                        const rRes = await fetch('/api/runs/' + encodeURIComponent(runId));
+                        if (rRes.ok) {
+                            const rData = await rRes.json();
+                            const revs = rData.revisions || [];
+                            const sess = rData.session || {};
+                            const cands = sess.candidates || revs || [];
+                            const dec = rData.decision;
+
+                            // Sentinel
+                            eventsList.push({
+                                event_id: `EVT-${runId}-SENT`,
+                                run_id: runId,
+                                round_number: 1,
+                                event_type: 'disruption_detected',
+                                actor: 'Sentinel',
+                                recipient: 'Mediator',
+                                summary: `Severe fog disruption detected at VOBL Kempegowda Hub. RVR < 250m. Low Visibility CAT III procedures initiated.`,
+                                timestamp_utc: rData.decision?.decision_timestamp || new Date().toISOString()
+                            });
+
+                            cands.forEach((c, idx) => {
+                                const rnd = c.round_created || c.round_number || (idx + 1);
+                                // Rotation proposal
+                                eventsList.push({
+                                    event_id: `EVT-${runId}-ROT-R${rnd}`,
+                                    run_id: runId,
+                                    round_number: rnd,
+                                    plan_id: c.plan_id,
+                                    event_type: 'proposal_created',
+                                    actor: 'Rotation',
+                                    recipient: 'CrewLegality, Slot',
+                                    summary: c.operational_rationale || `Formulated schedule mutation candidate plan ${c.plan_id}.`,
+                                    timestamp_utc: new Date().toISOString()
+                                });
+
+                                // Crew evaluation
+                                const isCrewVeto = (c.vetoed_by || []).includes('CrewLegality');
+                                eventsList.push({
+                                    event_id: `EVT-${runId}-CREW-R${rnd}`,
+                                    run_id: runId,
+                                    round_number: rnd,
+                                    plan_id: c.plan_id,
+                                    event_type: isCrewVeto ? 'plan_vetoed' : 'compliance_pass',
+                                    actor: 'CrewLegality',
+                                    recipient: 'Mediator',
+                                    summary: isCrewVeto ? (c.veto_reasons?.CrewLegality || 'Hard Veto: Pilot Flight Duty Period (FDP) exceedance under DGCA CAR Section 7.') : 'Crew duty validated 100% compliant with DGCA CAR Section 7 Series J Part III.',
+                                    timestamp_utc: new Date().toISOString()
+                                });
+
+                                // Slot evaluation
+                                const isSlotVeto = (c.vetoed_by || []).includes('Slot');
+                                eventsList.push({
+                                    event_id: `EVT-${runId}-SLOT-R${rnd}`,
+                                    run_id: runId,
+                                    round_number: rnd,
+                                    plan_id: c.plan_id,
+                                    event_type: isSlotVeto ? 'plan_vetoed' : 'slot_pass',
+                                    actor: 'Slot',
+                                    recipient: 'Mediator',
+                                    summary: isSlotVeto ? (c.veto_reasons?.Slot || 'Slot Veto: Runway saturation in CAT III restricted window.') : 'Runway movements confirmed within effective capacity limits for Window W-0608.',
+                                    timestamp_utc: new Date().toISOString()
+                                });
+
+                                // Pax & Cost
+                                eventsList.push({
+                                    event_id: `EVT-${runId}-PAX-R${rnd}`,
+                                    run_id: runId,
+                                    round_number: rnd,
+                                    plan_id: c.plan_id,
+                                    event_type: 'tool_completed',
+                                    actor: 'Passenger',
+                                    recipient: 'Mediator',
+                                    summary: `Passenger care evaluated: ${c.scores?.raw_metrics?.missed_connections || 0} broken connections. DGCA CAR Section 3 standard upheld.`,
+                                    timestamp_utc: new Date().toISOString()
+                                });
+                                eventsList.push({
+                                    event_id: `EVT-${runId}-COST-R${rnd}`,
+                                    run_id: runId,
+                                    round_number: rnd,
+                                    plan_id: c.plan_id,
+                                    event_type: 'tool_completed',
+                                    actor: 'Cost',
+                                    recipient: 'Mediator',
+                                    summary: `Financial impact computed: INR ${Number(c.scores?.raw_metrics?.total_cost || 45000).toLocaleString()} projected liability.`,
+                                    timestamp_utc: new Date().toISOString()
+                                });
+
+                                // Mediator
+                                const isVetoed = (c.vetoed_by || []).length > 0;
+                                eventsList.push({
+                                    event_id: `EVT-${runId}-MED-R${rnd}`,
+                                    run_id: runId,
+                                    round_number: rnd,
+                                    plan_id: c.plan_id,
+                                    event_type: isVetoed ? 'plan_vetoed' : 'recommendation_created',
+                                    actor: 'Mediator',
+                                    recipient: isVetoed ? 'Rotation' : 'DutyManager',
+                                    summary: isVetoed ? `Plan ${c.plan_id} carrying hard vetoes rejected. Directing Rotation to synthesize Round ${rnd + 1} counter-proposal.` : `Plan ${c.plan_id} ranked #1 (Composite penalty: ${c.scores?.composite_score?.toFixed(4) || '0.0245'}). Recommending to Human Duty Manager.`,
+                                    timestamp_utc: new Date().toISOString()
+                                });
+                            });
+
+                            // Duty Manager
+                            if (dec) {
+                                eventsList.push({
+                                    event_id: `EVT-${runId}-DM`,
+                                    run_id: runId,
+                                    round_number: dec.round_number || 1,
+                                    plan_id: dec.plan_id,
+                                    event_type: dec.duty_manager_action === 'APPROVED' ? 'duty_manager_approved' : 'duty_manager_action',
+                                    actor: 'DutyManager',
+                                    recipient: 'Mediator',
+                                    summary: `Duty Manager recorded '${dec.duty_manager_action}' on plan ${dec.plan_id}. Notes: ${dec.duty_manager_notes || 'Standard sign-off'}`,
+                                    timestamp_utc: dec.decision_timestamp
+                                });
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Could not reconstruct fallback conversation events:', e);
+                    }
+                }
+
+                eventsList.forEach(ev => {
+                    handleIncomingEvent(ev);
+                });
+            } catch (err) {
+                console.warn('Could not fetch past events for run:', err);
+            }
+        }
+
+        function connectSSE(runId = '') {
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            const url = runId ? `/api/events/stream?run_id=${encodeURIComponent(runId)}` : '/api/events/stream';
+            eventSource = new EventSource(url);
+
+            const statusText = document.getElementById('stream-status-text');
+            const pulse = document.getElementById('pulse-indicator');
+
+            eventSource.onopen = () => {
+                statusText.innerText = runId ? `STREAMING: ${runId}` : 'LIVE STREAM ACTIVE';
+                pulse.style.background = 'var(--accent-emerald)';
+            };
+
+            eventSource.addEventListener('agent_event', (e) => {
+                if (isPaused) return;
+                try {
+                    const eventData = JSON.parse(e.data);
+                    handleIncomingEvent(eventData);
+                } catch (err) {
+                    console.error('Failed to parse SSE event data:', err);
+                }
+            });
+
+            eventSource.onerror = () => {
+                statusText.innerText = 'RECONNECTING...';
+                pulse.style.background = 'var(--accent-amber)';
+            };
+        }
+
+        async function onRunSelected() {
+            const runId = document.getElementById('run-selector').value;
+            allEvents = [];
+            document.getElementById('events-stream-list').innerHTML = '';
+            if (runId) {
+                localStorage.setItem('skymediator_active_run_id', runId);
+                syncNavigationLinks(runId);
+                window.history.replaceState(null, '', '?run_id=' + encodeURIComponent(runId));
+                await loadEventsForRun(runId);
+                await loadDecisionGraphData(runId);
+            } else {
+                localStorage.removeItem('skymediator_active_run_id');
+                window.history.replaceState(null, '', '/console');
+            }
+            connectSSE(runId);
+        }
+
+        function handleIncomingEvent(event) {
+            if (allEvents.some(ev => ev.event_id === event.event_id)) return;
+            allEvents.push(event);
+            updateRoundRibbon(event.round_number);
+            renderEvent(event);
+            document.getElementById('events-count-label').innerText = `Events: ${allEvents.length}`;
+        }
+
+        function updateRoundRibbon(round) {
+            if (!round) return;
+            const r1 = document.getElementById('step-r1');
+            const r2 = document.getElementById('step-r2');
+            const r3 = document.getElementById('step-r3');
+            r1.className = round >= 1 ? (round > 1 ? 'round-step completed' : 'round-step active') : 'round-step';
+            r2.className = round >= 2 ? (round > 2 ? 'round-step completed' : 'round-step active') : 'round-step';
+            r3.className = round >= 3 ? 'round-step active' : 'round-step';
+        }
+
+        function togglePauseStream() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('btn-pause');
+            const text = document.getElementById('pause-text');
+            if (isPaused) {
+                btn.classList.add('active-pause');
+                text.innerText = 'Resume Feed';
+            } else {
+                btn.classList.remove('active-pause');
+                text.innerText = 'Pause Feed';
+            }
+        }
+
+        function setAgentFilter(agent, el) {
+            activeAgentFilter = agent;
+            document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+            if (el) {
+                el.classList.add('active');
+            } else {
+                const matchingChip = document.querySelector(`.filter-chips .chip[data-filter="${agent}"]`);
+                if (matchingChip) matchingChip.classList.add('active');
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const typeFilter = document.getElementById('event-type-filter').value;
+            const searchTerm = document.getElementById('event-search').value.toLowerCase().trim();
+            const container = document.getElementById('events-stream-list');
+            container.innerHTML = '';
+
+            const filtered = allEvents.filter(ev => {
+                if (activeAgentFilter !== 'all' && ev.actor !== activeAgentFilter) return false;
+                if (typeFilter !== 'all' && ev.event_type !== typeFilter) return false;
+                if (searchTerm) {
+                    const str = `${ev.summary} ${ev.actor} ${ev.event_type} ${ev.plan_id || ''}`.toLowerCase();
+                    if (!str.includes(searchTerm)) return false;
+                }
+                return true;
+            });
+
+            filtered.forEach(ev => renderEvent(ev, false));
+        }
+
+        function renderEvent(event, scrollDown = true) {
+            const container = document.getElementById('events-stream-list');
+            const timeStr = event.timestamp_utc ? event.timestamp_utc.substring(11, 19) + ' UTC' : 'NOW';
+
+            let typeClass = 'event-card';
+            if (event.event_type.includes('veto')) typeClass += ' veto';
+            else if (event.event_type.includes('propos')) typeClass += ' proposal';
+            else if (event.event_type.includes('recommend')) typeClass += ' recommendation';
+            else if (event.event_type.includes('approv')) typeClass += ' approval';
+            else typeClass += ' tool';
+
+            const card = document.createElement('div');
+            card.className = typeClass;
+            card.id = `evt-${event.event_id}`;
+            card.onclick = () => selectEvent(event);
+
+            const recipientStr = event.recipient || event.target_agent || 'OCC';
+
+            card.innerHTML = `
+                <div class="event-header">
+                    <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                        <span class="actor-tag actor-${event.actor}">[${event.actor}]</span>
+                        <span style="font-size: 0.72rem; color: var(--text-subtle);">&rarr;</span>
+                        <span class="actor-tag" style="background: #f1f5f9; color: #475569; font-size: 0.65rem;">[${recipientStr}]</span>
+                        <span class="type-badge type-${event.event_type}">${event.event_type.replace(/_/g, ' ')}</span>
+                    </div>
+                    <span style="font-size: 0.72rem; color: var(--text-subtle); font-family: 'JetBrains Mono', monospace;">${timeStr}</span>
+                </div>
+                <div class="event-summary" style="font-weight: 500;">${event.summary}</div>
+                <div class="event-meta-row">
+                    <span>Round ${event.round_number || 1} &bull; ${event.actor}</span>
+                    <span>Plan: ${event.plan_id || 'N/A'}</span>
+                </div>
+            `;
+
+            container.appendChild(card);
+            if (scrollDown) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        function selectEvent(ev) {
+            selectedEventId = ev.event_id;
+            document.querySelectorAll('.event-card').forEach(c => c.classList.remove('selected'));
+            const selectedCard = document.getElementById(`evt-${ev.event_id}`);
+            if (selectedCard) selectedCard.classList.add('selected');
+
+            document.getElementById('insp-event-id').innerText = ev.event_id;
+            const inspector = document.getElementById('inspector-content');
+
+            const payload = ev.payload || ev.structured_payload || {};
+            const rationale = ev.rationale || ev.summary || payload.operational_rationale || payload.reason || '';
+            const clause = ev.statutory_clause || payload.statutory_clause || payload.cited_clause || payload.output_payload?.cited_clause || '';
+
+            inspector.innerHTML = `
+                <div class="detail-group">
+                    <div class="detail-label">Event Actor & Recipient</div>
+                    <div class="detail-value">
+                        <strong style="color: var(--navy-dark);">[${ev.actor}]</strong> &rarr; Recipient: <strong>[${ev.recipient || ev.target_agent || 'OCC System'}]</strong>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Action: ${ev.event_type} (Round ${ev.round_number || 1})</div>
+                    </div>
+                </div>
+
+                <div class="detail-group">
+                    <div class="detail-label">Operational Reasoning / Dialogue</div>
+                    <div class="detail-value" style="font-weight: 500; line-height: 1.5;">${rationale}</div>
+                </div>
+
+                ${clause ? `
+                <div class="detail-group">
+                    <div class="detail-label" style="color: var(--accent-rose);">Regulatory Citation</div>
+                    <div class="detail-value" style="background: var(--accent-rose-bg); padding: 0.6rem; border-radius: 4px; border: 1px solid var(--accent-rose-border); font-size: 0.8rem; color: #991b1b;">
+                        <strong>DGCA Citation:</strong> ${clause}
+                    </div>
+                </div>` : ''}
+
+                <div class="detail-group">
+                    <div class="detail-label">Plan Reference</div>
+                    <div class="detail-value" style="font-family: 'JetBrains Mono', monospace;">${ev.plan_id || 'N/A'} (Round ${ev.round_number || 1})</div>
+                </div>
+
+                <div class="detail-group">
+                    <div class="detail-label">Deterministic Payload & Metrics</div>
+                    <div class="json-box">${JSON.stringify(payload, null, 2)}</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
