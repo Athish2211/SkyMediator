@@ -495,13 +495,16 @@ def get_llm_status():
         reply = call_gemini("Reply with word CONNECTED.")
         latency = round((time.time() - t0) * 1000)
         is_live = bool(reply and not reply.startswith("[Deterministic"))
+        msg = "Successfully connected to Gemini API" if is_live else (
+            reply if reply and reply.startswith("[Deterministic") else "Gemini returned empty or non-live response"
+        )
         return {
             "status": "ONLINE" if is_live else "FALLBACK",
             "model": settings.LLM_MODEL,
-            "provider": "Google Gemini (Generative Language v1beta)",
+            "provider": "Google Gemini (Generative Language v1beta)" if is_live else "Deterministic Fallback Engine",
             "latency_ms": latency,
             "response": reply[:60] if reply else "",
-            "message": "Successfully connected to Gemini API"
+            "message": msg
         }
     except Exception as e:
         return {

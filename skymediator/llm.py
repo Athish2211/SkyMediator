@@ -13,10 +13,25 @@ from skymediator.logging_config import logger
 
 
 def get_gemini_api_key() -> Optional[str]:
-    """Retrieves Gemini API key from environment variable or settings."""
-    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("SKYMEDIATOR_GEMINI_API_KEY") or settings.GEMINI_API_KEY
+    """Retrieves Gemini API key from environment variable, .env file, or settings, stripping any quotes."""
+    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("SKYMEDIATOR_GEMINI_API_KEY")
+    if not key or len(key.strip().strip('"').strip("'")) < 10:
+        # Dynamically inspect .env file in case it was updated while server was running
+        env_file = settings.BASE_DIR / ".env"
+        if env_file.exists():
+            try:
+                from dotenv import dotenv_values
+                vals = dotenv_values(env_file)
+                key = vals.get("GEMINI_API_KEY") or vals.get("SKYMEDIATOR_GEMINI_API_KEY")
+                if key:
+                    os.environ["GEMINI_API_KEY"] = key
+                    os.environ["SKYMEDIATOR_GEMINI_API_KEY"] = key
+            except Exception:
+                pass
+    if not key:
+        key = settings.GEMINI_API_KEY
     if key:
-        key = key.strip()
+        key = key.strip().strip('"').strip("'").strip()
     return key
 
 
@@ -24,7 +39,7 @@ def is_gemini_available() -> bool:
     """Checks if a valid Gemini API key is configured."""
     key = get_gemini_api_key()
     if not key:
-        logger.warning("GEMINI_API_KEY not found in environment or settings")
+        logger.warning("GEMINI_API_KEY not found in environment, .env file, or settings")
         return False
     if len(key) < 10:
         logger.warning(f"GEMINI_API_KEY appears invalid (length: {len(key)}). Valid keys are typically 39+ characters.")
@@ -39,7 +54,7 @@ _LLM_COOLDOWN_UNTIL: float = 0.0
 def call_gemini(prompt: str, system_prompt: Optional[str] = None) -> str:
     """
     Executes a prompt against Google Gemini with strict latency limits and circuit-breaker protection.
-    Uses verified working model gemini-3.1-flash-lite-preview with 5s timeout.
+    Uses verified working model gemini-3.1-flash-lite-preview with robust fallback.
     """
     global _LLM_COOLDOWN_UNTIL
 
@@ -52,9 +67,11 @@ def call_gemini(prompt: str, system_prompt: Optional[str] = None) -> str:
         return "[Deterministic OCC Fallback: Set GEMINI_API_KEY to activate live Gemini synthesis]"
 
     preferred_model = settings.LLM_MODEL or "gemini-3.1-flash-lite-preview"
+    # Fallback cascade prioritizing verified responsive models
     models_to_try = [preferred_model]
-    if preferred_model != "gemini-3.1-flash-lite-preview":
-        models_to_try.append("gemini-3.1-flash-lite-preview")
+    for fallback_model in ["gemini-3.1-flash-lite-preview", "gemini-2.5-flash", "gemini-flash-latest"]:
+        if fallback_model not in models_to_try:
+            models_to_try.append(fallback_model)
 
     payload: Dict[str, Any] = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -72,7 +89,7 @@ def call_gemini(prompt: str, system_prompt: Optional[str] = None) -> str:
     for model in models_to_try:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
         try:
-            response = _LLM_SESSION.post(url, json=payload, timeout=(2.0, 5.0))
+            response = _LLM_SESSION.post(url, json=payload, timeout=(4.0, 10.0))
             if response.status_code == 200:
                 data = response.json()
                 candidates = data.get("candidates", [])
@@ -81,16 +98,29 @@ def call_gemini(prompt: str, system_prompt: Optional[str] = None) -> str:
                     if parts:
                         return parts[0].get("text", "").strip()
             elif response.status_code == 429:
-                logger.warning(f"Gemini model {model} hit quota 429. Activating 30s circuit breaker.")
-                _LLM_COOLDOWN_UNTIL = time.time() + 30.0
+                logger.warning(f"Gemini model {model} hit quota 429. Activating 15s circuit breaker.")
+                _LLM_COOLDOWN_UNTIL = time.time() + 15.0
                 break
             elif response.status_code == 404:
                 continue
             else:
-                break
+                logger.warning(f"Gemini API returned HTTP {response.status_code}: {response.text[:120]}")
+                continue
         except Exception as e:
             logger.warning(f"Gemini model {model} timeout/error: {e}")
-            break
+            # Try fresh connection if session had stale socket
+            try:
+                fresh_res = requests.post(url, json=payload, timeout=(4.0, 10.0))
+                if fresh_res.status_code == 200:
+                    data = fresh_res.json()
+                    candidates = data.get("candidates", [])
+                    if candidates:
+                        parts = candidates[0].get("content", {}).get("parts", [])
+                        if parts:
+                            return parts[0].get("text", "").strip()
+            except Exception:
+                pass
+            continue
 
     return "[Deterministic OCC Fallback: Live LLM synthesis timed out or encountered an API error]"
 
