@@ -45,5 +45,11 @@ def score_plan(
             "missed_connections": missed_connections,
             "total_cost": total_cost,
             "crew_buffer_penalty": crew_buffer_penalty
+        },
+        "raw_metrics": {
+            "delay_minutes": delay_minutes,
+            "missed_connections": missed_connections,
+            "total_cost": total_cost,
+            "crew_buffer_penalty": crew_buffer_penalty
         }
     }

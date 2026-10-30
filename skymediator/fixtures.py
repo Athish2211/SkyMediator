@@ -35,29 +35,47 @@ def seed_database(db_path: Optional[Union[str, Path]] = None, seed: int = 42) ->
         cost_rates
     )
 
-    # 2. Seed 15 Aircraft (Airbus A320 fleet based at VOBL/BLR)
-    tails = [f"VT-BLR{i:02d}" for i in range(1, 16)]
-    aircraft_rows = []
-    for i, tail in enumerate(tails):
-        maint_hours = 120.0 if i != 14 else 15.0  # Tail 15 has low maintenance remaining
-        aircraft_rows.append((tail, "A320", 180, 35, "VOBL", maint_hours))
+    # 2. Seed 15 Aircraft (Diverse Narrow-body & Regional Fleet based at VOBL/BLR)
+    fleet_specs = [
+        # (tail, type, seats, min_turn_min, airport, maint_hours)
+        ("VT-BLR01", "A320neo", 186, 35, "VOBL", 145.0),
+        ("VT-BLR02", "A320neo", 186, 35, "VOBL", 110.0),
+        ("VT-BLR03", "A320neo", 186, 35, "VOBL", 85.0),
+        ("VT-BLR04", "A320neo", 186, 35, "VOBL", 160.0),
+        ("VT-BLR05", "A321neo", 222, 45, "VOBL", 130.0),
+        ("VT-BLR06", "A321neo", 222, 45, "VOBL", 95.0),
+        ("VT-BLR07", "A321neo", 232, 45, "VOBL", 175.0),
+        ("VT-BLR08", "A321neo", 232, 45, "VOBL", 120.0),
+        ("VT-BLR09", "A320ceo", 180, 35, "VOBL", 65.0),
+        ("VT-BLR10", "A320ceo", 180, 35, "VOBL", 140.0),
+        ("VT-BLR11", "A320ceo", 180, 35, "VOBL", 75.0),
+        ("VT-BLR12", "A320ceo", 180, 35, "VOBL", 115.0),
+        ("VT-BLR13", "ATR72-600", 78, 25, "VOBL", 90.0),
+        ("VT-BLR14", "ATR72-600", 78, 25, "VOBL", 50.0),
+        ("VT-BLR15", "A320neo", 186, 35, "VOBL", 180.0),  # Standby Reserve
+    ]
+    tails = [spec[0] for spec in fleet_specs]
+    seats_map = {spec[0]: spec[2] for spec in fleet_specs}
+
     conn.executemany(
         "INSERT OR REPLACE INTO aircraft (tail, aircraft_type, seats, min_turn_min, current_airport, maintenance_due_hours) VALUES (?, ?, ?, ?, ?, ?)",
-        aircraft_rows
+        fleet_specs
     )
 
-    # 3. Seed Scheduled Flights (40 flights covering VOBL to DEL, BOM, MAA, HYD, GOI, CCU)
+    # 3. Seed Scheduled Flights (Diverse Indian sectors with realistic stage-length durations)
     routes = [
-        ("VOBL", "VIDP", 150),  # BLR -> DEL
-        ("VIDP", "VOBL", 150),  # DEL -> BLR
-        ("VOBL", "VABB", 100),  # BLR -> BOM
-        ("VABB", "VOBL", 100),  # BOM -> BLR
-        ("VOBL", "VOMM", 50),   # BLR -> MAA
-        ("VOMM", "VOBL", 50),   # MAA -> BLR
-        ("VOBL", "VOHY", 70),   # BLR -> HYD
-        ("VOHY", "VOBL", 70),   # HYD -> BLR
-        ("VOBL", "VOGO", 60),   # BLR -> GOI
-        ("VOGO", "VOBL", 60),   # GOI -> BLR
+        ("VOBL", "VIDP", 165),  # BLR -> DEL (165m)
+        ("VIDP", "VOBL", 160),  # DEL -> BLR (160m)
+        ("VOBL", "VABB", 105),  # BLR -> BOM (105m)
+        ("VABB", "VOBL", 100),  # BOM -> BLR (100m)
+        ("VOBL", "VECC", 155),  # BLR -> CCU (155m)
+        ("VECC", "VOBL", 150),  # CCU -> BLR (150m)
+        ("VOBL", "VOMM", 55),   # BLR -> MAA (55m)
+        ("VOMM", "VOBL", 50),   # MAA -> BLR (50m)
+        ("VOBL", "VOHY", 70),   # BLR -> HYD (70m)
+        ("VOHY", "VOBL", 70),   # HYD -> BLR (70m)
+        ("VOBL", "VOGO", 75),   # BLR -> GOI (75m)
+        ("VOGO", "VOBL", 70),   # GOI -> BLR (70m)
     ]
     
     flights_data = []
@@ -65,11 +83,18 @@ def seed_database(db_path: Optional[Union[str, Path]] = None, seed: int = 42) ->
     
     for day_offset in range(2):  # 24 hour rotation
         for i, tail in enumerate(tails):
-            route = routes[(i + day_offset * 3) % len(routes)]
+            # Assign regional routes to ATR aircraft, trunk routes to A321/A320
+            if tail in ("VT-BLR13", "VT-BLR14"):
+                regional_routes = [("VOBL", "VOMM", 55), ("VOMM", "VOBL", 50), ("VOBL", "VOHY", 70), ("VOHY", "VOBL", 70), ("VOBL", "VOGO", 75), ("VOGO", "VOBL", 70)]
+                route = regional_routes[(i + day_offset) % len(regional_routes)]
+            else:
+                route = routes[(i + day_offset * 3) % len(routes)]
+
             dep_time = base_time + timedelta(hours=i * 1.2 + day_offset * 12)
             arr_time = dep_time + timedelta(minutes=route[2])
             flight_id = f"6E-{flight_num}"
             flight_num += 1
+            seats = seats_map.get(tail, 180)
             
             flights_data.append((
                 flight_id,
@@ -80,7 +105,7 @@ def seed_database(db_path: Optional[Union[str, Path]] = None, seed: int = 42) ->
                 arr_time.isoformat(),
                 dep_time.isoformat(),
                 arr_time.isoformat(),
-                180,
+                seats,
                 "SCHEDULED"
             ))
 

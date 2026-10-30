@@ -1451,10 +1451,10 @@
                             <h3 id="rec-title" style="margin-top: 0.2rem;">Plan Ready for Authorization</h3>
                             <p id="rec-desc" style="font-size: 0.88rem; color: var(--text-main); margin-top: 0.25rem;"></p>
                             <div class="rec-metrics">
-                                <span>Composite Score: <strong id="rec-score">0.0245</strong></span>
-                                <span>Tactical Delay: <strong id="rec-delay">30 mins</strong></span>
+                                <span>Composite Score: <strong id="rec-score">0.0000</strong></span>
+                                <span>Tactical Delay: <strong id="rec-delay">0 mins</strong></span>
                                 <span>Pax Impact: <strong id="rec-pax">0 broken</strong></span>
-                                <span>Financial Liability: <strong id="rec-cost">INR 4,500</strong></span>
+                                <span>Financial Liability: <strong id="rec-cost">INR 0</strong></span>
                             </div>
                         </div>
                     </div>
@@ -2056,10 +2056,20 @@
                 recSec.style.display = 'block';
                 document.getElementById('rec-title').innerText = `Recommended: ${rec.plan_id} (Round ${rec.round_created || 1})`;
                 document.getElementById('rec-desc').innerText = rec.operational_rationale || '';
-                document.getElementById('rec-score').innerText = rec.scores?.composite_score?.toFixed(4) || '0.0245';
-                document.getElementById('rec-delay').innerText = (rec.scores?.raw_metrics?.delay_minutes || 30) + ' mins';
-                document.getElementById('rec-pax').innerText = (rec.scores?.raw_metrics?.missed_connections || 0) + ' broken';
-                document.getElementById('rec-cost').innerText = 'INR ' + Number(rec.scores?.raw_metrics?.total_cost || 4500).toLocaleString();
+                document.getElementById('rec-score').innerText = rec.scores?.composite_score !== undefined ? rec.scores.composite_score.toFixed(4) : '0.0000';
+                
+                const rawM = rec.scores?.raw_metrics || rec.scores?.raw_inputs || {};
+                let delayM = rawM.delay_minutes;
+                if (delayM === undefined || delayM === null) {
+                    const delayOp = rec.plan_diff?.find(d => d.op === 'delay');
+                    delayM = delayOp ? delayOp.delay_minutes : 0;
+                }
+                const paxM = rawM.missed_connections !== undefined ? rawM.missed_connections : 0;
+                const costM = rawM.total_cost !== undefined ? rawM.total_cost : (delayM * 150);
+
+                document.getElementById('rec-delay').innerText = delayM > 0 ? `${delayM} mins` : '0 mins (On-Time)';
+                document.getElementById('rec-pax').innerText = `${paxM} broken`;
+                document.getElementById('rec-cost').innerText = 'INR ' + Number(costM).toLocaleString();
 
                 if (rec.occ_briefing) {
                     document.getElementById('briefing-container').style.display = 'block';

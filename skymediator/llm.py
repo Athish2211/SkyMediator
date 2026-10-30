@@ -438,7 +438,10 @@ def parse_duty_manager_disruption(
             "For example, if the message says '11.0h max FDP under 120m holding delay', delay_minutes=120, not 660. "
             "(default 180 if severe and no specific delay mentioned, 60 if moderate)\n"
             "- counter_delay_minutes: realistic counter-proposal delay in minutes for Round 2 (integer, 25-45)\n"
-            "- initial_action: one of ['excessive_delay', 'swap_tail', 'cancel']\n"
+            "- initial_action: The tactical operational action to evaluate in Round 1. "
+            "MUST be 'excessive_delay' for weather, fog, holding delay, slot congestion, or flight delay reports. "
+            "ONLY use 'swap_tail' if the disruption is purely an aircraft mechanical failure (AOG/snag) or the user explicitly asks for an aircraft swap/substitution. "
+            "ONLY use 'cancel' if the user explicitly orders flight cancellation.\n"
             "- candidate_tail: standby aircraft registration if swap is requested or available (e.g. 'VT-BLR15')\n"
             "- duty_manager_intent: concise 1-sentence summary of Duty Manager's operational intent\n"
             "- tactical_summary: concise 1-line headline summarizing the operational situation\n"
@@ -482,6 +485,13 @@ def parse_duty_manager_disruption(
                         val = explicit_delay_m.group(1) or explicit_delay_m.group(2)
                         if val:
                             parsed["delay_minutes"] = int(val)
+
+                    # Safety override for initial_action:
+                    # If message describes holding delay, fog, or weather without mentioning swap or standby,
+                    # initial_action MUST be 'excessive_delay' so OCC compliance agents can deliberate.
+                    if parsed.get("initial_action") == "swap_tail":
+                        if not any(w in clean_msg.lower() for w in ["swap", "standby", "reassign", "substitute", "replace tail", "aog", "snag", "technical"]):
+                            parsed["initial_action"] = "excessive_delay"
 
                     return parsed
         except Exception as e:

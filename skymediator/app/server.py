@@ -1048,6 +1048,12 @@ def get_run_details(run_id: str):
                         d[fld] = json.loads(d[fld])
                     except Exception:
                         pass
+            # Alias clean keys for frontend consumption
+            d["plan_diff"] = d.get("plan_diff_json") or []
+            d["vetoed_by"] = d.get("vetoed_by_json") or []
+            d["veto_reasons"] = d.get("veto_reasons_json") or {}
+            d["scores"] = d.get("scores_json") or {}
+            d["compliance_notes"] = d.get("compliance_notes_json") or {}
             revisions.append(d)
 
         dec_cursor = conn.execute("SELECT * FROM decision_records WHERE run_id = ? ORDER BY decision_timestamp DESC LIMIT 1", (run_id,))

@@ -12,18 +12,39 @@ from skymediator.config import settings
 from skymediator.db import get_connection, init_db
 
 
+FLEET_SPECS = [
+    # (tail, type, seats, min_turn_min, airport, maint_hours)
+    ("VT-BLR01", "A320neo", 186, 35, "VOBL", 145.0),
+    ("VT-BLR02", "A320neo", 186, 35, "VOBL", 110.0),
+    ("VT-BLR03", "A320neo", 186, 35, "VOBL", 85.0),
+    ("VT-BLR04", "A320neo", 186, 35, "VOBL", 160.0),
+    ("VT-BLR05", "A321neo", 222, 45, "VOBL", 130.0),
+    ("VT-BLR06", "A321neo", 222, 45, "VOBL", 95.0),
+    ("VT-BLR07", "A321neo", 232, 45, "VOBL", 175.0),
+    ("VT-BLR08", "A321neo", 232, 45, "VOBL", 120.0),
+    ("VT-BLR09", "A320ceo", 180, 35, "VOBL", 65.0),
+    ("VT-BLR10", "A320ceo", 180, 35, "VOBL", 140.0),
+    ("VT-BLR11", "A320ceo", 180, 35, "VOBL", 75.0),
+    ("VT-BLR12", "A320ceo", 180, 35, "VOBL", 115.0),
+    ("VT-BLR13", "ATR72-600", 78, 25, "VOBL", 90.0),
+    ("VT-BLR14", "ATR72-600", 78, 25, "VOBL", 50.0),
+    ("VT-BLR15", "A320neo", 186, 35, "VOBL", 180.0),  # Standby Reserve
+]
+
+SEATS_BY_TAIL = {spec[0]: spec[2] for spec in FLEET_SPECS}
+
 ROUTES = [
-    {"origin": "VOBL", "dest": "VIDP", "block_mins": 150, "pax_demand": 170},  # BLR -> DEL
-    {"origin": "VIDP", "dest": "VOBL", "block_mins": 150, "pax_demand": 175},  # DEL -> BLR
-    {"origin": "VOBL", "dest": "VABB", "block_mins": 100, "pax_demand": 165},  # BLR -> BOM
-    {"origin": "VABB", "dest": "VOBL", "block_mins": 100, "pax_demand": 168},  # BOM -> BLR
-    {"origin": "VOBL", "dest": "VOMM", "block_mins": 50,  "pax_demand": 150},  # BLR -> MAA
+    {"origin": "VOBL", "dest": "VIDP", "block_mins": 165, "pax_demand": 180},  # BLR -> DEL
+    {"origin": "VIDP", "dest": "VOBL", "block_mins": 160, "pax_demand": 178},  # DEL -> BLR
+    {"origin": "VOBL", "dest": "VABB", "block_mins": 105, "pax_demand": 175},  # BLR -> BOM
+    {"origin": "VABB", "dest": "VOBL", "block_mins": 100, "pax_demand": 170},  # BOM -> BLR
+    {"origin": "VOBL", "dest": "VOMM", "block_mins": 55,  "pax_demand": 150},  # BLR -> MAA
     {"origin": "VOMM", "dest": "VOBL", "block_mins": 50,  "pax_demand": 145},  # MAA -> BLR
     {"origin": "VOBL", "dest": "VOHY", "block_mins": 70,  "pax_demand": 160},  # BLR -> HYD
     {"origin": "VOHY", "dest": "VOBL", "block_mins": 70,  "pax_demand": 155},  # HYD -> BLR
-    {"origin": "VOBL", "dest": "VOGO", "block_mins": 60,  "pax_demand": 140},  # BLR -> GOI
-    {"origin": "VOGO", "dest": "VOBL", "block_mins": 60,  "pax_demand": 142},  # GOI -> BLR
-    {"origin": "VOBL", "dest": "VECC", "block_mins": 150, "pax_demand": 160},  # BLR -> CCU
+    {"origin": "VOBL", "dest": "VOGO", "block_mins": 75,  "pax_demand": 140},  # BLR -> GOI
+    {"origin": "VOGO", "dest": "VOBL", "block_mins": 70,  "pax_demand": 142},  # GOI -> BLR
+    {"origin": "VOBL", "dest": "VECC", "block_mins": 155, "pax_demand": 160},  # BLR -> CCU
     {"origin": "VECC", "dest": "VOBL", "block_mins": 150, "pax_demand": 162},  # CCU -> BLR
 ]
 
@@ -80,7 +101,7 @@ def generate_fleet_rotations(
                 "dest": dest,
                 "std": dep_dt.isoformat(),
                 "sta": arr_dt.isoformat(),
-                "seats": 180,
+                "seats": SEATS_BY_TAIL.get(tail, 180),
                 "status": "SCHEDULED"
             })
 
@@ -97,15 +118,11 @@ def seed_schedule_and_aircraft(db_path: Optional[Path] = None) -> int:
     conn = get_connection(db_path)
     try:
         # Seed 15 Aircraft
-        aircraft_rows = [
-            (f"VT-BLR{i:02d}", "A320", 180, 35, "VOBL", 120.0 if i != 15 else 18.0)
-            for i in range(1, 16)
-        ]
         conn.executemany(
             """INSERT OR REPLACE INTO aircraft 
             (tail, aircraft_type, seats, min_turn_min, current_airport, maintenance_due_hours)
             VALUES (?, ?, ?, ?, ?, ?)""",
-            aircraft_rows
+            FLEET_SPECS
         )
 
         # Seed Flights
