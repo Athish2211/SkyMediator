@@ -1206,6 +1206,260 @@
 
         .dt-pane { display: none; }
         .dt-pane.active { display: block; }
+
+        /* --- DYNAMIC TACTICAL TIME, NEEDLE & AIRBORNE ADAPTATION --- */
+        .tactical-time-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.55rem 0.95rem;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .tactical-clock-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        .tactical-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .tactical-slider {
+            flex: 1;
+            accent-color: #0284c7;
+            cursor: pointer;
+            height: 6px;
+        }
+
+        .time-btn {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.22rem 0.55rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .time-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: var(--navy-dark);
+        }
+
+        .time-btn.active {
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+        }
+
+        /* Gantt NOW Needle */
+        .gantt-now-needle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #0284c7;
+            box-shadow: 0 0 10px rgba(2, 132, 199, 0.8), 0 0 2px #38bdf8;
+            z-index: 25;
+            pointer-events: none;
+            transition: left 0.15s ease-out;
+        }
+
+        .gantt-needle-head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0284c7;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 3px;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+            pointer-events: auto;
+            letter-spacing: 0.03em;
+        }
+
+        /* Dynamic Airborne & Completed Flight Block Styles */
+        .gantt-flight-block.airborne {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+            border: 2px solid #38bdf8 !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.75) !important;
+            animation: pulse-airborne 2s infinite ease-in-out;
+            font-weight: 700 !important;
+            z-index: 10 !important;
+        }
+
+        .gantt-flight-block.completed {
+            background: #64748b !important;
+            border: 1px solid #94a3b8 !important;
+            opacity: 0.72;
+        }
+
+        @keyframes pulse-airborne {
+            0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+
+        .gantt-ac-status-badge {
+            font-size: 0.58rem;
+            font-weight: 700;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            display: inline-block;
+            margin-top: 2px;
+        }
+
+        .gantt-ac-status-badge.airborne {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+            animation: pulse-airborne 2.5s infinite;
+        }
+
+        .gantt-ac-status-badge.ground {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .gantt-ac-maint {
+            font-size: 0.62rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .gantt-ac-maint.warning {
+            color: #d97706;
+            font-weight: 700;
+        }
+
+        .gantt-ac-maint.critical {
+            color: #e11d48;
+            font-weight: 800;
+        }
+
+        /* CRUD table buttons & submodals */
+        .btn-table-action {
+            padding: 0.2rem 0.45rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            transition: all 0.15s;
+            margin-left: 0.25rem;
+        }
+
+        .btn-table-action.edit:hover {
+            background: #e0f2fe;
+            color: #0369a1;
+            border-color: #7dd3fc;
+        }
+
+        .btn-table-action.delete:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+
+        .btn-table-action.trigger {
+            background: #fef3c7;
+            color: #b45309;
+            border-color: #fde68a;
+        }
+
+        .btn-table-action.trigger:hover {
+            background: #fde68a;
+            color: #92400e;
+        }
+
+        .crud-submodal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(3px);
+        }
+
+        .crud-submodal-content {
+            background: #ffffff;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 520px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            border: 1px solid var(--border);
+            max-height: 88vh;
+            overflow-y: auto;
+        }
+
+        .crud-form-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .crud-form-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .crud-form-group input, .crud-form-group select {
+            width: 100%;
+            padding: 0.45rem 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--text-main);
+        }
+
+        .crud-form-group input:focus, .crud-form-group select:focus {
+            outline: none;
+            border-color: #0284c7;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+        }
     </style>
 </head>
 <body>
@@ -1361,8 +1615,47 @@
                     <span id="gantt-active-tag" style="font-size: 0.68rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--primary);">BASELINE VIEW</span>
                 </div>
 
+                <!-- Interactive Tactical Time Controller & Airborne Status Bar -->
+                <div class="tactical-time-bar">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <div class="tactical-clock-chip" id="tactical-clock-display">
+                            <span>🕒 TACTICAL TIME:</span>
+                            <span id="tactical-clock-time" style="color: var(--primary);">07:15 IST</span>
+                            <span id="tactical-clock-date" style="font-size: 0.68rem; color: var(--text-muted);">(2026-11-01)</span>
+                        </div>
+                        <button class="time-btn" id="btn-toggle-play" onclick="toggleTacticalPlayback()" title="Toggle auto progression">▶ Play</button>
+                        <button class="time-btn" onclick="stepTacticalMinutes(-60)" title="Step back 1 hour">◀ -1h</button>
+                        <button class="time-btn" onclick="stepTacticalMinutes(60)" title="Step forward 1 hour">+1h ▶</button>
+                        <button class="time-btn" onclick="resetTacticalTime()" title="Reset to 04:00 baseline">↺ 04:00</button>
+                        <button class="time-btn" onclick="syncTacticalToRealTime()" title="Sync to real current time">⚡ Real-Time</button>
+                    </div>
+
+                    <div class="tactical-slider-wrap">
+                        <span style="font-size: 0.68rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">04:00</span>
+                        <input type="range" min="0" max="1440" step="5" value="195" class="tactical-slider" id="tactical-time-slider" oninput="onTacticalSliderChange(this.value)">
+                        <span style="font-size: 0.68rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">04:00+1d</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                        <span class="chip" style="font-size: 0.7rem; border-color: #7dd3fc; background: #e0f2fe; color: #0369a1;" id="kpi-on-air">✈ ON AIR: 0</span>
+                        <span class="chip" style="font-size: 0.7rem; border-color: #a7f3d0; background: #ecfdf5; color: #047857;" id="kpi-on-ground">⛯ ON GROUND: 15</span>
+                        <span class="chip" style="font-size: 0.7rem; border-color: #cbd5e1; background: #f1f5f9; color: #475569;" id="kpi-completed">✓ ARRIVED: 0</span>
+                    </div>
+                </div>
+
+                <!-- Live Airborne Flights Marquee/Ticker -->
+                <div id="live-airborne-ticker" style="padding: 0.35rem 0.85rem; background: #f0f9ff; border-left: 4px solid var(--primary); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--navy-dark); display: flex; align-items: center; gap: 0.5rem; overflow-x: auto; white-space: nowrap;">
+                    <strong style="color: var(--primary);">✈ AIRSPACE SCAN:</strong>
+                    <span id="airborne-ticker-content" style="color: var(--text-muted);">Scanning active flight tracks...</span>
+                </div>
+
                 <div class="gantt-canvas-wrap">
                     <div class="gantt-canvas" id="gantt-canvas-container">
+                        <!-- Vertical Dynamic "NOW" Needle -->
+                        <div id="gantt-now-needle" class="gantt-now-needle" style="left: calc(160px + (100% - 160px) * (195 / 1440));">
+                            <div class="gantt-needle-head" id="gantt-needle-label">▼ NOW 07:15</div>
+                        </div>
+
                         <!-- Time Axis Header -->
                         <div class="gantt-time-axis">
                             <div class="gantt-time-cell" style="text-align: left; padding-left: 0.6rem; color: var(--navy-dark);">AIRCRAFT / TAIL</div>
@@ -1502,40 +1795,75 @@
                 <button class="tab-btn" onclick="switchDataTab('scenarios')">Scenarios</button>
             </div>
             <div class="modal-body">
+                <!-- Flights Schedule Pane -->
                 <div id="dt-pane-schedule" class="dt-pane active">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                        <input type="text" id="schedule-search" placeholder="Search flight ID, tail..." style="padding: 0.4rem; border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem;" oninput="filterScheduleTable()">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <input type="text" id="schedule-search" placeholder="Search flight ID, tail, route..." style="padding: 0.4rem 0.6rem; border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem; width: 260px;" oninput="filterScheduleTable()">
+                        <button class="btn-clean" onclick="openAddFlightModal()" style="background: var(--primary); color: #fff; border-color: var(--primary); font-size: 0.75rem; padding: 0.35rem 0.75rem;">+ Add Flight</button>
                     </div>
                     <table class="dt-table" id="schedule-table">
                         <thead>
-                            <tr><th>Flight</th><th>Tail</th><th>Route</th><th>STD</th><th>STA</th><th>Seats</th><th>Status</th></tr>
+                            <tr><th>Flight</th><th>Tail</th><th>Route</th><th>STD</th><th>STA</th><th>Seats</th><th>Status</th><th style="text-align: right;">Actions</th></tr>
                         </thead>
                         <tbody id="schedule-tbody"></tbody>
                     </table>
                 </div>
+
+                <!-- Aircraft Fleet Pane -->
                 <div id="dt-pane-fleet" class="dt-pane">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Fleet Configuration, Minimum Turnaround & Dynamic Maintenance Thresholds</span>
+                        <button class="btn-clean" onclick="openAddAircraftModal()" style="background: var(--primary); color: #fff; border-color: var(--primary); font-size: 0.75rem; padding: 0.35rem 0.75rem;">+ Add Aircraft</button>
+                    </div>
                     <table class="dt-table" id="fleet-table">
                         <thead>
-                            <tr><th>Tail</th><th>Type</th><th>Seats</th><th>Maint Hours Rem</th><th>Station</th></tr>
+                            <tr><th>Tail</th><th>Type</th><th>Seats</th><th>Min Turn</th><th>Station</th><th>Maint (Base)</th><th>Maint (Dynamic Rem)</th><th style="text-align: right;">Actions</th></tr>
                         </thead>
                         <tbody id="fleet-tbody"></tbody>
                     </table>
                 </div>
+
+                <!-- Crew Duties Pane -->
                 <div id="dt-pane-crew" class="dt-pane">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">DGCA CAR Section 7 Compliant Crew Roster & Leg Assignments</span>
+                        <button class="btn-clean" onclick="openAddCrewModal()" style="background: var(--primary); color: #fff; border-color: var(--primary); font-size: 0.75rem; padding: 0.35rem 0.75rem;">+ Add Crew Member</button>
+                    </div>
                     <table class="dt-table" id="crew-table">
                         <thead>
-                            <tr><th>Crew ID</th><th>Name</th><th>Role</th><th>Base</th><th>Duty Start</th><th>Assigned Flight</th></tr>
+                            <tr><th>Crew ID</th><th>Name</th><th>Role</th><th>Base</th><th>Duty Start</th><th>Assigned Flight</th><th style="text-align: right;">Actions</th></tr>
                         </thead>
                         <tbody id="crew-tbody"></tbody>
                     </table>
                 </div>
+
+                <!-- Scenarios Pane -->
                 <div id="dt-pane-scenarios" class="dt-pane">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Benchmark Disruption Test Cases & Anomaly Presets</span>
+                        <button class="btn-clean" onclick="openAddScenarioModal()" style="background: var(--primary); color: #fff; border-color: var(--primary); font-size: 0.75rem; padding: 0.35rem 0.75rem;">+ Add Scenario</button>
+                    </div>
                     <table class="dt-table" id="scenarios-table">
                         <thead>
-                            <tr><th>Scenario ID</th><th>Name</th><th>Type</th><th>Airport</th><th>Severity</th></tr>
+                            <tr><th>Scenario ID</th><th>Name</th><th>Type</th><th>Airport</th><th>Severity</th><th style="text-align: right;">Actions</th></tr>
                         </thead>
                         <tbody id="scenarios-tbody"></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generic CRUD Submodal for Editing & Creating Records -->
+        <div id="crud-submodal" class="crud-submodal" style="display: none;">
+            <div class="crud-submodal-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                    <strong id="crud-modal-title" style="font-size: 0.92rem; color: var(--navy-dark);">Edit Record</strong>
+                    <button onclick="closeCrudSubmodal()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+                </div>
+                <div id="crud-modal-fields"></div>
+                <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.25rem;">
+                    <button class="btn-secondary" onclick="closeCrudSubmodal()" style="font-size: 0.75rem;">Cancel</button>
+                    <button class="btn-clean" id="crud-modal-save-btn" style="background: var(--primary); color: #fff; border-color: var(--primary); font-size: 0.75rem;">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -1582,7 +1910,7 @@
                 const flData = await flRes.json();
                 cachedFleet = fData.fleet || [];
                 cachedFlights = flData.flights || [];
-                renderFleetGanttChart();
+                updateTacticalTime(tacticalMinutes, true);
             } catch (err) {
                 console.warn('Could not load Gantt data:', err);
             }
@@ -1619,11 +1947,108 @@
             renderFleetGanttChart();
         }
 
+        let tacticalMinutes = 195; // 07:15 IST (3h 15m from 04:00)
+        let tacticalPlaying = false;
+        let tacticalTimer = null;
+
+        function getTacticalInfo(mins) {
+            const horizonStart = new Date(HORIZON_START_ISO).getTime();
+            const currentMs = horizonStart + (mins * 60000);
+            const d = new Date(currentMs);
+            const hh = String(d.getHours()).padStart(2, '0');
+            const mm = String(d.getMinutes()).padStart(2, '0');
+            const yyyy = d.getFullYear();
+            const mo = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return {
+                timestamp: currentMs,
+                timeStr: `${hh}:${mm} IST`,
+                dateStr: `${yyyy}-${mo}-${dd}`,
+                hours: d.getHours(),
+                minutes: d.getMinutes()
+            };
+        }
+
+        function onTacticalSliderChange(val) {
+            updateTacticalTime(parseInt(val, 10), false);
+        }
+
+        function updateTacticalTime(mins, syncSlider = true) {
+            tacticalMinutes = Math.min(1440, Math.max(0, mins));
+            if (syncSlider) {
+                const slider = document.getElementById('tactical-time-slider');
+                if (slider) slider.value = tacticalMinutes;
+            }
+
+            const info = getTacticalInfo(tacticalMinutes);
+            const timeEl = document.getElementById('tactical-clock-time');
+            const dateEl = document.getElementById('tactical-clock-date');
+            if (timeEl) timeEl.innerText = info.timeStr;
+            if (dateEl) dateEl.innerText = `(${info.dateStr})`;
+
+            // Update Needle position & label
+            const needle = document.getElementById('gantt-now-needle');
+            const needleLabel = document.getElementById('gantt-needle-label');
+            if (needle) {
+                needle.style.display = 'block';
+                needle.style.left = `calc(160px + (100% - 160px) * (${tacticalMinutes} / 1440))`;
+            }
+            if (needleLabel) {
+                needleLabel.innerText = `▼ NOW ${info.timeStr}`;
+            }
+
+            renderFleetGanttChart();
+        }
+
+        function toggleTacticalPlayback() {
+            tacticalPlaying = !tacticalPlaying;
+            const btn = document.getElementById('btn-toggle-play');
+            if (btn) {
+                btn.innerText = tacticalPlaying ? '⏸ Pause' : '▶ Play';
+                btn.classList.toggle('active', tacticalPlaying);
+            }
+
+            if (tacticalPlaying) {
+                tacticalTimer = setInterval(() => {
+                    let next = tacticalMinutes + 5;
+                    if (next > 1440) next = 0;
+                    updateTacticalTime(next, true);
+                }, 500);
+            } else {
+                if (tacticalTimer) {
+                    clearInterval(tacticalTimer);
+                    tacticalTimer = null;
+                }
+            }
+        }
+
+        function stepTacticalMinutes(delta) {
+            let next = (tacticalMinutes + delta + 1440) % 1440;
+            updateTacticalTime(next, true);
+        }
+
+        function resetTacticalTime() {
+            updateTacticalTime(0, true);
+        }
+
+        function syncTacticalToRealTime() {
+            const now = new Date();
+            const startOfDay = new Date(now);
+            startOfDay.setHours(4, 0, 0, 0);
+            let diffMs = now.getTime() - startOfDay.getTime();
+            if (diffMs < 0) diffMs += 24 * 3600 * 1000;
+            let mins = Math.floor(diffMs / 60000) % 1440;
+            updateTacticalTime(mins, true);
+        }
+
         function renderFleetGanttChart() {
             const container = document.getElementById('gantt-rows-container');
             if (!container || !cachedFleet.length) return;
 
             const horizonStart = new Date(HORIZON_START_ISO).getTime();
+            const tacticalInfo = getTacticalInfo(tacticalMinutes);
+            const currentTacticalMs = tacticalInfo.timestamp;
+
             let workingFlights = JSON.parse(JSON.stringify(cachedFlights));
 
             if (currentScheduleMode === 'approved') {
@@ -1650,11 +2075,58 @@
             }
 
             let rowsHtml = '';
+            let airborneFlightsList = [];
+            let totalAirborneCount = 0;
+            let totalGroundCount = 0;
+            let totalCompletedFlights = 0;
 
             cachedFleet.forEach(ac => {
                 const tail = ac.tail;
+                const baseMaint = parseFloat(ac.maintenance_due_hours || 100.0);
                 const acFlights = workingFlights.filter(f => f.tail === tail);
 
+                let hoursFlown = 0;
+                let activeAirborneFlight = null;
+                let currentStation = ac.current_airport || 'VOBL';
+
+                // Deterministic calculation of flown hours and station up to currentTacticalMs
+                acFlights.forEach(fl => {
+                    if (fl.status === 'CANCELLED' || fl.is_cancelled) return;
+                    const fStart = new Date(fl.std).getTime();
+                    const fEnd = new Date(fl.sta).getTime();
+                    const flDurationHours = Math.max(0, (fEnd - fStart) / (3600 * 1000));
+
+                    if (currentTacticalMs >= fEnd) {
+                        hoursFlown += flDurationHours;
+                        currentStation = fl.dest;
+                        totalCompletedFlights++;
+                    } else if (currentTacticalMs > fStart && currentTacticalMs < fEnd) {
+                        const elapsedHours = (currentTacticalMs - fStart) / (3600 * 1000);
+                        hoursFlown += elapsedHours;
+                        activeAirborneFlight = fl;
+                        currentStation = `${fl.origin}➔${fl.dest}`;
+                    }
+                });
+
+                const dynamicMaint = Math.max(0, baseMaint - hoursFlown);
+                let maintClass = '';
+                if (dynamicMaint < 25) maintClass = 'critical';
+                else if (dynamicMaint < 60) maintClass = 'warning';
+
+                const isAirborne = !!activeAirborneFlight;
+                if (isAirborne) {
+                    totalAirborneCount++;
+                    airborneFlightsList.push({
+                        flight: activeAirborneFlight.flight_id,
+                        tail: tail,
+                        route: `${activeAirborneFlight.origin} ➔ ${activeAirborneFlight.dest}`,
+                        elapsed: Math.round((currentTacticalMs - new Date(activeAirborneFlight.std).getTime()) / 60000)
+                    });
+                } else {
+                    totalGroundCount++;
+                }
+
+                // Build blocks
                 let rowBlocks = '';
 
                 // If VT-BLR01 in approved mode and 6E-101 swapped out, render maintenance snag buffer
@@ -1685,22 +2157,32 @@
                         stackedDisruptions.some(d => d.affected_flight_id === fl.flight_id)
                     );
 
-                    if (isDisruptedFlight) {
+                    const isFlightAirborne = (currentTacticalMs >= fStart && currentTacticalMs < fEnd && !fl.is_cancelled && fl.status !== 'CANCELLED');
+                    const isFlightCompleted = (currentTacticalMs >= fEnd && !fl.is_cancelled && fl.status !== 'CANCELLED');
+
+                    if (fl.is_cancelled || fl.status === 'CANCELLED') {
+                        blockClass += ' cancelled';
+                        label = `[X] ${fl.flight_id} CANCELLED`;
+                    } else if (isDisruptedFlight) {
                         blockClass += ' disrupted';
                         label = `[!] ${fl.flight_id} HOLDING (${fl.origin}-${fl.dest})`;
                     } else if (currentScheduleMode === 'approved' && fl.is_swapped) {
                         blockClass += ' swapped-approved';
                         label = `[OK] ${fl.flight_id} SWAPPED &rarr; ${tail}`;
-                    } else if (currentScheduleMode === 'approved' && fl.is_cancelled) {
-                        blockClass += ' cancelled';
-                        label = `[X] ${fl.flight_id} CANCELLED`;
                     } else if (fl.is_delayed) {
                         blockClass += ' delayed';
                         label = `${fl.flight_id} +${fl.delay_minutes}m`;
+                    } else if (isFlightAirborne) {
+                        blockClass += ' airborne';
+                        label = `✈ ${fl.flight_id} [ON AIR]`;
+                    } else if (isFlightCompleted) {
+                        blockClass += ' completed';
+                        label = `✓ ${fl.flight_id} (${fl.origin}-${fl.dest})`;
                     }
 
                     const timeTip = `${fl.std.substring(11, 16)} - ${fl.sta.substring(11, 16)}`;
-                    const tooltip = `Flight: ${fl.flight_id} | Route: ${fl.origin} -> ${fl.dest} | Times: ${timeTip} | Tail: ${tail}`;
+                    let statusNote = isFlightAirborne ? 'AIRBORNE NOW' : (isFlightCompleted ? 'ARRIVED' : 'SCHEDULED');
+                    const tooltip = `Flight: ${fl.flight_id} [${statusNote}] | Route: ${fl.origin} -> ${fl.dest} | Times: ${timeTip} | Tail: ${tail} | Maint Rem: ${dynamicMaint.toFixed(1)}h`;
 
                     rowBlocks += `
                         <div class="${blockClass}" style="left: ${leftPct}%; width: ${widthPct}%;" title="${tooltip}">
@@ -1709,7 +2191,7 @@
                     `;
                 });
 
-                // If standby aircraft and no flights in baseline
+                // Standby notice
                 if (tail === 'VT-BLR15' && currentScheduleMode !== 'approved') {
                     rowBlocks += `
                         <div style="position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-size: 0.65rem; color: #0284c7; font-family: 'JetBrains Mono', monospace; font-weight: 600; letter-spacing: 0.05em;">
@@ -1718,7 +2200,7 @@
                     `;
                 }
 
-                // Render corridor on each row (06:00 - 08:00 = 120min to 240min)
+                // Corridor
                 const fogLeft = ((120) / 1440) * 100;
                 const fogWidth = ((120) / 1440) * 100;
                 const corridorHtml = `
@@ -1730,8 +2212,16 @@
                 rowsHtml += `
                     <div class="gantt-row">
                         <div class="gantt-ac-label">
-                            <span class="gantt-ac-tail">${tail}</span>
-                            <span class="gantt-ac-meta">${ac.current_airport}</span>
+                            <div style="overflow: hidden;">
+                                <div class="gantt-ac-tail">${tail}</div>
+                                <div class="gantt-ac-meta" title="Current Station: ${currentStation}">${ac.aircraft_type || 'A320'} &bull; ${currentStation}</div>
+                            </div>
+                            <div style="text-align: right; flex-shrink: 0; margin-left: 0.25rem;">
+                                <span class="gantt-ac-maint ${maintClass}" title="Dynamic Maintenance Remaining: ${dynamicMaint.toFixed(1)}h (Base: ${baseMaint.toFixed(1)}h, Flown: ${hoursFlown.toFixed(1)}h)">Maint: ${dynamicMaint.toFixed(1)}h</span>
+                                <span class="gantt-ac-status-badge ${isAirborne ? 'airborne' : 'ground'}">
+                                    ${isAirborne ? '✈ AIRBORNE' : '⛯ GROUND'}
+                                </span>
+                            </div>
                         </div>
                         <div class="gantt-timeline-track">
                             ${corridorHtml}
@@ -1742,6 +2232,26 @@
             });
 
             container.innerHTML = rowsHtml;
+
+            // Update KPI Pills
+            const kpiAir = document.getElementById('kpi-on-air');
+            const kpiGnd = document.getElementById('kpi-on-ground');
+            const kpiComp = document.getElementById('kpi-completed');
+            if (kpiAir) kpiAir.innerText = `✈ ON AIR: ${totalAirborneCount}`;
+            if (kpiGnd) kpiGnd.innerText = `⛯ ON GROUND: ${totalGroundCount}`;
+            if (kpiComp) kpiComp.innerText = `✓ ARRIVED: ${totalCompletedFlights}`;
+
+            // Update Airspace ticker
+            const tickerEl = document.getElementById('airborne-ticker-content');
+            if (tickerEl) {
+                if (airborneFlightsList.length > 0) {
+                    tickerEl.innerHTML = airborneFlightsList.map(a => 
+                        `<strong style="color: #0369a1;">${a.flight}</strong> (${a.tail}, ${a.route}, <span style="color: #0284c7;">${a.elapsed}m flown</span>)`
+                    ).join(' &bull; ');
+                } else {
+                    tickerEl.innerHTML = `<span style="color: var(--text-muted);">All 15 aircraft currently parked at gates/stands.</span>`;
+                }
+            }
         }
 
         function syncNavigationLinks(runId) {
@@ -1840,11 +2350,38 @@
                 const container = document.getElementById('fleet-matrix-container');
                 if (!container || !data.fleet) return;
 
+                const tacticalInfo = getTacticalInfo(tacticalMinutes);
+                const currentTacticalMs = tacticalInfo.timestamp;
+
                 container.innerHTML = '';
                 data.fleet.forEach(ac => {
+                    const tail = ac.tail;
+                    const baseMaint = parseFloat(ac.maintenance_due_hours || 100.0);
+                    const acFlights = (cachedFlights || []).filter(f => f.tail === tail);
+
+                    let hoursFlown = 0;
+                    let isAirborne = false;
+                    let currentStation = ac.current_airport || 'VOBL';
+
+                    acFlights.forEach(fl => {
+                        if (fl.status === 'CANCELLED') return;
+                        const fStart = new Date(fl.std).getTime();
+                        const fEnd = new Date(fl.sta).getTime();
+                        if (currentTacticalMs >= fEnd) {
+                            hoursFlown += Math.max(0, (fEnd - fStart) / (3600 * 1000));
+                            currentStation = fl.dest;
+                        } else if (currentTacticalMs > fStart && currentTacticalMs < fEnd) {
+                            hoursFlown += Math.max(0, (currentTacticalMs - fStart) / (3600 * 1000));
+                            isAirborne = true;
+                            currentStation = `${fl.origin}➔${fl.dest}`;
+                        }
+                    });
+
+                    const dynamicMaint = Math.max(0, baseMaint - hoursFlown);
+
                     let badgeClass = 'aircraft-badge';
                     let tagClass = 'ac-status-tag available';
-                    let tagLabel = 'ACTIVE';
+                    let tagLabel = isAirborne ? 'AIRBORNE' : 'ACTIVE';
 
                     if (ac.tail === swappedTail) {
                         badgeClass += ' active-swap';
@@ -1858,15 +2395,21 @@
                         badgeClass += ' standby-ready';
                         tagClass = 'ac-status-tag standby';
                         tagLabel = 'STANDBY';
-                    } else if (ac.status_badge === 'MAINTENANCE') {
+                    } else if (dynamicMaint < 25 || ac.status_badge === 'MAINTENANCE') {
                         tagClass = 'ac-status-tag maint';
-                        tagLabel = 'MAINT';
+                        tagLabel = `MAINT (${dynamicMaint.toFixed(0)}h)`;
+                    } else if (isAirborne) {
+                        tagClass = 'ac-status-tag available';
+                        tagLabel = 'AIRBORNE';
                     }
 
                     const html = `
                         <div class="${badgeClass}" id="ac-card-${ac.tail}">
-                            <div class="ac-tail">${ac.tail}</div>
-                            <div class="ac-sub">${ac.aircraft_type} &bull; ${ac.current_airport}</div>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <span class="ac-tail">${ac.tail}</span>
+                                <span style="font-size: 0.62rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: ${dynamicMaint < 35 ? '#d97706' : 'var(--text-muted)'};" title="Dynamic Maintenance Rem: ${dynamicMaint.toFixed(1)}h (Base: ${baseMaint.toFixed(1)}h)">${dynamicMaint.toFixed(0)}h rem</span>
+                            </div>
+                            <div class="ac-sub">${ac.aircraft_type} &bull; ${currentStation}</div>
                             <span class="${tagClass}">${tagLabel}</span>
                         </div>
                     `;
@@ -2399,6 +2942,20 @@
             loadModalData(tab);
         }
 
+        let modalLoadedFlights = [];
+        let modalLoadedFleet = [];
+        let modalLoadedCrew = [];
+        let modalLoadedScenarios = [];
+
+        function filterScheduleTable() {
+            const q = (document.getElementById('schedule-search')?.value || '').toLowerCase().trim();
+            const rows = document.querySelectorAll('#schedule-tbody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = (!q || text.includes(q)) ? '' : 'none';
+            });
+        }
+
         async function loadModalData(tab) {
             try {
                 if (tab === 'schedule') {
@@ -2406,16 +2963,24 @@
                     const data = await res.json();
                     const tbody = document.getElementById('schedule-tbody');
                     tbody.innerHTML = '';
-                    (data.schedule || []).forEach(f => {
+                    const flights = data.flights || data.schedule || [];
+                    modalLoadedFlights = flights;
+                    flights.forEach(f => {
+                        const stdDisplay = f.std ? (f.std.includes('T') ? f.std.substring(11, 16) : f.std) : '—';
+                        const staDisplay = f.sta ? (f.sta.includes('T') ? f.sta.substring(11, 16) : f.sta) : '—';
                         tbody.innerHTML += `
                             <tr>
                                 <td><strong>${f.flight_id}</strong></td>
                                 <td>${f.tail}</td>
                                 <td>${f.origin} &rarr; ${f.dest}</td>
-                                <td>${f.std.substring(11, 16)}</td>
-                                <td>${f.sta.substring(11, 16)}</td>
+                                <td>${stdDisplay}</td>
+                                <td>${staDisplay}</td>
                                 <td>${f.seats}</td>
                                 <td><span class="chip">${f.status}</span></td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <button class="btn-table-action edit" onclick="openEditFlightModal('${f.flight_id}')">Edit</button>
+                                    <button class="btn-table-action delete" onclick="deleteFlightRecord('${f.flight_id}')">Del</button>
+                                </td>
                             </tr>
                         `;
                     });
@@ -2424,14 +2989,40 @@
                     const data = await res.json();
                     const tbody = document.getElementById('fleet-tbody');
                     tbody.innerHTML = '';
-                    (data.fleet || []).forEach(ac => {
+                    const fleet = data.fleet || data.aircraft || [];
+                    modalLoadedFleet = fleet;
+
+                    const tacticalInfo = getTacticalInfo(tacticalMinutes);
+                    const currentTacticalMs = tacticalInfo.timestamp;
+
+                    fleet.forEach(ac => {
+                        const baseMaint = parseFloat(ac.maintenance_due_hours || 100);
+                        const acFlights = (cachedFlights || []).filter(f => f.tail === ac.tail && f.status !== 'CANCELLED');
+                        let hoursFlown = 0;
+                        acFlights.forEach(fl => {
+                            const fStart = new Date(fl.std).getTime();
+                            const fEnd = new Date(fl.sta).getTime();
+                            if (currentTacticalMs >= fEnd) {
+                                hoursFlown += Math.max(0, (fEnd - fStart) / (3600 * 1000));
+                            } else if (currentTacticalMs > fStart && currentTacticalMs < fEnd) {
+                                hoursFlown += Math.max(0, (currentTacticalMs - fStart) / (3600 * 1000));
+                            }
+                        });
+                        const dynamicMaint = Math.max(0, baseMaint - hoursFlown);
+
                         tbody.innerHTML += `
                             <tr>
                                 <td><strong>${ac.tail}</strong></td>
                                 <td>${ac.aircraft_type}</td>
                                 <td>${ac.seats}</td>
-                                <td>${ac.maintenance_due_hours}h</td>
+                                <td>${ac.min_turn_min || 35}m</td>
                                 <td>${ac.current_airport}</td>
+                                <td>${baseMaint.toFixed(1)}h</td>
+                                <td><strong style="color: ${dynamicMaint < 35 ? '#d97706' : 'var(--navy-dark)'};">${dynamicMaint.toFixed(1)}h</strong> <span style="font-size:0.65rem; color:var(--text-muted);">(-${hoursFlown.toFixed(1)}h)</span></td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <button class="btn-table-action edit" onclick="openEditAircraftModal('${ac.tail}')">Edit</button>
+                                    <button class="btn-table-action delete" onclick="deleteAircraftRecord('${ac.tail}')">Del</button>
+                                </td>
                             </tr>
                         `;
                     });
@@ -2440,15 +3031,22 @@
                     const data = await res.json();
                     const tbody = document.getElementById('crew-tbody');
                     tbody.innerHTML = '';
-                    (data.crew || []).forEach(c => {
+                    const crew = data.crew || [];
+                    modalLoadedCrew = crew;
+                    crew.forEach(c => {
+                        const dutyDisplay = c.duty_start ? (c.duty_start.includes('T') ? c.duty_start.substring(11, 16) : c.duty_start) : '—';
                         tbody.innerHTML += `
                             <tr>
                                 <td><strong>${c.crew_id}</strong></td>
                                 <td>${c.name}</td>
                                 <td>${c.role}</td>
                                 <td>${c.base}</td>
-                                <td>${c.duty_start ? c.duty_start.substring(11, 16) : '—'}</td>
+                                <td>${dutyDisplay}</td>
                                 <td>${c.assigned_flight_id || '—'}</td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <button class="btn-table-action edit" onclick="openEditCrewModal('${c.crew_id}')">Edit</button>
+                                    <button class="btn-table-action delete" onclick="deleteCrewRecord('${c.crew_id}')">Del</button>
+                                </td>
                             </tr>
                         `;
                     });
@@ -2457,7 +3055,9 @@
                     const data = await res.json();
                     const tbody = document.getElementById('scenarios-tbody');
                     tbody.innerHTML = '';
-                    (data.scenarios || []).forEach(s => {
+                    const scenarios = data.scenarios || [];
+                    modalLoadedScenarios = scenarios;
+                    scenarios.forEach(s => {
                         tbody.innerHTML += `
                             <tr>
                                 <td><strong>${s.scenario_id}</strong></td>
@@ -2465,6 +3065,11 @@
                                 <td>${s.disruption_type}</td>
                                 <td>${s.airport}</td>
                                 <td><span class="chip">${s.severity}</span></td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <button class="btn-table-action trigger" onclick="triggerScenarioFromModal('${s.scenario_id}')" title="Trigger disruption recovery simulation">⚡ Trigger</button>
+                                    <button class="btn-table-action edit" onclick="openEditScenarioModal('${s.scenario_id}')">Edit</button>
+                                    <button class="btn-table-action delete" onclick="deleteScenarioRecord('${s.scenario_id}')">Del</button>
+                                </td>
                             </tr>
                         `;
                     });
@@ -2472,6 +3077,558 @@
             } catch (err) {
                 console.warn('Error loading modal data:', err);
             }
+        }
+
+        // --- SUBMODAL GENERIC CONTROLLER & CRUD ACTIONS ---
+        function closeCrudSubmodal() {
+            const sub = document.getElementById('crud-submodal');
+            if (sub) sub.style.display = 'none';
+        }
+
+        // 1. FLIGHT SCHEDULE CRUD
+        function openAddFlightModal() {
+            document.getElementById('crud-modal-title').innerText = '+ Add Scheduled Flight';
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <div class="crud-form-group">
+                    <label>Flight ID</label>
+                    <input type="text" id="f-flight-id" placeholder="e.g. 6E-901">
+                </div>
+                <div class="crud-form-group">
+                    <label>Aircraft Tail</label>
+                    <input type="text" id="f-tail" placeholder="e.g. VT-BLR01">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Origin ICAO</label>
+                        <input type="text" id="f-origin" value="VOBL">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Destination ICAO</label>
+                        <input type="text" id="f-dest" value="VIDP">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>STD (Departure)</label>
+                        <input type="text" id="f-std" value="2026-11-01T08:00:00">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>STA (Arrival)</label>
+                        <input type="text" id="f-sta" value="2026-11-01T10:45:00">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Passenger Seats</label>
+                        <input type="number" id="f-seats" value="186">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Status</label>
+                        <select id="f-status">
+                            <option value="SCHEDULED">SCHEDULED</option>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="DELAYED">DELAYED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveFlightRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        function openEditFlightModal(flightId) {
+            const flight = modalLoadedFlights.find(f => f.flight_id === flightId);
+            if (!flight) return;
+            document.getElementById('crud-modal-title').innerText = `Edit Flight ${flight.flight_id}`;
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <input type="hidden" id="f-flight-id" value="${flight.flight_id}">
+                <div class="crud-form-group">
+                    <label>Aircraft Tail</label>
+                    <input type="text" id="f-tail" value="${flight.tail}">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Origin ICAO</label>
+                        <input type="text" id="f-origin" value="${flight.origin}">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Destination ICAO</label>
+                        <input type="text" id="f-dest" value="${flight.dest}">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>STD (Departure)</label>
+                        <input type="text" id="f-std" value="${flight.std}">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>STA (Arrival)</label>
+                        <input type="text" id="f-sta" value="${flight.sta}">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Passenger Seats</label>
+                        <input type="number" id="f-seats" value="${flight.seats}">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Status</label>
+                        <select id="f-status">
+                            <option value="SCHEDULED" ${flight.status === 'SCHEDULED' ? 'selected' : ''}>SCHEDULED</option>
+                            <option value="ACTIVE" ${flight.status === 'ACTIVE' ? 'selected' : ''}>ACTIVE</option>
+                            <option value="DELAYED" ${flight.status === 'DELAYED' ? 'selected' : ''}>DELAYED</option>
+                            <option value="CANCELLED" ${flight.status === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveFlightRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        async function saveFlightRecord() {
+            const fid = document.getElementById('f-flight-id')?.value?.trim().toUpperCase();
+            const tail = document.getElementById('f-tail')?.value?.trim().toUpperCase();
+            const origin = document.getElementById('f-origin')?.value?.trim().toUpperCase();
+            const dest = document.getElementById('f-dest')?.value?.trim().toUpperCase();
+            const std = document.getElementById('f-std')?.value?.trim();
+            const sta = document.getElementById('f-sta')?.value?.trim();
+            const seats = parseInt(document.getElementById('f-seats')?.value || '180', 10);
+            const status = document.getElementById('f-status')?.value || 'SCHEDULED';
+
+            if (!fid || !tail || !origin || !dest || !std || !sta) {
+                alert('Please fill all mandatory flight fields.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ flight_id: fid, tail, origin, dest, std, sta, seats, status })
+                });
+                const data = await res.json();
+                closeCrudSubmodal();
+                loadModalData('schedule');
+                loadFleetGanttData();
+            } catch (err) {
+                alert('Failed to save flight: ' + err);
+            }
+        }
+
+        async function deleteFlightRecord(flightId) {
+            if (!confirm(`Delete flight ${flightId} from active schedule?`)) return;
+            try {
+                const res = await fetch(`/api/schedule/${encodeURIComponent(flightId)}`, { method: 'DELETE' });
+                const data = await res.json();
+                loadModalData('schedule');
+                loadFleetGanttData();
+            } catch (err) {
+                alert('Failed to delete flight: ' + err);
+            }
+        }
+
+        // 2. FLEET AIRCRAFT CRUD
+        function openAddAircraftModal() {
+            document.getElementById('crud-modal-title').innerText = '+ Add Aircraft to Fleet';
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <div class="crud-form-group">
+                    <label>Aircraft Registration (Tail)</label>
+                    <input type="text" id="a-tail" placeholder="e.g. VT-BLR16">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Subfleet Type</label>
+                        <select id="a-type">
+                            <option value="A320neo">A320neo</option>
+                            <option value="A321neo">A321neo</option>
+                            <option value="A320ceo">A320ceo</option>
+                            <option value="ATR72-600">ATR72-600</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Passenger Seats</label>
+                        <input type="number" id="a-seats" value="186">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Min Turnaround (Mins)</label>
+                        <input type="number" id="a-turn" value="35">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Home Station (ICAO)</label>
+                        <input type="text" id="a-station" value="VOBL">
+                    </div>
+                </div>
+                <div class="crud-form-group">
+                    <label>Base Maintenance Due Hours</label>
+                    <input type="number" step="0.5" id="a-maint" value="120.0">
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveAircraftRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        function openEditAircraftModal(tail) {
+            const ac = modalLoadedFleet.find(a => a.tail === tail);
+            if (!ac) return;
+            document.getElementById('crud-modal-title').innerText = `Edit Aircraft ${ac.tail}`;
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <input type="hidden" id="a-tail" value="${ac.tail}">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Subfleet Type</label>
+                        <select id="a-type">
+                            <option value="A320neo" ${ac.aircraft_type === 'A320neo' ? 'selected' : ''}>A320neo</option>
+                            <option value="A321neo" ${ac.aircraft_type === 'A321neo' ? 'selected' : ''}>A321neo</option>
+                            <option value="A320ceo" ${ac.aircraft_type === 'A320ceo' ? 'selected' : ''}>A320ceo</option>
+                            <option value="ATR72-600" ${ac.aircraft_type === 'ATR72-600' ? 'selected' : ''}>ATR72-600</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Passenger Seats</label>
+                        <input type="number" id="a-seats" value="${ac.seats}">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Min Turnaround (Mins)</label>
+                        <input type="number" id="a-turn" value="${ac.min_turn_min || 35}">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Current Station (ICAO)</label>
+                        <input type="text" id="a-station" value="${ac.current_airport || 'VOBL'}">
+                    </div>
+                </div>
+                <div class="crud-form-group">
+                    <label>Base Maintenance Due Hours</label>
+                    <input type="number" step="0.5" id="a-maint" value="${ac.maintenance_due_hours || 100}">
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveAircraftRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        async function saveAircraftRecord() {
+            const tail = document.getElementById('a-tail')?.value?.trim().toUpperCase();
+            const aircraft_type = document.getElementById('a-type')?.value;
+            const seats = parseInt(document.getElementById('a-seats')?.value || '180', 10);
+            const min_turn_min = parseInt(document.getElementById('a-turn')?.value || '35', 10);
+            const current_airport = document.getElementById('a-station')?.value?.trim().toUpperCase() || 'VOBL';
+            const maintenance_due_hours = parseFloat(document.getElementById('a-maint')?.value || '100');
+
+            if (!tail) {
+                alert('Please enter aircraft tail.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/fleet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tail, aircraft_type, seats, min_turn_min, current_airport, maintenance_due_hours })
+                });
+                const data = await res.json();
+                closeCrudSubmodal();
+                loadModalData('fleet');
+                loadFleetData();
+                loadFleetGanttData();
+            } catch (err) {
+                alert('Failed to save aircraft: ' + err);
+            }
+        }
+
+        async function deleteAircraftRecord(tail) {
+            if (!confirm(`Delete aircraft ${tail} from fleet? This will cascade to related records.`)) return;
+            try {
+                const res = await fetch(`/api/fleet/${encodeURIComponent(tail)}`, { method: 'DELETE' });
+                const data = await res.json();
+                loadModalData('fleet');
+                loadFleetData();
+                loadFleetGanttData();
+            } catch (err) {
+                alert('Failed to delete aircraft: ' + err);
+            }
+        }
+
+        // 3. CREW MEMBER & DUTY CRUD
+        function openAddCrewModal() {
+            document.getElementById('crud-modal-title').innerText = '+ Add Crew Member';
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Crew ID</label>
+                        <input type="text" id="c-crew-id" placeholder="e.g. CR-999">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="c-name" placeholder="e.g. Capt. Rajesh">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Role</label>
+                        <select id="c-role">
+                            <option value="CAPTAIN">CAPTAIN</option>
+                            <option value="FIRST_OFFICER">FIRST_OFFICER</option>
+                            <option value="CABIN_SENIOR">CABIN_SENIOR</option>
+                            <option value="CABIN_ATTENDANT">CABIN_ATTENDANT</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Base Station</label>
+                        <input type="text" id="c-base" value="VOBL">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Duty Start</label>
+                        <input type="text" id="c-duty-start" value="2026-11-01T04:30:00">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Assigned Flight</label>
+                        <input type="text" id="c-flight-id" placeholder="e.g. 6E-101">
+                    </div>
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveCrewRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        function openEditCrewModal(crewId) {
+            const crew = modalLoadedCrew.find(c => c.crew_id === crewId);
+            if (!crew) return;
+            document.getElementById('crud-modal-title').innerText = `Edit Crew ${crew.crew_id} (${crew.name})`;
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <input type="hidden" id="c-crew-id" value="${crew.crew_id}">
+                <div class="crud-form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="c-name" value="${crew.name}">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Role</label>
+                        <select id="c-role">
+                            <option value="CAPTAIN" ${crew.role === 'CAPTAIN' ? 'selected' : ''}>CAPTAIN</option>
+                            <option value="FIRST_OFFICER" ${crew.role === 'FIRST_OFFICER' ? 'selected' : ''}>FIRST_OFFICER</option>
+                            <option value="CABIN_SENIOR" ${crew.role === 'CABIN_SENIOR' ? 'selected' : ''}>CABIN_SENIOR</option>
+                            <option value="CABIN_ATTENDANT" ${crew.role === 'CABIN_ATTENDANT' ? 'selected' : ''}>CABIN_ATTENDANT</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Base Station</label>
+                        <input type="text" id="c-base" value="${crew.base}">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Duty Start</label>
+                        <input type="text" id="c-duty-start" value="${crew.duty_start || '2026-11-01T04:30:00'}">
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Assigned Flight</label>
+                        <input type="text" id="c-flight-id" value="${crew.assigned_flight_id || ''}">
+                    </div>
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveCrewRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        async function saveCrewRecord() {
+            const crew_id = document.getElementById('c-crew-id')?.value?.trim().toUpperCase();
+            const name = document.getElementById('c-name')?.value?.trim();
+            const role = document.getElementById('c-role')?.value?.toUpperCase();
+            const base = document.getElementById('c-base')?.value?.trim().toUpperCase() || 'VOBL';
+            const duty_start = document.getElementById('c-duty-start')?.value?.trim();
+            const assigned_flight_id = document.getElementById('c-flight-id')?.value?.trim().toUpperCase() || null;
+
+            if (!crew_id || !name) {
+                alert('Please enter crew ID and full name.');
+                return;
+            }
+
+            try {
+                // Save crew member
+                await fetch('/api/crew', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ crew_id, name, role, base })
+                });
+
+                // If duty_start provided, update duty
+                if (duty_start) {
+                    await fetch('/api/crew/duty', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ crew_id, duty_start, assigned_flight_id })
+                    });
+                }
+
+                closeCrudSubmodal();
+                loadModalData('crew');
+            } catch (err) {
+                alert('Failed to save crew record: ' + err);
+            }
+        }
+
+        async function deleteCrewRecord(crewId) {
+            if (!confirm(`Delete crew member ${crewId} and all assigned duties?`)) return;
+            try {
+                const res = await fetch(`/api/crew/${encodeURIComponent(crewId)}`, { method: 'DELETE' });
+                const data = await res.json();
+                loadModalData('crew');
+            } catch (err) {
+                alert('Failed to delete crew: ' + err);
+            }
+        }
+
+        // 4. SCENARIOS CRUD & INSTANT TRIGGER
+        function openAddScenarioModal() {
+            document.getElementById('crud-modal-title').innerText = '+ Add Disruption Scenario';
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <div class="crud-form-group">
+                    <label>Scenario ID</label>
+                    <input type="text" id="s-scenario-id" placeholder="e.g. SCENARIO_CUSTOM_01">
+                </div>
+                <div class="crud-form-group">
+                    <label>Scenario Name</label>
+                    <input type="text" id="s-name" placeholder="e.g. Morning Fog Grounding at VOBL">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Disruption Type</label>
+                        <select id="s-type">
+                            <option value="fog">FOG</option>
+                            <option value="aog">AOG (Mechanical)</option>
+                            <option value="weather">WEATHER</option>
+                            <option value="crew_shortage">CREW SHORTAGE</option>
+                            <option value="slot_closure">SLOT CLOSURE</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Airport ICAO</label>
+                        <input type="text" id="s-airport" value="VOBL">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Severity</label>
+                        <select id="s-severity">
+                            <option value="MINOR">MINOR</option>
+                            <option value="MODERATE">MODERATE</option>
+                            <option value="SEVERE" selected>SEVERE</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Difficulty</label>
+                        <select id="s-difficulty">
+                            <option value="STANDARD" selected>STANDARD</option>
+                            <option value="HARD">HARD</option>
+                            <option value="EXTREME">EXTREME</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveScenarioRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        function openEditScenarioModal(scenarioId) {
+            const sc = modalLoadedScenarios.find(s => s.scenario_id === scenarioId);
+            if (!sc) return;
+            document.getElementById('crud-modal-title').innerText = `Edit Scenario ${sc.scenario_id}`;
+            document.getElementById('crud-modal-fields').innerHTML = `
+                <input type="hidden" id="s-scenario-id" value="${sc.scenario_id}">
+                <div class="crud-form-group">
+                    <label>Scenario Name</label>
+                    <input type="text" id="s-name" value="${sc.name}">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Disruption Type</label>
+                        <select id="s-type">
+                            <option value="fog" ${sc.disruption_type === 'fog' ? 'selected' : ''}>FOG</option>
+                            <option value="aog" ${sc.disruption_type === 'aog' ? 'selected' : ''}>AOG (Mechanical)</option>
+                            <option value="weather" ${sc.disruption_type === 'weather' ? 'selected' : ''}>WEATHER</option>
+                            <option value="crew_shortage" ${sc.disruption_type === 'crew_shortage' ? 'selected' : ''}>CREW SHORTAGE</option>
+                            <option value="slot_closure" ${sc.disruption_type === 'slot_closure' ? 'selected' : ''}>SLOT CLOSURE</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Airport ICAO</label>
+                        <input type="text" id="s-airport" value="${sc.airport}">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="crud-form-group">
+                        <label>Severity</label>
+                        <select id="s-severity">
+                            <option value="MINOR" ${sc.severity === 'MINOR' ? 'selected' : ''}>MINOR</option>
+                            <option value="MODERATE" ${sc.severity === 'MODERATE' ? 'selected' : ''}>MODERATE</option>
+                            <option value="SEVERE" ${sc.severity === 'SEVERE' ? 'selected' : ''}>SEVERE</option>
+                        </select>
+                    </div>
+                    <div class="crud-form-group">
+                        <label>Difficulty</label>
+                        <select id="s-difficulty">
+                            <option value="STANDARD" ${sc.difficulty === 'STANDARD' ? 'selected' : ''}>STANDARD</option>
+                            <option value="HARD" ${sc.difficulty === 'HARD' ? 'selected' : ''}>HARD</option>
+                            <option value="EXTREME" ${sc.difficulty === 'EXTREME' ? 'selected' : ''}>EXTREME</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            document.getElementById('crud-modal-save-btn').onclick = saveScenarioRecord;
+            document.getElementById('crud-submodal').style.display = 'flex';
+        }
+
+        async function saveScenarioRecord() {
+            const scenario_id = document.getElementById('s-scenario-id')?.value?.trim().toUpperCase();
+            const name = document.getElementById('s-name')?.value?.trim();
+            const disruption_type = document.getElementById('s-type')?.value?.toLowerCase();
+            const airport = document.getElementById('s-airport')?.value?.trim().toUpperCase() || 'VOBL';
+            const severity = document.getElementById('s-severity')?.value?.toUpperCase();
+            const difficulty = document.getElementById('s-difficulty')?.value?.toUpperCase();
+
+            if (!scenario_id || !name) {
+                alert('Please enter scenario ID and title.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/scenarios', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scenario_id, name, disruption_type, airport, severity, difficulty })
+                });
+                const data = await res.json();
+                closeCrudSubmodal();
+                loadModalData('scenarios');
+            } catch (err) {
+                alert('Failed to save scenario: ' + err);
+            }
+        }
+
+        async function deleteScenarioRecord(scenarioId) {
+            if (!confirm(`Delete scenario ${scenarioId}?`)) return;
+            try {
+                const res = await fetch(`/api/scenarios/${encodeURIComponent(scenarioId)}`, { method: 'DELETE' });
+                const data = await res.json();
+                loadModalData('scenarios');
+            } catch (err) {
+                alert('Failed to delete scenario: ' + err);
+            }
+        }
+
+        async function triggerScenarioFromModal(scenarioId) {
+            closeDataManagerModal();
+            closeCrudSubmodal();
+            const scSelect = document.getElementById('scenario-select');
+            if (scSelect) scSelect.value = scenarioId;
+            await runRecovery();
         }
 
         async function resetDatabaseToBaseline() {

@@ -93,6 +93,13 @@ class CrewDutyPayload(BaseModel):
     assigned_flight_id: Optional[str] = None
 
 
+class CrewMemberPayload(BaseModel):
+    crew_id: str
+    name: str
+    role: str = "CAPTAIN"
+    base: str = "VOBL"
+
+
 class ScenarioPayload(BaseModel):
     scenario_id: str
     name: str
@@ -168,7 +175,7 @@ def list_schedule():
     try:
         cursor = conn.execute("SELECT flight_id, tail, origin, dest, std, sta, seats, status FROM flights ORDER BY std ASC")
         rows = [dict(r) for r in cursor.fetchall()]
-        return {"flights_count": len(rows), "flights": rows}
+        return {"flights_count": len(rows), "flights": rows, "schedule": rows}
     finally:
         conn.close()
 
@@ -245,6 +252,38 @@ def update_crew_duty(item: CrewDutyPayload):
             )
         conn.commit()
         return {"status": "SUCCESS", "message": f"Duty for {item.crew_id} updated (Start: {item.duty_start})."}
+    finally:
+        conn.close()
+
+
+@app.post("/api/crew")
+def add_or_update_crew_member(item: CrewMemberPayload):
+    conn = get_connection(settings.DB_PATH)
+    try:
+        conn.execute(
+            """INSERT OR REPLACE INTO crew_members (crew_id, name, role, base)
+               VALUES (?, ?, ?, ?)""",
+            (item.crew_id.upper(), item.name, item.role.upper(), item.base.upper())
+        )
+        conn.commit()
+        return {"status": "SUCCESS", "message": f"Crew member {item.crew_id.upper()} recorded successfully."}
+    finally:
+        conn.close()
+
+
+@app.delete("/api/crew/{crew_id}")
+def delete_crew_member(crew_id: str):
+    conn = get_connection(settings.DB_PATH)
+    try:
+        cid = crew_id.upper()
+        cursor = conn.execute("SELECT duty_id FROM crew_duties WHERE crew_id = ?", (cid,))
+        duties = [r["duty_id"] for r in cursor.fetchall()]
+        for did in duties:
+            conn.execute("DELETE FROM crew_duty_flights WHERE duty_id = ?", (did,))
+        conn.execute("DELETE FROM crew_duties WHERE crew_id = ?", (cid,))
+        conn.execute("DELETE FROM crew_members WHERE crew_id = ?", (cid,))
+        conn.commit()
+        return {"status": "SUCCESS", "message": f"Crew member {cid} removed."}
     finally:
         conn.close()
 
