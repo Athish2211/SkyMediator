@@ -1653,6 +1653,7 @@
                     </div>
                 </div>
 
+                <div id="gantt-status-banner" style="display: none;"></div>
                 <!-- Minimal Airspace & Operational Status Ticker -->
                 <div id="live-airborne-ticker" style="padding: 0.35rem 0.85rem; background: #ffffff; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; overflow-x: auto; white-space: nowrap;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -1953,20 +1954,29 @@
             const tagEl = document.getElementById('gantt-active-tag');
 
             if (mode === 'baseline') {
-                banner.className = 'gantt-status-banner';
-                textEl.innerText = 'Displaying scheduled baseline across all 15 narrow-body aircraft (VT-BLR01 - VT-BLR15). VT-BLR15 positioned as standby reserve at Kempegowda Hub.';
-                tagEl.innerText = 'BASELINE VIEW';
-                tagEl.style.color = 'var(--primary)';
+                if (banner) banner.className = 'gantt-status-banner';
+                if (textEl) textEl.innerText = 'Displaying scheduled baseline across all 15 narrow-body aircraft (VT-BLR01 - VT-BLR15). VT-BLR15 positioned as standby reserve at Kempegowda Hub.';
+                if (tagEl) {
+                    tagEl.innerText = 'BASELINE VIEW';
+                    tagEl.style.color = 'var(--primary)';
+                    tagEl.style.background = '#e0f2fe';
+                }
             } else if (mode === 'disrupted') {
-                banner.className = 'gantt-status-banner disrupted';
-                textEl.innerText = 'ACTIVE DISRUPTION: Flight 6E-101 (VT-BLR01) impacted by CAT III morning fog / operational snag at VOBL Hub. Standby reserve VT-BLR15 alerted.';
-                tagEl.innerText = 'DISRUPTED STATE';
-                tagEl.style.color = 'var(--accent-rose)';
+                if (banner) banner.className = 'gantt-status-banner disrupted';
+                if (textEl) textEl.innerText = 'ACTIVE DISRUPTION: Flight rotation impacted at VOBL Hub. Standby reserve alerted.';
+                if (tagEl) {
+                    tagEl.innerText = 'DISRUPTED STATE';
+                    tagEl.style.color = 'var(--accent-rose)';
+                    tagEl.style.background = '#fee2e2';
+                }
             } else if (mode === 'approved') {
-                banner.className = 'gantt-status-banner approved';
-                textEl.innerText = 'APPROVED RECOVERY DISPATCH: Flight 6E-101 dynamically mutated and reassigned to standby VT-BLR15. VT-BLR01 routed to maintenance recovery buffer. 100% DGCA CAR Section 7 compliant.';
-                tagEl.innerText = 'APPROVED PLAN DISPATCHED';
-                tagEl.style.color = 'var(--accent-emerald)';
+                if (banner) banner.className = 'gantt-status-banner approved';
+                if (textEl) textEl.innerText = 'APPROVED RECOVERY DISPATCH: Recovery mutations dispatched across fleet. 100% DGCA CAR Section 7 compliant.';
+                if (tagEl) {
+                    tagEl.innerText = 'APPROVED PLAN DISPATCHED';
+                    tagEl.style.color = '#047857';
+                    tagEl.style.background = '#ecfdf5';
+                }
             }
 
             renderFleetGanttChart();
@@ -3771,7 +3781,7 @@
         async function triggerScenarioFromModal(scenarioId) {
             closeDataManagerModal();
             closeCrudSubmodal();
-            const scSelect = document.getElementById('scenario-select');
+            const scSelect = document.getElementById('scenario-selector');
             if (scSelect) scSelect.value = scenarioId;
             await runRecovery();
         }
