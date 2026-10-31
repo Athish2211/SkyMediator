@@ -2274,8 +2274,19 @@
 
         async function requestReplan() {
             if (!currentRunId) return;
-            const reason = prompt('Enter feedback for agent revision loop (e.g. "swap to VT-BLR15", "cancel flight", "delay 45 mins", "prioritize departure"):', 'Prioritize departure over connection hold');
+            const reason = prompt('Enter feedback for agent revision loop (e.g. "delay 45 mins", "cancel flight", "swap to VT-BLR15", "prioritize departure"):', 'Prioritize departure over connection hold; evaluate calibrated delay');
             if (!reason) return;
+
+            // Immediately show active thinking and deliberation state
+            document.getElementById('rec-section').style.display = 'none';
+            document.getElementById('rounds-list').innerHTML = `
+                <div class="card" style="text-align: center; padding: 2.5rem; color: var(--navy-dark); border-left: 4px solid var(--accent-amber);">
+                    <div style="font-size: 0.95rem; font-weight: 700; color: var(--accent-amber);">Re-orchestrating 7-Agent Deliberation Suite...</div>
+                    <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 0.4rem;">Incorporating Duty Manager Directive: <em>"${reason}"</em></p>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">Rotation synthesizing cause-aware diff &bull; Crew Legality auditing CAR Sec 7 &bull; Mediator arbitrating new trade-offs</p>
+                </div>
+            `;
+
             try {
                 const res = await fetch('/api/approve_plan', {
                     method: 'POST',
@@ -2297,12 +2308,22 @@
                         renderRounds(data.candidates || [data.selected_plan]);
                     }
                     loadFleetGanttData();
-                    alert(`New Plan Synthesized: ${data.plan_id || 'Plan revision'}\n\n${data.message}`);
+                } else if (data.session) {
+                    handleRecoveryResponse(data.session);
                 } else {
-                    alert('Revision Requested: ' + (data.message || 'Feedback submitted to agents.'));
+                    document.getElementById('rounds-list').innerHTML = `
+                        <div class="card" style="padding: 1.5rem; color: var(--accent-amber); border-left: 4px solid var(--accent-amber);">
+                            <strong>Revision Registered:</strong> ${data.message || 'Feedback submitted to multi-agent deliberation loop.'}
+                        </div>
+                    `;
                 }
             } catch (err) {
-                alert('Error requesting revision: ' + err);
+                console.error('Replan error:', err);
+                document.getElementById('rounds-list').innerHTML = `
+                    <div class="card" style="padding: 1.5rem; color: var(--accent-rose); border-left: 4px solid var(--accent-rose);">
+                        <strong>Replan Failed:</strong> ${err.message || err}
+                    </div>
+                `;
             }
         }
 

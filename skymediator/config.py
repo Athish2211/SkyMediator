@@ -55,8 +55,8 @@ class Settings(BaseSettings):
         description="Google Gemini API key for natural language rationale & RAG reformulation"
     )
     LLM_MODEL: str = Field(
-        default="gemini-3.1-flash-lite-preview",
-        description="Google Gemini model name (e.g. gemini-3.1-flash-lite-preview)"
+        default="gemini-flash-lite-latest",
+        description="Google Gemini model name (e.g. gemini-flash-lite-latest)"
     )
 
     # Orchestration Boundaries

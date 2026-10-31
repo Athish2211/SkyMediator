@@ -66,10 +66,10 @@ def call_gemini(prompt: str, system_prompt: Optional[str] = None) -> str:
     if not api_key:
         return "[Deterministic OCC Fallback: Set GEMINI_API_KEY to activate live Gemini synthesis]"
 
-    preferred_model = settings.LLM_MODEL or "gemini-3.1-flash-lite-preview"
-    # Fallback cascade prioritizing verified responsive models
+    preferred_model = settings.LLM_MODEL or "gemini-flash-lite-latest"
+    # Fallback cascade prioritizing verified responsive models with zero 503 errors
     models_to_try = [preferred_model]
-    for fallback_model in ["gemini-3.1-flash-lite-preview", "gemini-2.5-flash", "gemini-flash-latest"]:
+    for fallback_model in ["gemini-flash-lite-latest", "gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-3.6-flash"]:
         if fallback_model not in models_to_try:
             models_to_try.append(fallback_model)
 

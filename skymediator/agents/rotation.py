@@ -36,6 +36,13 @@ class RotationAgent:
         # Identify which constraints were violated in prior rounds
         vetoed_types = [c.get("constraint_type") for c in constraints_log]
 
+        # Root cause categorization
+        dis_type = (disruption.get("disruption_type") or disruption.get("type") or "fog").lower()
+        is_weather = any(w in dis_type for w in ["fog", "weather", "visibility", "rvr", "metar", "wind", "storm", "cat iii", "cat 3"])
+        is_aog = any(w in dis_type for w in ["aog", "maintenance", "technical", "snag", "hydraulic", "engine", "grounded", "mechanical"])
+        is_crew = any(w in dis_type for w in ["crew", "pilot", "captain", "officer", "fdtl", "timeout", "fatigue", "rest"])
+        is_slot = any(w in dis_type for w in ["slot", "runway", "curfew", "holding", "atc", "capacity", "gridlock"])
+
         # Check for Human Replan Directive (PROP-04 Replan Loop)
         human_revisions = [c for c in constraints_log if c.get("constraint_type") == "HUMAN_REVISION"]
         stacked = disruption.get("stacked_disruptions") or []
@@ -45,22 +52,33 @@ class RotationAgent:
             feedback = (latest_hr.get("reason") or "").lower()
             import re
 
-            has_cancel = any(w in feedback for w in ["cancel", "cancellation"])
-            has_delay = any(w in feedback for w in ["delay", "postpone", "push", "retard", "hold"])
-            has_swap = any(w in feedback for w in ["swap", "standby", "reassign"]) or ("tail" in feedback and "swap" in feedback)
+            has_cancel = any(w in feedback for w in ["cancel", "cancellation", "ground"])
+            has_delay = any(w in feedback for w in ["delay", "postpone", "push", "retard", "hold", "wait"])
+            has_swap = any(w in feedback for w in ["swap", "standby", "reassign", "substitute"]) or ("tail" in feedback and "swap" in feedback)
+            avoid_cancel = "avoid cancellation" in feedback or "do not cancel" in feedback
 
-            # Determine dominant human directive action resolving "instead of" precedence
+            # Determine dominant human directive action resolving precedence
             target_action = None
-            if has_delay and has_swap:
-                idx_delay = min((feedback.find(w) for w in ["delay", "postpone", "push", "retard", "hold"] if w in feedback), default=999)
+            if has_cancel and not avoid_cancel:
+                target_action = "cancel"
+            elif has_delay and has_swap:
+                idx_delay = min((feedback.find(w) for w in ["delay", "postpone", "push", "retard", "hold", "wait"] if w in feedback), default=999)
                 idx_swap = min((feedback.find(w) for w in ["swap", "standby", "reassign"] if w in feedback), default=999)
                 target_action = "delay" if idx_delay < idx_swap else "swap"
-            elif has_cancel:
-                target_action = "cancel"
             elif has_delay:
                 target_action = "delay"
             elif has_swap or "tail" in feedback or "standby" in feedback:
                 target_action = "swap"
+            else:
+                # Context-aware fallback: Understand the root cause instead of blindly swapping
+                if is_weather:
+                    target_action = "delay"
+                elif is_aog:
+                    target_action = "swap"
+                elif is_crew:
+                    target_action = "delay"
+                else:
+                    target_action = "delay"
 
             if target_action == "cancel":
                 plan_diff = [
@@ -99,20 +117,6 @@ class RotationAgent:
                 ]
                 rationale = f"Replan revision: Rescheduled {affected_id} with {d_min}m delay per Duty Manager directive."
 
-            else:
-                # Switch strategy from previous candidate to counter-propose
-                target_tail = disruption.get("candidate_tail", "VT-BLR15")
-                val = swap_tail(affected_id, target_tail, base_schedule)
-                plan_diff = [
-                    SwapTailOp(
-                        flight_id=affected_id,
-                        original_tail=disruption.get("original_tail", flight_base["tail"] if flight_base else "VT-BLR01"),
-                        new_tail=target_tail,
-                        reason=f"Duty Manager Replan Directive: '{latest_hr.get('reason')}'. Swapped to preserve schedule integrity."
-                    ).model_dump()
-                ]
-                rationale = f"Replan revision addressing Duty Manager directive '{latest_hr.get('reason')}': Swapped {affected_id} to {target_tail} to maintain punctuality."
-
         elif len(stacked) > 1:
             # Multi-incident disruption stacking: Formulate recovery mutations for ALL active disruptions simultaneously
             plan_diff = []
@@ -126,6 +130,9 @@ class RotationAgent:
                 f_sta = datetime.fromisoformat(fb["sta"]) if fb else datetime(2026, 11, 1, 8, 30)
                 orig_t = disc.get("original_tail", fb["tail"] if fb else "VT-BLR01")
 
+                disc_type = (disc.get("disruption_type") or disc.get("type") or "").lower()
+                disc_is_aog = any(w in disc_type for w in ["aog", "maintenance", "technical", "snag", "hydraulic"])
+
                 if disc.get("initial_action") == "cancel":
                     plan_diff.append(
                         CancelOp(
@@ -133,7 +140,7 @@ class RotationAgent:
                             reason=f"Stacked recovery: Cancel flight {f_id} to isolate disruption"
                         ).model_dump()
                     )
-                elif disc.get("initial_action") == "swap_tail" or disc.get("type") in ("MAINTENANCE", "AOG"):
+                elif disc.get("initial_action") == "swap_tail" or disc_is_aog:
                     cand_t = disc.get("candidate_tail", "VT-BLR15")
                     if cand_t in assigned_tails:
                         cand_t = "VT-BLR14" if cand_t != "VT-BLR14" else "VT-BLR13"
@@ -164,7 +171,12 @@ class RotationAgent:
             rationale = f"Multi-Incident Recovery Plan covering {len(stacked)} stacked disruptions ({flight_ids_str}). Formulated coordinated schedule mutations."
 
         elif round_number == 1:
-            if disruption.get("initial_action") == "cancel":
+            init_action = disruption.get("initial_action")
+            # Weather cannot be resolved by swapping tails on the foggy runway
+            if is_weather and init_action == "swap_tail":
+                init_action = "excessive_delay"
+
+            if init_action == "cancel":
                 plan_diff = [
                     CancelOp(
                         flight_id=affected_id,
@@ -172,7 +184,8 @@ class RotationAgent:
                     ).model_dump()
                 ]
                 rationale = f"Cancel flight {affected_id} per Duty Manager operational dispatch directive."
-            elif disruption.get("initial_action") == "excessive_delay":
+
+            elif init_action == "excessive_delay" or is_weather:
                 delay_min = disruption.get("delay_minutes", 180)
                 plan_diff = [
                     DelayOp(
@@ -180,13 +193,13 @@ class RotationAgent:
                         delay_minutes=delay_min,
                         new_std=std_dt + timedelta(minutes=delay_min),
                         new_sta=sta_dt + timedelta(minutes=delay_min),
-                        reason=f"Round 1: Initial tactical delay of {delay_min}m for weather/operational clearance"
+                        reason=f"Round 1: Initial tactical delay of {delay_min}m for {dis_type.upper()} clearance at {disruption.get('airport', 'VOBL')}"
                     ).model_dump()
                 ]
-                rationale = f"Delay flight {affected_id} by {delay_min}m to allow runway visual range recovery."
-            else:
+                rationale = f"Tactical delay on flight {affected_id} by {delay_min}m allowing runway visual range recovery."
+
+            elif is_aog or init_action == "swap_tail":
                 target_tail = disruption.get("candidate_tail", "VT-BLR15")
-                # Validate turnaround before proposing swap
                 val = swap_tail(affected_id, target_tail, base_schedule)
                 plan_diff = [
                     SwapTailOp(
@@ -198,17 +211,55 @@ class RotationAgent:
                 ]
                 rationale = f"Swap aircraft on flight {affected_id} to standby tail {target_tail} (Turnaround: {val.get('turnaround_margin_minutes', 0)}m)."
 
+            elif is_crew:
+                plan_diff = [
+                    DelayOp(
+                        flight_id=affected_id,
+                        delay_minutes=35,
+                        new_std=std_dt + timedelta(minutes=35),
+                        new_sta=sta_dt + timedelta(minutes=35),
+                        reason="Round 1: Tactical 35m delay to position and brief rested standby flight crew"
+                    ).model_dump()
+                ]
+                rationale = f"Calibrated 35m delay on flight {affected_id} for standby crew activation."
+
+            else:
+                d_min = disruption.get("delay_minutes", 45)
+                plan_diff = [
+                    DelayOp(
+                        flight_id=affected_id,
+                        delay_minutes=d_min,
+                        new_std=std_dt + timedelta(minutes=d_min),
+                        new_sta=sta_dt + timedelta(minutes=d_min),
+                        reason=f"Round 1: Tactical delay of {d_min}m to align with airport slot availability"
+                    ).model_dump()
+                ]
+                rationale = f"Apply calibrated {d_min}m delay on {affected_id}."
+
         elif "FDTL" in vetoed_types:
-            # Counter-proposal responding to Crew Legality Veto:
-            # Check if cancellation or moderate delay was requested
-            if disruption.get("counter_action") == "cancel":
+            # Counter-proposal responding to Crew Legality Veto
+            # In Round 3 (or if delay already vetoed), decisively propose cancellation to prevent illegal exceedance
+            if disruption.get("counter_action") == "cancel" or round_number >= 3:
                 plan_diff = [
                     CancelOp(
                         flight_id=affected_id,
-                        reason="Counter-proposal responding to Crew FDTL veto: Cancel flight to prevent illegal duty exceedance"
+                        reason=f"Round {round_number} Counter-proposal: Strategic cancellation to eliminate illegal crew duty exceedance"
                     ).model_dump()
                 ]
-                rationale = f"Counter-proposal: Selectively cancel {affected_id} to respect statutory crew duty limits."
+                rationale = f"Counter-proposal (Round {round_number}): Selectively cancel {affected_id} to respect statutory crew duty limits under DGCA CAR Section 7."
+            elif is_aog:
+                # If AOG was vetoed for crew, reassign to standby tail with reserve crew
+                target_tail = disruption.get("candidate_tail", "VT-BLR15")
+                val = swap_tail(affected_id, target_tail, base_schedule)
+                plan_diff = [
+                    SwapTailOp(
+                        flight_id=affected_id,
+                        original_tail=disruption.get("original_tail", flight_base["tail"] if flight_base else "VT-BLR01"),
+                        new_tail=target_tail,
+                        reason="Counter-proposal: Tail swap to standby aircraft with fresh reserve crew"
+                    ).model_dump()
+                ]
+                rationale = f"Counter-proposal: Swapped {affected_id} to {target_tail} with fresh reserve crew."
             else:
                 counter_delay = disruption.get("counter_delay_minutes", 25)
                 plan_diff = [
@@ -217,7 +268,7 @@ class RotationAgent:
                         delay_minutes=counter_delay,
                         new_std=std_dt + timedelta(minutes=counter_delay),
                         new_sta=sta_dt + timedelta(minutes=counter_delay),
-                        reason=f"Counter-proposal: Reduced delay of {counter_delay}m calibrated within legal crew FDP"
+                        reason=f"Counter-proposal (Round {round_number}): Reduced delay of {counter_delay}m calibrated within legal crew FDP"
                     ).model_dump()
                 ]
                 rationale = f"Counter-proposal: Calibrated {counter_delay}m delay for {affected_id} preserving pilot legality."
@@ -233,7 +284,7 @@ class RotationAgent:
             rationale = f"Counter-proposal: Cancel {affected_id} to relieve slot saturation."
 
         else:
-            # Default fallback
+            # Default fallback: calibrated tactical delay
             plan_diff = [
                 DelayOp(
                     flight_id=affected_id,
