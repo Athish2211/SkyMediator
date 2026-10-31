@@ -70,15 +70,24 @@ class RotationAgent:
             elif has_swap or "tail" in feedback or "standby" in feedback:
                 target_action = "swap"
             else:
-                # Context-aware fallback: Understand the root cause instead of blindly swapping
-                if is_weather:
+                # DUTY MANAGER REPLAN SAFETY: Never repeat the previously rejected strategy
+                prev_ops = [
+                    c.get("chosen_op", {}).get("op") or (c.get("plan_diff", [{}])[0].get("op") if c.get("plan_diff") else None)
+                    for c in constraints_log if c.get("chosen_op") or c.get("plan_diff")
+                ]
+                last_op = prev_ops[-1] if prev_ops else None
+
+                if last_op in ("swap", "swap_tail"):
+                    # Previous proposal was aircraft swap; Duty Manager rejected -> pivot to calibrated delay
                     target_action = "delay"
-                elif is_aog:
-                    target_action = "swap"
-                elif is_crew:
+                elif last_op == "delay":
+                    # Previous proposal was delay; Duty Manager rejected -> pivot to standby swap or strategic cancel
+                    target_action = "swap" if (disruption.get("candidate_tail", "VT-BLR15") == "VT-BLR15") else "cancel"
+                elif last_op == "cancel":
+                    # Previous proposal was cancellation; Duty Manager rejected -> pivot to holding delay
                     target_action = "delay"
                 else:
-                    target_action = "delay"
+                    target_action = "delay" if is_weather else "swap"
 
             if target_action == "cancel":
                 plan_diff = [
@@ -105,7 +114,7 @@ class RotationAgent:
 
             elif target_action == "delay":
                 digits = re.search(r"(\d+)\s*(?:m|min|mins|minute|minutes)?", feedback)
-                d_min = int(digits.group(1)) if digits else 45
+                d_min = int(digits.group(1)) if digits else (45 if is_weather else 35)
                 plan_diff = [
                     DelayOp(
                         flight_id=affected_id,
@@ -116,6 +125,28 @@ class RotationAgent:
                     ).model_dump()
                 ]
                 rationale = f"Replan revision: Rescheduled {affected_id} with {d_min}m delay per Duty Manager directive."
+
+            # Multi-incident disruption stacking during Replan: Ensure ALL active stacked disruptions are also preserved
+            if len(stacked) > 1:
+                assigned_tails = {p.get("new_tail") for p in plan_diff if p.get("new_tail")}
+                for disc in stacked:
+                    f_id = disc.get("affected_flight_id")
+                    if not f_id or f_id == affected_id or any(p.get("flight_id") == f_id for p in plan_diff):
+                        continue
+                    fb = next((f for f in base_schedule if f["flight_id"] == f_id), None)
+                    f_std = datetime.fromisoformat(fb["std"]) if fb else datetime(2026, 11, 1, 6, 0)
+                    f_sta = datetime.fromisoformat(fb["sta"]) if fb else datetime(2026, 11, 1, 8, 30)
+                    orig_t = disc.get("original_tail", fb["tail"] if fb else "VT-BLR01")
+                    disc_d_type = (disc.get("disruption_type") or disc.get("type") or "").lower()
+
+                    if disc.get("initial_action") == "cancel":
+                        plan_diff.append(CancelOp(flight_id=f_id, reason=f"Stacked incident: Cancel {f_id}").model_dump())
+                    elif "aog" in disc_d_type and "VT-BLR15" not in assigned_tails:
+                        assigned_tails.add("VT-BLR15")
+                        plan_diff.append(SwapTailOp(flight_id=f_id, original_tail=orig_t, new_tail="VT-BLR15", reason=f"Stacked AOG: Tail swap {f_id} to VT-BLR15").model_dump())
+                    else:
+                        d_mins = disc.get("counter_delay_minutes") or 35
+                        plan_diff.append(DelayOp(flight_id=f_id, delay_minutes=d_mins, new_std=f_std + timedelta(minutes=d_mins), new_sta=f_sta + timedelta(minutes=d_mins), reason=f"Stacked incident: Calibrated {d_mins}m delay").model_dump())
 
         elif len(stacked) > 1:
             # Multi-incident disruption stacking: Formulate recovery mutations for ALL active disruptions simultaneously

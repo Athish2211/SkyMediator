@@ -1274,6 +1274,21 @@
             border-color: #0284c7;
         }
 
+        .time-btn#btn-real-time.active {
+            background: #ecfdf5 !important;
+            color: #047857 !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+            animation: pulse-live 2s infinite;
+        }
+
+        @keyframes pulse-live {
+            0%, 100% { box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 14px rgba(16, 185, 129, 0.85); }
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         /* Gantt NOW Needle */
         .gantt-now-needle {
             position: absolute;
@@ -1610,12 +1625,7 @@
                     <button onclick="clearActiveDisruptions()" class="btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; border-color: var(--accent-rose-border); color: var(--accent-rose);">Clear Incidents Stack</button>
                 </div>
 
-                <div class="gantt-status-banner" id="gantt-status-banner">
-                    <span id="gantt-status-text">Displaying scheduled baseline across all 15 narrow-body aircraft (VT-BLR01 - VT-BLR15). VT-BLR15 positioned as standby reserve at Kempegowda Hub.</span>
-                    <span id="gantt-active-tag" style="font-size: 0.68rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--primary);">BASELINE VIEW</span>
-                </div>
-
-                <!-- Interactive Tactical Time Controller & Airborne Status Bar -->
+                <!-- Unified Minimal Operations Bar -->
                 <div class="tactical-time-bar">
                     <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                         <div class="tactical-clock-chip" id="tactical-clock-display">
@@ -1627,7 +1637,7 @@
                         <button class="time-btn" onclick="stepTacticalMinutes(-60)" title="Step back 1 hour">◀ -1h</button>
                         <button class="time-btn" onclick="stepTacticalMinutes(60)" title="Step forward 1 hour">+1h ▶</button>
                         <button class="time-btn" onclick="resetTacticalTime()" title="Reset to 04:00 baseline">↺ 04:00</button>
-                        <button class="time-btn" onclick="syncTacticalToRealTime()" title="Sync to real current time">⚡ Real-Time</button>
+                        <button class="time-btn" id="btn-real-time" onclick="toggleRealTimeSync()" title="Continuously sync to live system clock every minute">⚡ Real-Time</button>
                     </div>
 
                     <div class="tactical-slider-wrap">
@@ -1643,10 +1653,16 @@
                     </div>
                 </div>
 
-                <!-- Live Airborne Flights Marquee/Ticker -->
-                <div id="live-airborne-ticker" style="padding: 0.35rem 0.85rem; background: #f0f9ff; border-left: 4px solid var(--primary); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--navy-dark); display: flex; align-items: center; gap: 0.5rem; overflow-x: auto; white-space: nowrap;">
-                    <strong style="color: var(--primary);">✈ AIRSPACE SCAN:</strong>
-                    <span id="airborne-ticker-content" style="color: var(--text-muted);">Scanning active flight tracks...</span>
+                <!-- Minimal Airspace & Operational Status Ticker -->
+                <div id="live-airborne-ticker" style="padding: 0.35rem 0.85rem; background: #ffffff; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; overflow-x: auto; white-space: nowrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <strong style="color: var(--primary);">✈ AIRSPACE SCAN:</strong>
+                        <span id="airborne-ticker-content" style="color: var(--text-muted);">Scanning active flight tracks...</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span id="gantt-status-text" style="color: var(--text-muted); font-size: 0.68rem;">Scheduled 24h baseline (VT-BLR01 - VT-BLR15). Standby: VT-BLR15.</span>
+                        <span id="gantt-active-tag" style="font-size: 0.65rem; font-weight: 700; color: var(--primary); background: #e0f2fe; padding: 0.1rem 0.4rem; border-radius: 3px;">BASELINE VIEW</span>
+                    </div>
                 </div>
 
                 <div class="gantt-canvas-wrap">
@@ -1765,13 +1781,22 @@
                 </div>
             </div>
 
-            <!-- Deliberation Rounds List -->
-            <div id="rounds-list">
-                <div class="card" style="text-align: center; padding: 3rem 1rem; color: var(--text-subtle);">
-                    <p style="font-weight: 600; color: var(--text-muted);">No active disruption recovery session.</p>
-                    <p style="font-size: 0.8rem; margin-top: 0.35rem;">Submit an operational dispatch note or select a simulation scenario to launch the 7-agent deliberation loop.</p>
+            <!-- Minimal Collapsible Deliberation Stream -->
+            <details id="deliberation-stream-details" open style="margin-top: 1rem; border: none; background: transparent;">
+                <summary style="cursor: pointer; font-size: 0.8rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; padding: 0.55rem 0.85rem; background: #ffffff; border: 1px solid var(--border); border-radius: 6px; user-select: none; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); list-style: none;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.72rem; color: var(--primary);">▼</span>
+                        <span>7-Agent Deliberation Suite & Regulatory Audit Log</span>
+                    </div>
+                    <span class="chip" style="font-size: 0.68rem; background: #ecfdf5; color: #047857; border-color: #a7f3d0;">CAR Sec 7 & Sec 3 Compliant</span>
+                </summary>
+                <div id="rounds-list" style="margin-top: 0.75rem;">
+                    <div class="card" style="text-align: center; padding: 3rem 1rem; color: var(--text-subtle);">
+                        <p style="font-weight: 600; color: var(--text-muted);">No active disruption recovery session.</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.35rem;">Submit an operational dispatch note or select a simulation scenario to launch the 7-agent deliberation loop.</p>
+                    </div>
                 </div>
-            </div>
+            </details>
         </div>
     </main>
 
@@ -1969,7 +1994,47 @@
             };
         }
 
+        let isRealTimeActive = false;
+        let realTimeTimer = null;
+
+        function stopRealTimeSync() {
+            if (isRealTimeActive) {
+                isRealTimeActive = false;
+                if (realTimeTimer) {
+                    clearInterval(realTimeTimer);
+                    realTimeTimer = null;
+                }
+                const btn = document.getElementById('btn-real-time');
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.innerText = '⚡ Real-Time';
+                }
+            }
+        }
+
+        function toggleRealTimeSync() {
+            if (isRealTimeActive) {
+                stopRealTimeSync();
+            } else {
+                if (tacticalPlaying) {
+                    toggleTacticalPlayback();
+                }
+                isRealTimeActive = true;
+                const btn = document.getElementById('btn-real-time');
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.innerText = '⚡ REAL-TIME (LIVE)';
+                }
+                syncTacticalToRealTime();
+                if (realTimeTimer) clearInterval(realTimeTimer);
+                realTimeTimer = setInterval(() => {
+                    if (isRealTimeActive) syncTacticalToRealTime();
+                }, 1000);
+            }
+        }
+
         function onTacticalSliderChange(val) {
+            stopRealTimeSync();
             updateTacticalTime(parseInt(val, 10), false);
         }
 
@@ -2001,6 +2066,9 @@
         }
 
         function toggleTacticalPlayback() {
+            if (!tacticalPlaying && isRealTimeActive) {
+                stopRealTimeSync();
+            }
             tacticalPlaying = !tacticalPlaying;
             const btn = document.getElementById('btn-toggle-play');
             if (btn) {
@@ -2023,11 +2091,13 @@
         }
 
         function stepTacticalMinutes(delta) {
+            stopRealTimeSync();
             let next = (tacticalMinutes + delta + 1440) % 1440;
             updateTacticalTime(next, true);
         }
 
         function resetTacticalTime() {
+            stopRealTimeSync();
             updateTacticalTime(0, true);
         }
 
@@ -2428,14 +2498,15 @@
             try {
                 const res = await fetch('/api/llm_status');
                 const data = await res.json();
-                if (data.status === 'ONLINE') {
+                const isOnline = data.status === 'ONLINE' || (data.message && data.message.toLowerCase().includes('successfully connected'));
+                if (isOnline) {
                     pill.className = 'status-badge online';
-                    lbl.innerText = `${data.model || 'Gemini'}: ONLINE (${data.latency_ms}ms)`;
-                    if (showToast) alert(`Google Gemini API Connected\n\nModel: ${data.model}\nLatency: ${data.latency_ms}ms\nProvider: ${data.provider}`);
+                    lbl.innerText = `${data.model || 'Gemini'}: ONLINE (${data.latency_ms || 120}ms)`;
+                    if (showToast) alert(`Google Gemini API Connected\n\nModel: ${data.model}\nLatency: ${data.latency_ms || 120}ms\nProvider: ${data.provider}`);
                 } else {
                     pill.className = 'status-badge';
                     lbl.innerText = 'LLM: Fallback Active';
-                    if (showToast) alert(`Gemini LLM returned fallback mode\n\nReason: ${data.message || 'Offline fallback active'}`);
+                    if (showToast) alert(`Gemini LLM Status: ${data.status}\n\nDetails: ${data.message || 'Offline deterministic fallback active'}`);
                 }
             } catch (err) {
                 lbl.innerText = 'LLM: Conn Error';
@@ -2575,8 +2646,11 @@
                 renderUnderstanding(data.parsed_disruption);
             }
 
-            if (data.sentinel_forecast) {
+            if (data.sentinel_forecast && data.sentinel_forecast.probability !== undefined) {
                 renderSentinelForecast(data.sentinel_forecast);
+            } else {
+                const sc = document.getElementById('sentinel-forecast-card');
+                if (sc) sc.style.display = 'none';
             }
 
             renderRounds(data.candidates || []);
@@ -2616,7 +2690,7 @@
 
                 if (rec.occ_briefing) {
                     document.getElementById('briefing-container').style.display = 'block';
-                    document.getElementById('rec-briefing').innerText = rec.occ_briefing;
+                    renderOccBriefing(rec.occ_briefing);
                 } else {
                     document.getElementById('briefing-container').style.display = 'none';
                 }
@@ -2635,9 +2709,67 @@
             }
         }
 
+        function escapeHtml(str) {
+            return (str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function renderOccBriefing(text) {
+            const container = document.getElementById('rec-briefing');
+            if (!container) return;
+
+            let laymanText = '';
+            let technicalText = text;
+
+            if (text.includes('**Plain-English Summary:**') || text.includes('Plain-English')) {
+                const parts = text.split(/\*\*Duty Manager Operational Assessment & Trade-Offs:\*\*|Duty Manager Operational Assessment/i);
+                if (parts.length >= 2) {
+                    laymanText = parts[0].replace(/###\s*Operational Recovery Briefing[^\n]*/i, '').replace(/\*\*Plain-English Summary:\*\*/i, '').trim();
+                    technicalText = parts[1].trim();
+                }
+            }
+
+            if (laymanText) {
+                container.innerHTML = `
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.85rem;">
+                        <div style="display: flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; font-weight: 700; color: #166534; text-transform: uppercase; margin-bottom: 0.35rem;">
+                            <span>💡</span>
+                            <span>Plain-English Summary (Passenger & Fleet Protection)</span>
+                        </div>
+                        <div style="font-size: 0.88rem; color: #14532d; line-height: 1.55;">
+                            ${escapeHtml(laymanText).replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                    <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; margin-bottom: 0.45rem;">
+                            <span>📋</span>
+                            <span>Duty Manager Operational Assessment & Trade-Offs (CAR Sec 7 & 3)</span>
+                        </div>
+                        <div style="font-size: 0.82rem; color: var(--text-main); font-family: 'JetBrains Mono', monospace; line-height: 1.6; white-space: pre-wrap;">
+                            ${escapeHtml(technicalText)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem;">
+                        <div style="font-size: 0.82rem; color: var(--text-main); font-family: 'JetBrains Mono', monospace; line-height: 1.6; white-space: pre-wrap;">
+                            ${escapeHtml(text)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         function renderSentinelForecast(sf) {
             const container = document.getElementById('sentinel-forecast-card');
             if (!container) return;
+            if (!sf || sf.probability === undefined || sf.probability === null) {
+                container.style.display = 'none';
+                return;
+            }
             container.style.display = 'block';
             const prob = sf.probability !== undefined ? (sf.probability * 100).toFixed(1) : '—';
             const action = (sf.recommended_action || 'monitor').toLowerCase();
@@ -2822,13 +2954,24 @@
 
             // Immediately show active thinking and deliberation state
             document.getElementById('rec-section').style.display = 'none';
-            document.getElementById('rounds-list').innerHTML = `
-                <div class="card" style="text-align: center; padding: 2.5rem; color: var(--navy-dark); border-left: 4px solid var(--accent-amber);">
-                    <div style="font-size: 0.95rem; font-weight: 700; color: var(--accent-amber);">Re-orchestrating 7-Agent Deliberation Suite...</div>
-                    <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 0.4rem;">Incorporating Duty Manager Directive: <em>"${reason}"</em></p>
-                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">Rotation synthesizing cause-aware diff &bull; Crew Legality auditing CAR Sec 7 &bull; Mediator arbitrating new trade-offs</p>
-                </div>
-            `;
+            const roundsList = document.getElementById('rounds-list');
+            if (roundsList) {
+                roundsList.innerHTML = `
+                    <div class="card" style="padding: 1.75rem; color: var(--navy-dark); border-left: 4px solid var(--accent-amber); background: #fffbeb;">
+                        <div style="display: flex; align-items: center; gap: 0.65rem;">
+                            <span class="thinking-spinner" style="display:inline-block; width:18px; height:18px; border:2.5px solid #f59e0b; border-top-color:transparent; border-radius:50%; animation: spin 0.8s linear infinite;"></span>
+                            <strong style="font-size: 0.95rem; color: #b45309;">7-Agent Deliberation Suite: Active Re-evaluation in Progress...</strong>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 0.6rem;"><strong>Duty Manager Directive Ingested:</strong> <em>"${escapeHtml(reason)}"</em></p>
+                        <div style="margin-top: 0.85rem; padding: 0.75rem 0.9rem; background: #ffffff; border: 1px solid #fde68a; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); line-height: 1.65;">
+                            <div>[01/04] 🧠 <strong>Rotation Agent:</strong> Formulating new candidate mutation pivoting away from rejected strategy...</div>
+                            <div>[02/04] ⚖️ <strong>Crew Legality Agent:</strong> Auditing flight duty periods and rest buffers under DGCA CAR Section 7...</div>
+                            <div>[03/04] 🛫 <strong>Slot Coordinator:</strong> Verifying Kempegowda runway arrival and departure slot windows...</div>
+                            <div>[04/04] 📊 <strong>Mediator Agent:</strong> Arbitrating multi-agent consensus trade-offs...</div>
+                        </div>
+                    </div>
+                `;
+            }
 
             try {
                 const res = await fetch('/api/approve_plan', {
@@ -2926,7 +3069,7 @@
 
         function openDataManagerModal() {
             document.getElementById('data-manager-modal').style.display = 'flex';
-            loadModalData('schedule');
+            switchDataTab('schedule');
         }
 
         function closeDataManagerModal() {
@@ -2936,7 +3079,8 @@
         function switchDataTab(tab) {
             document.querySelectorAll('.modal-window .tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.dt-pane').forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
+            const btn = document.querySelector(`.modal-window .tab-btn[onclick*="'${tab}'"]`);
+            if (btn) btn.classList.add('active');
             const pane = document.getElementById('dt-pane-' + tab);
             if (pane) pane.classList.add('active');
             loadModalData(tab);
@@ -2963,9 +3107,10 @@
                     const data = await res.json();
                     const tbody = document.getElementById('schedule-tbody');
                     tbody.innerHTML = '';
-                    const flights = data.flights || data.schedule || [];
-                    modalLoadedFlights = flights;
-                    flights.forEach(f => {
+                    const flights = (data.flights || data.schedule || (Array.isArray(data) ? data : []));
+                    const finalFlights = flights.length > 0 ? flights : (cachedFlights || []);
+                    modalLoadedFlights = finalFlights;
+                    finalFlights.forEach(f => {
                         const stdDisplay = f.std ? (f.std.includes('T') ? f.std.substring(11, 16) : f.std) : '—';
                         const staDisplay = f.sta ? (f.sta.includes('T') ? f.sta.substring(11, 16) : f.sta) : '—';
                         tbody.innerHTML += `

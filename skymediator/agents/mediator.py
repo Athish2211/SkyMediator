@@ -39,7 +39,8 @@ class MediatorAgent:
         cost_reports: Optional[Dict[str, Any]] = None,
         crew_decision: Optional[str] = None,
         slot_decision: Optional[str] = None,
-        run_id: str = "DELIBERATE"
+        run_id: str = "DELIBERATE",
+        disruption: Optional[Dict[str, Any]] = None
     ) -> MediatorOutput:
         """
         Adjudicates candidate plans in the current deliberation round.
@@ -194,7 +195,7 @@ class MediatorAgent:
         briefing = synthesize_occ_briefing(
             plan=top_cand,
             scores=top_cand.get("scores", {}),
-            disruption={"hub": settings.HUB_AIRPORT, "round": round_number},
+            disruption=disruption or {"hub": settings.HUB_AIRPORT, "round": round_number},
             hub=f"{settings.HUB_AIRPORT} ({settings.HUB_IATA})"
         )
         top_cand["occ_briefing"] = briefing

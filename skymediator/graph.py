@@ -87,11 +87,28 @@ def node_initialize_disruption(state: PlanState) -> Dict[str, Any]:
 
 def node_sentinel_forecast(state: PlanState) -> Dict[str, Any]:
     """
-    Sentinel Agent evaluates weather observations or AOG signals to establish
-    disruption probability, expected start/end times, and recommended tactical actions.
+    Sentinel Agent evaluates weather observations to establish fog probability,
+    expected start/end times, and recommended tactical actions.
+    Sentinel ONLY triggers if the disruption entered involves fog or weather.
     """
     run_id = state["run_id"]
     disruption = state.get("disruption", {})
+    dis_type = str(disruption.get("disruption_type") or disruption.get("type") or "").lower()
+    dis_msg = str(disruption.get("message") or "").lower()
+    scen_id = str(disruption.get("scenario_id") or "").lower()
+
+    # Sentinel agent for fog should ONLY trigger if the disruption includes fog/weather
+    is_fog_or_weather = any(
+        k in dis_type or k in dis_msg or k in scen_id
+        for k in ["fog", "cat iii", "cat3", "visibility", "rvr", "weather", "metar", "rain", "storm", "low_vis"]
+    )
+
+    if not is_fog_or_weather:
+        logger.info(f"[{run_id}] Sentinel weather evaluation skipped: disruption '{dis_type or scen_id}' is non-meteorological (mechanical AOG/crew/slot).")
+        return {
+            "sentinel_forecast": None
+        }
+
     airport = disruption.get("airport", settings.HUB_AIRPORT)
 
     # Use supplied observation or synthesize from disruption parameters
@@ -408,7 +425,8 @@ def node_mediator_adjudicate(state: PlanState) -> Dict[str, Any]:
         cost_reports=cost_reports,
         crew_decision=crew_decision,
         slot_decision=slot_decision,
-        run_id=run_id
+        run_id=run_id,
+        disruption=state.get("disruption")
     )
 
     # Persist snapshot of all candidates into plan_revisions table
