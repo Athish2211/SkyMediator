@@ -34,6 +34,11 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-base);
@@ -45,7 +50,7 @@
         }
 
         header {
-            padding: 0.85rem 2rem;
+            padding: 0.85rem 1.5rem;
             border-bottom: 1px solid var(--border);
             background: var(--bg-surface);
             position: sticky;
@@ -55,6 +60,11 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: var(--shadow-sm);
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
         .brand-cluster {
@@ -185,7 +195,7 @@
 
         /* Filter Toolbar */
         .toolbar {
-            padding: 0.65rem 2rem;
+            padding: 0.65rem 1.5rem;
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -193,12 +203,17 @@
             justify-content: space-between;
             gap: 1rem;
             box-shadow: var(--shadow-sm);
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .toolbar-group {
             display: flex;
             align-items: center;
             gap: 0.65rem;
+            flex-wrap: wrap;
         }
 
         .ctrl-select, .ctrl-input {
@@ -218,6 +233,7 @@
         .filter-chips {
             display: flex;
             gap: 0.3rem;
+            flex-wrap: wrap;
         }
 
         .chip {
@@ -241,10 +257,13 @@
         /* Main 2-Column Console Layout */
         .console-layout {
             display: grid;
-            grid-template-columns: 1fr 420px;
+            grid-template-columns: minmax(0, 1fr) 420px;
             flex: 1;
             height: calc(100vh - 105px);
             overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .stream-panel {
@@ -637,6 +656,23 @@
             color: var(--text-subtle);
             padding: 4rem 1rem;
             font-size: 0.85rem;
+        }
+
+        /* Responsive Viewport Fitting */
+        @media (max-width: 1040px) {
+            .console-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: visible;
+            }
+            .stream-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                min-height: 500px;
+            }
+            .inspector-panel {
+                min-height: 400px;
+            }
         }
     </style>
 </head>

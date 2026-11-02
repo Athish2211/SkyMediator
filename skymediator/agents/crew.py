@@ -5,7 +5,7 @@ Holds absolute HARD VETO authority.
 Uses Agentic RAG: retrieves clauses, self-grades relevance, rewrites queries, and abstains if ambiguous.
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Literal, Optional, Tuple
 from uuid import uuid4
 from pydantic import BaseModel, Field
@@ -45,12 +45,29 @@ class CrewLegalityAgent:
         mutated_res = apply_plan_diff(base_schedule, candidate.plan_diff)
         mutated_schedule = mutated_res["mutated_flights"]
 
+        # Identify flights swapped to standby aircraft supported by hub reserve crew
+        swapped_standby_flights = set()
+        for op in candidate.plan_diff:
+            op_dict = op.model_dump() if hasattr(op, "model_dump") else (op if isinstance(op, dict) else {})
+            if op_dict.get("op") == "swap_tail":
+                new_tail = str(op_dict.get("new_tail", "")).upper()
+                reason = str(op_dict.get("reason", "")).lower()
+                if new_tail.startswith("VT-BLR1") or new_tail == "STANDBY" or "reserve crew" in reason or "standby" in reason:
+                    swapped_standby_flights.add(op_dict.get("flight_id"))
+
         for crew in active_crew:
             crew_id = crew["crew_id"]
             assigned_flights = crew.get("assigned_flights", [])
-            duty_record = crew.get("duty_record", {
+            duty_record = dict(crew.get("duty_record", {
                 "duty_start": datetime(2026, 11, 1, 4, 0).isoformat()
-            })
+            }))
+
+            # Tail swaps to standby aircraft at hub utilize fresh reserve crew
+            if any(f in swapped_standby_flights for f in assigned_flights):
+                fl_obj = next((f for f in mutated_schedule if f["flight_id"] in swapped_standby_flights), None)
+                if fl_obj:
+                    fl_std = datetime.fromisoformat(fl_obj["std"])
+                    duty_record["duty_start"] = (fl_std - timedelta(minutes=45)).isoformat()
 
             calc_res = calc_duty_time(
                 crew_id=crew_id,

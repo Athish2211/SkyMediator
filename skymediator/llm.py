@@ -146,15 +146,14 @@ def synthesize_occ_briefing(
     if is_gemini_available():
         system_prompt = (
             "You are the Chief Operations Control Center (OCC) Duty Dispatcher for Kempegowda International Airport (BLR). "
-            "Write an operational briefing structured in two clear sections:\n"
-            "1. **Plain-English Situation Summary (Layman-Friendly)**: In 2 simple, everyday sentences that any passenger or non-expert "
-            "can easily understand, state what happened to the flight, what the airline did to fix it, and why this keeps passengers safe and protected.\n"
-            "2. **Duty Manager Operational Assessment & Trade-Offs**: For airline management, provide an operational analysis comparing the chosen "
-            "action against Alternative A and Alternative B, detailing downline aircraft rotation continuity, and DGCA CAR Section 7 (Crew FDTL) "
-            "and Section 3 (Passenger Care) statutory compliance.\n"
-            "CRITICAL CAUSE-AWARE RULE: Base your explanation strictly on the actual Disruption Type provided. If the disruption is FOG or weather, "
-            "never mention mechanical snags or technical groundings! If the disruption is AOG/maintenance, focus on aircraft technical status. "
-            "Always match the true operational context."
+            "Write an executive, concise operational briefing for the Human Duty Manager. "
+            "Structure into clean sections with clear headers:\n"
+            "Operational Context & Action Taken: 1-2 concise sentences summarizing the incident, affected flight, and immediate tactical action taken.\n"
+            "Comparative Trade-Off Analysis: Bullet points detailing why the chosen action was picked over Alternative A (holding) and Alternative B (cancellation).\n"
+            "Downline Aircraft Rotation Continuity: 1-2 sentences on how aircraft routing and base maintenance are preserved.\n"
+            "Statutory & Regulatory Compliance (DGCA CAR): Confirm compliance under DGCA CAR Section 7 (Crew FDTL) and Section 3 (Passenger Care).\n"
+            "CRITICAL RULES: Base your explanation strictly on the actual Disruption Type provided. Never hallucinate mechanical issues if the disruption is weather/fog! "
+            "Keep the text clean, authoritative, and professional without markdown asterisk clutter."
         )
         user_prompt = (
             f"Disruption Type: {dis_type} at {hub}\n"
@@ -165,70 +164,60 @@ def synthesize_occ_briefing(
             f"Composite Penalty Score: {composite_score:.4f}\n"
             f"Total Delay: {delay_min} mins\n"
             f"Projected Liability: INR {total_cost:,.0f}\n\n"
-            "Generate the dual-layer executive operational recovery briefing:"
+            "Generate the executive Duty Manager operational recovery briefing:"
         )
         res = call_gemini(user_prompt, system_prompt=system_prompt)
         if not res.startswith("[Deterministic"):
             return res
 
-    # Deterministic high-quality dual-layer OCC Briefing
+    # Deterministic high-quality OCC Briefing
     swaps = [d for d in diffs if d.get("op") == "swap_tail"]
     delays = [d for d in diffs if d.get("op") == "delay"]
     cancels = [d for d in diffs if d.get("op") == "cancel"]
 
-    # 1. Plain English Layman Summary
-    if swaps:
-        layman = (
-            f"**Plain-English Summary:** Flight {swaps[0].get('flight_id')} could not operate on its scheduled aircraft ({swaps[0].get('original_tail')}) "
-            f"due to an active {dis_type} event. Instead of delaying passengers for hours, we swapped to standby hot-reserve plane "
-            f"{swaps[0].get('new_tail')} positioned at {hub}. Passengers depart on schedule, the flight crew remains fully rested, "
-            f"and zero flights had to be cancelled."
-        )
-    elif cancels:
-        layman = (
-            f"**Plain-English Summary:** Due to severe {dis_type} conditions exceeding safe operating limits at {hub}, "
-            f"Flight {cancels[0].get('flight_id')} was strategically cancelled. This prevents passengers from being trapped inside an aircraft on "
-            f"the tarmac for hours and protects our flight crew from exceeding mandatory legal duty limits. All affected passengers are automatically "
-            f"eligible for full refunds or priority rebooking on subsequent departures under DGCA CAR Section 3."
-        )
-    elif delays:
-        layman = (
-            f"**Plain-English Summary:** Flight {delays[0].get('flight_id')} is delayed by {delays[0].get('delay_minutes')} minutes "
-            f"to allow the {dis_type.lower()} conditions to safely clear and ensure a runway arrival slot is secured. This controlled delay "
-            f"avoids the need to cancel the flight while keeping our pilots strictly within legal working hours."
-        )
-    else:
-        layman = f"**Plain-English Summary:** Operational schedule adjusted to insulate the fleet from the {dis_type} event at {hub}."
-
-    # 2. Duty Manager Operational Assessment
     lines = [
-        f"### Operational Recovery Briefing — Plan {plan_id}",
-        layman,
-        "**Duty Manager Operational Assessment & Trade-Offs:**",
+        f"Operational Recovery Briefing — Plan {plan_id}",
+        "Operational Context & Action Taken:",
     ]
 
     if swaps:
         lines.append(
-            f"- **Standby Tail Deployment:** Reassigned {swaps[0].get('flight_id')} to reserve aircraft {swaps[0].get('new_tail')}. "
-            f"Alternative A (holding for technical maintenance) would have cascaded a {delay_min + 120}m delay into downline rotations. "
-            f"Alternative B (cancellation) was rejected to avoid passenger displacement and INR {total_cost + 450000:,.0f} in statutory hotel/meal claims."
+            f"Flight {swaps[0].get('flight_id')} reassigned from {swaps[0].get('original_tail')} to standby reserve tail {swaps[0].get('new_tail')} at {hub}. "
+            f"This tactical substitution decouples the rotation from the active {dis_type} event, preserving departure punctuality."
         )
-    if delays:
+        lines.append("Comparative Trade-Off Analysis:")
         lines.append(
-            f"- **Calibrated Tactical Delay:** Retarded departure by {delays[0].get('delay_minutes')}m. "
-            f"Alternative A (tail swap) was inapplicable or unnecessary for this movement. "
-            f"Alternative B (cancellation) was rejected as delay fits within legal crew Flight Duty Period (FDP) buffers."
+            f"• Chosen Action (Tail Swap to {swaps[0].get('new_tail')}): Maximizes network integrity and on-time performance with zero passenger displacement.\n"
+            f"• Alternative A (Holding for Maintenance/Clearance): Would have cascaded {delay_min + 120}m of delay into downline rotations.\n"
+            f"• Alternative B (Flight Cancellation): Rejected to avert passenger displacement and INR {total_cost + 450000:,.0f} in statutory hotel/meal claims."
         )
-    if cancels:
+    elif delays:
         lines.append(
-            f"- **Strategic Cancellation:** Cancelled {cancels[0].get('flight_id')} to avert statutory crew FDTL exceedance. "
-            f"Downline tail was preserved to protect subsequent evening bank connectivity."
+            f"Flight {delays[0].get('flight_id')} retarded by {delays[0].get('delay_minutes')} minutes to absorb {dis_type} clearance at {hub}."
         )
+        lines.append("Comparative Trade-Off Analysis:")
+        lines.append(
+            f"• Chosen Action ({delays[0].get('delay_minutes')}m Delay): Calibrated delay allows safe operations while remaining within legal pilot FDP limits.\n"
+            f"• Alternative A (Tail Swap): Inapplicable or unnecessary for this movement profile.\n"
+            f"• Alternative B (Cancellation): Rejected because passenger throughput and aircraft continuity are maintained within acceptable operational cost."
+        )
+    elif cancels:
+        lines.append(
+            f"Flight {cancels[0].get('flight_id')} strategically cancelled to insulate the fleet from {dis_type} conditions at {hub}."
+        )
+        lines.append("Comparative Trade-Off Analysis:")
+        lines.append(
+            f"• Chosen Action (Strategic Cancellation): Prevents compounding crew duty exceedances and severe slot curfew violations.\n"
+            f"• Alternative A (Extended Delay): Unviable as pilots would exceed DGCA CAR Section 7 statutory duty limits.\n"
+            f"• Alternative B (Tail Swap): Standby resources insufficient to absorb the extended ground holding."
+        )
+    else:
+        lines.append(f"Operational schedule adjusted to insulate the fleet from the {dis_type} event at {hub}.")
 
+    lines.append("Statutory & Regulatory Compliance (DGCA CAR):")
     lines.append(
-        f"**Regulatory & Financial Status:** 100% compliant with DGCA CAR Section 7 Series J Part III (Crew Rest & FDTL) "
-        f"and DGCA CAR Section 3 Series M Part IV (Passenger Care). Composite penalty score: **{composite_score:.4f}** "
-        f"(Delay: {delay_min}m, Est. Liability: INR {total_cost:,.0f}). Ready for Duty Manager dispatch authorization."
+        f"• DGCA CAR Section 7 (Crew FDTL & Rest): 100% compliant. Projected composite penalty: {composite_score:.4f}.\n"
+        f"• DGCA CAR Section 3 (Passenger Care): All rebooking/care buffers active. Projected liability: INR {total_cost:,.0f}."
     )
 
     return "\n\n".join(lines)

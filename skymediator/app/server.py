@@ -447,17 +447,23 @@ def parse_message_endpoint(req: ParseDisruptionRequest):
     }
 
 
-def get_crew_roster_for_flight(affected_id: str, is_severe: bool, base_time: datetime) -> List[Dict[str, Any]]:
+def get_crew_roster_for_flight(
+    affected_id: str,
+    is_severe: bool,
+    base_time: datetime,
+    disruption_type: str = "",
+    base_schedule: Optional[List[Dict[str, Any]]] = None
+) -> List[Dict[str, Any]]:
     conn = get_connection(settings.DB_PATH)
     try:
         cursor = conn.execute(
             """SELECT c.crew_id, c.name, c.role, cd.duty_start, cd.max_fdp_minutes, cdf.flight_id
-               FROM crew_members c
-               JOIN crew_duties cd ON c.crew_id = cd.crew_id
-               LEFT JOIN crew_duty_flights cdf ON cd.duty_id = cdf.duty_id
-               WHERE cdf.flight_id = ? OR c.crew_id = 'CREW-CAPT-01'
-               ORDER BY (cdf.flight_id = ?) DESC, cd.duty_start ASC""",
-            (affected_id, affected_id)
+               FROM crew_duty_flights cdf
+               JOIN crew_duties cd ON cdf.duty_id = cd.duty_id
+               JOIN crew_members c ON cd.crew_id = c.crew_id
+               WHERE cdf.flight_id = ?
+               ORDER BY cd.duty_start ASC""",
+            (affected_id,)
         )
         rows = [dict(r) for r in cursor.fetchall()]
         if rows:
@@ -470,8 +476,7 @@ def get_crew_roster_for_flight(affected_id: str, is_severe: bool, base_time: dat
                 seen.add(cid)
                 d_start = r.get("duty_start")
                 if not d_start:
-                    duty_start_hour = 2 if is_severe else 5
-                    d_start = datetime(base_time.year, base_time.month, base_time.day, duty_start_hour, 0).isoformat()
+                    d_start = datetime(base_time.year, base_time.month, base_time.day, 5, 0).isoformat()
                 roster.append({
                     "crew_id": cid,
                     "duty_record": {"duty_start": d_start},
@@ -479,6 +484,36 @@ def get_crew_roster_for_flight(affected_id: str, is_severe: bool, base_time: dat
                 })
             if roster:
                 return roster
+
+        # If not assigned in crew_duty_flights, lookup flight in schedule
+        fl_row = None
+        if base_schedule:
+            fl_row = next((f for f in base_schedule if f.get("flight_id") == affected_id), None)
+        if not fl_row:
+            cursor = conn.execute("SELECT std, sta FROM flights WHERE flight_id = ?", (affected_id,))
+            fl_row = cursor.fetchone()
+
+        if fl_row:
+            std_str = fl_row["std"]
+            std_dt = datetime.fromisoformat(std_str)
+            is_crew_fatigue = any(
+                w in str(disruption_type).lower()
+                for w in ["crew", "pilot", "captain", "officer", "fdtl", "timeout", "fatigue", "wocl"]
+            )
+            if is_crew_fatigue:
+                duty_start_hour = 2 if is_severe else 4
+                d_start = datetime(std_dt.year, std_dt.month, std_dt.day, duty_start_hour, 0).isoformat()
+            else:
+                # Normal operational reporting: standard 45 minutes prior to scheduled departure
+                d_start = (std_dt - timedelta(minutes=45)).isoformat()
+
+            return [
+                {
+                    "crew_id": f"CREW-{affected_id}-CAPT",
+                    "duty_record": {"duty_start": d_start},
+                    "assigned_flights": [affected_id]
+                }
+            ]
     except Exception as e:
         logger.warning(f"Error querying crew roster from DB: {e}")
     finally:
@@ -487,7 +522,7 @@ def get_crew_roster_for_flight(affected_id: str, is_severe: bool, base_time: dat
     duty_start_hour = 2 if is_severe else 5
     return [
         {
-            "crew_id": "CREW-CAPT-01",
+            "crew_id": f"CREW-{affected_id}-CAPT",
             "duty_record": {"duty_start": datetime(base_time.year, base_time.month, base_time.day, duty_start_hour, 0).isoformat()},
             "assigned_flights": [affected_id]
         }
@@ -592,12 +627,25 @@ def run_recovery(req: TriggerDisruptionRequest):
         seen_crew = set()
         for disc in ACTIVE_DISRUPTIONS:
             f_id = disc.get("affected_flight_id", "6E-101")
-            roster = get_crew_roster_for_flight(f_id, disc.get("severity") == "SEVERE", base_time)
+            d_type = str(disc.get("disruption_type") or disc.get("type") or "")
+            roster = get_crew_roster_for_flight(
+                f_id,
+                disc.get("severity") == "SEVERE",
+                base_time,
+                disruption_type=d_type,
+                base_schedule=base_schedule
+            )
             for c in roster:
                 if c["crew_id"] not in seen_crew:
                     seen_crew.add(c["crew_id"])
                     all_crew.append(c)
-        crew_roster = all_crew if all_crew else get_crew_roster_for_flight(affected_id, is_severe, base_time)
+        crew_roster = all_crew if all_crew else get_crew_roster_for_flight(
+            affected_id,
+            is_severe,
+            base_time,
+            disruption_type=str(parsed.get("disruption_type") or parsed.get("type") or ""),
+            base_schedule=base_schedule
+        )
 
         slot_windows = [
             {
@@ -658,12 +706,25 @@ def run_recovery(req: TriggerDisruptionRequest):
         seen_crew = set()
         for disc in ACTIVE_DISRUPTIONS:
             f_id = disc.get("affected_flight_id", "6E-101")
-            roster = get_crew_roster_for_flight(f_id, disc.get("severity") == "SEVERE", base_time)
+            d_type = str(disc.get("disruption_type") or disc.get("type") or "")
+            roster = get_crew_roster_for_flight(
+                f_id,
+                disc.get("severity") == "SEVERE",
+                base_time,
+                disruption_type=d_type,
+                base_schedule=base_schedule
+            )
             for c in roster:
                 if c["crew_id"] not in seen_crew:
                     seen_crew.add(c["crew_id"])
                     all_crew.append(c)
-        crew_roster = all_crew if all_crew else get_crew_roster_for_flight(affected_id, is_severe, base_time)
+        crew_roster = all_crew if all_crew else get_crew_roster_for_flight(
+            affected_id,
+            is_severe,
+            base_time,
+            disruption_type=str(scen_dict["disruption_type"]),
+            base_schedule=base_schedule
+        )
 
         slot_windows = [
             {

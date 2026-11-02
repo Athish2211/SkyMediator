@@ -34,6 +34,11 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-base);
@@ -45,7 +50,7 @@
         }
 
         header {
-            padding: 0.85rem 2rem;
+            padding: 0.85rem 1.5rem;
             border-bottom: 1px solid var(--border);
             background: var(--bg-surface);
             position: sticky;
@@ -55,6 +60,11 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: var(--shadow-sm);
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
         .brand-cluster {
@@ -219,10 +229,19 @@
 
         main {
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 360px minmax(0, 1fr);
             gap: 1.25rem;
-            padding: 1.25rem 2rem;
+            padding: 1.25rem 1.5rem;
             flex: 1;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            min-width: 0;
+            max-width: 100%;
         }
 
         .card {
@@ -422,6 +441,9 @@
             display: flex;
             flex-direction: column;
             gap: 1.1rem;
+            min-width: 0;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .section-header-row {
@@ -597,6 +619,10 @@
             padding: 1.15rem 1.25rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .gantt-header {
@@ -686,10 +712,13 @@
 
         .gantt-canvas-wrap {
             overflow-x: auto;
+            max-width: 100%;
+            width: 100%;
             border: 1px solid var(--border);
             border-radius: 6px;
             background: #ffffff;
             position: relative;
+            box-sizing: border-box;
         }
 
         .gantt-canvas {
@@ -958,12 +987,45 @@
             background: #ffffff;
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 0.85rem;
-            margin-top: 0.85rem;
+            padding: 1rem 1.15rem;
+            margin-top: 0.65rem;
             font-size: 0.85rem;
             color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .occ-section-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin: 0.85rem 0 0.35rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .occ-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .occ-bullet-list {
+            margin: 0.25rem 0 0.75rem 1.25rem;
+            padding: 0;
+            list-style-type: disc;
+        }
+
+        .occ-bullet-list li {
+            font-size: 0.82rem;
+            color: var(--text-main);
+            margin-bottom: 0.35rem;
             line-height: 1.55;
-            white-space: pre-line;
+        }
+
+        .occ-bullet-list li strong {
+            color: var(--navy-dark);
+            font-weight: 700;
         }
 
         .rec-actions {
@@ -1217,6 +1279,9 @@
             border-bottom: 1px solid var(--border);
             gap: 0.85rem;
             flex-wrap: wrap;
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .tactical-clock-chip {
@@ -1474,6 +1539,39 @@
             outline: none;
             border-color: #0284c7;
             box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+        }
+
+        /* Responsive Viewport Fitting */
+        @media (max-width: 1200px) {
+            header {
+                padding: 0.75rem 1rem;
+            }
+            main {
+                grid-template-columns: 320px minmax(0, 1fr);
+                padding: 1rem;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 1040px) {
+            header {
+                padding: 0.65rem 0.85rem;
+            }
+            .brand-cluster {
+                gap: 0.75rem;
+                flex-wrap: wrap;
+            }
+            nav.nav-links {
+                margin-left: 0;
+            }
+            main {
+                grid-template-columns: 1fr;
+                padding: 0.75rem;
+                gap: 1rem;
+            }
+            .sidebar {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -2726,51 +2824,70 @@
                 .replace(/>/g, '&gt;');
         }
 
-        function renderOccBriefing(text) {
+        function renderOccBriefing(raw) {
             const container = document.getElementById('rec-briefing');
-            if (!container) return;
+            if (!container || !raw) return;
 
-            let laymanText = '';
-            let technicalText = text;
+            // 1. Clean orphan prefixes, markdown headers, and any leftover layman sections
+            let text = raw.trim();
+            text = text.replace(/^\s*(&\s*Trade-Offs|###[^\n]*)\s*\n?/gmi, '');
+            text = text.replace(/(\*\*|\b)Plain-English[^\n]*\n?/gi, '');
+            text = text.replace(/###\s*Operational Recovery Briefing[^\n]*/gi, '');
 
-            if (text.includes('**Plain-English Summary:**') || text.includes('Plain-English')) {
-                const parts = text.split(/\*\*Duty Manager Operational Assessment & Trade-Offs:\*\*|Duty Manager Operational Assessment/i);
-                if (parts.length >= 2) {
-                    laymanText = parts[0].replace(/###\s*Operational Recovery Briefing[^\n]*/i, '').replace(/\*\*Plain-English Summary:\*\*/i, '').trim();
-                    technicalText = parts[1].trim();
+            const lines = text.split('\n');
+            let html = '';
+            let inList = false;
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (!line) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    continue;
+                }
+
+                // Check for section headers like **Section Title:** or Plain Section Title:
+                const headerMatch = line.match(/^\*\*([^*:]+)(?::\*\*|\*\*:?)\s*$/) || line.match(/^([A-Z][A-Za-z0-9\s/&()-]+):\s*$/);
+                if (headerMatch) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    const title = headerMatch[1].trim();
+                    html += `<div class="occ-section-title"><span>▶</span><span>${escapeHtml(title)}</span></div>`;
+                    continue;
+                }
+
+                // Bullet items starting with * or - or •
+                const isBullet = line.startsWith('* ') || line.startsWith('- ') || line.startsWith('• ');
+                if (isBullet) {
+                    if (!inList) {
+                        html += '<ul class="occ-bullet-list">';
+                        inList = true;
+                    }
+                    let item = line.replace(/^[\*\-•]\s*/, '').trim();
+                    // Convert bold **text** to <strong>
+                    item = item.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                    // Remove all rogue asterisks
+                    item = item.replace(/\*/g, '').trim();
+                    html += `<li>${item}</li>`;
+                    continue;
+                }
+
+                if (inList) {
+                    html += '</ul>';
+                    inList = false;
+                }
+
+                // Standard paragraph line: convert **bold** and remove stray asterisks
+                let p = line.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                p = p.replace(/\*/g, '').trim();
+                if (p) {
+                    html += `<p style="font-size: 0.82rem; color: var(--text-main); line-height: 1.6; margin-bottom: 0.45rem;">${p}</p>`;
                 }
             }
 
-            if (laymanText) {
-                container.innerHTML = `
-                    <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.85rem;">
-                        <div style="display: flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; font-weight: 700; color: #166534; text-transform: uppercase; margin-bottom: 0.35rem;">
-                            <span>💡</span>
-                            <span>Plain-English Summary (Passenger & Fleet Protection)</span>
-                        </div>
-                        <div style="font-size: 0.88rem; color: #14532d; line-height: 1.55;">
-                            ${escapeHtml(laymanText).replace(/\n/g, '<br>')}
-                        </div>
-                    </div>
-                    <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem;">
-                        <div style="display: flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; margin-bottom: 0.45rem;">
-                            <span>📋</span>
-                            <span>Duty Manager Operational Assessment & Trade-Offs (CAR Sec 7 & 3)</span>
-                        </div>
-                        <div style="font-size: 0.82rem; color: var(--text-main); font-family: 'JetBrains Mono', monospace; line-height: 1.6; white-space: pre-wrap;">
-                            ${escapeHtml(technicalText)}
-                        </div>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `
-                    <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem;">
-                        <div style="font-size: 0.82rem; color: var(--text-main); font-family: 'JetBrains Mono', monospace; line-height: 1.6; white-space: pre-wrap;">
-                            ${escapeHtml(text)}
-                        </div>
-                    </div>
-                `;
+            if (inList) {
+                html += '</ul>';
             }
+
+            container.innerHTML = html || `<p style="font-size: 0.82rem; color: var(--text-main);">${escapeHtml(text)}</p>`;
         }
 
         function renderSentinelForecast(sf) {
