@@ -57,3 +57,14 @@ traces/
 data/processed/*.db
 data/processed/*.db-journal
 
+# LaTeX build artifacts
+*.aux
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+missfont.log
+
+

@@ -37,6 +37,9 @@ def get_gemini_api_key() -> Optional[str]:
 
 def is_gemini_available() -> bool:
     """Checks if a valid Gemini API key is configured."""
+    import os
+    if os.environ.get("SKYMEDIATOR_OFFLINE") == "1":
+        return False
     key = get_gemini_api_key()
     if not key:
         logger.warning("GEMINI_API_KEY not found in environment, .env file, or settings")
@@ -106,20 +109,12 @@ def call_gemini(prompt: str, system_prompt: Optional[str] = None) -> str:
             else:
                 logger.warning(f"Gemini API returned HTTP {response.status_code}: {response.text[:120]}")
                 continue
+        except requests.exceptions.ConnectionError as e:
+            logger.warning(f"Gemini connection failed (network unreachable): {e}. Circuit breaker activated.")
+            _LLM_COOLDOWN_UNTIL = time.time() + 300.0
+            break
         except Exception as e:
             logger.warning(f"Gemini model {model} timeout/error: {e}")
-            # Try fresh connection if session had stale socket
-            try:
-                fresh_res = requests.post(url, json=payload, timeout=(4.0, 10.0))
-                if fresh_res.status_code == 200:
-                    data = fresh_res.json()
-                    candidates = data.get("candidates", [])
-                    if candidates:
-                        parts = candidates[0].get("content", {}).get("parts", [])
-                        if parts:
-                            return parts[0].get("text", "").strip()
-            except Exception:
-                pass
             continue
 
     return "[Deterministic OCC Fallback: Live LLM synthesis timed out or encountered an API error]"

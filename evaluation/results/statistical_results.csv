@@ -1,0 +1,9 @@
+comparison,metric,n_samples,mean_treatment,mean_control,mean_difference,diff_ci_95,wilcoxon_stat,p_value,statistically_significant,cliffs_delta,cohens_d
+Multi-Agent vs Single-Agent,Total Cost (INR),135,126962.963,51666.6667,75296.2963,"[33772.1759, 119813.3333]",3755.0,0.242545,False,-0.3759,0.2894
+Multi-Agent vs Single-Agent,Composite Score,135,0.0761,0.0356,0.0405,"[0.0283, 0.0529]",2835.0,0.000115,True,0.0329,0.533
+Predictive vs Reactive,Total Cost (INR),135,7888.8889,107824.0741,-99935.1852,"[-144570.7407, -60841.8981]",325.0,0.0,True,-0.4417,-0.3869
+Predictive vs Reactive,Delay Minutes,135,11.8519,100.5556,-88.7037,"[-98.4472, -78.9259]",0.0,0.0,True,-0.823,-1.4963
+3 Rounds vs 1 Round,Total Cost (INR),135,126962.963,88814.8148,38148.1481,"[19074.0741, 61037.037]",0.0,0.001565,True,0.011,0.2818
+3 Rounds vs 1 Round,Composite Score,135,0.0761,0.1279,-0.0519,"[-0.083, -0.0259]",0.0,0.001565,True,-0.0055,-0.2818
+SkyMediator vs Greedy Heuristic,Total Cost (INR),130,127750.0,58461.5385,69288.4615,"[26186.1058, 112257.2596]",2052.5,3e-06,True,-0.4305,0.2735
+SkyMediator vs OR-Tools Solver,Total Cost (INR),130,127750.0,15461.5385,112288.4615,"[63511.7788, 163786.8269]",3655.0,0.48577,False,-0.3476,0.3932

@@ -1,0 +1,17 @@
+[
+  {
+    "system": "Google OR-Tools Solver",
+    "fdtl_violation_rate": 7.6923076923076925,
+    "feasibility_rate": 92.3076923076923
+  },
+  {
+    "system": "Greedy Recovery Heuristic",
+    "fdtl_violation_rate": 3.8461538461538463,
+    "feasibility_rate": 96.15384615384616
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "fdtl_violation_rate": 0.0,
+    "feasibility_rate": 100.0
+  }
+]

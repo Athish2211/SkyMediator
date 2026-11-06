@@ -1,0 +1,39 @@
+# SkyMediator Comprehensive Evaluation & Benchmarking Configuration
+project: SkyMediator
+academic_context: "Agentic AI (26CD7PEAAI), BMSCE"
+authors:
+  - "Athish Raj"
+  - "Dinesh K"
+  - "Sanchit Rajesh"
+instructor: "Dr. Kalyan Nagaraj"
+date: "2026-11-05"
+
+hub_airport: VOBL
+regulatory_baseline: "DGCA CAR Section 7, Series J, Part III"
+passenger_care_standard: "DGCA CAR Section 3, Series M, Part IV"
+
+evaluation:
+  random_seed: 42
+  num_scenarios: 27
+  num_adversarial: 6
+  stochastic_repetitions: 5
+  bootstrap_resamples: 1000
+  significance_level: 0.05
+  max_negotiation_rounds: 3
+  indifference_threshold: 0.05
+
+baselines:
+  - greedy_heuristic
+  - ortools_solver
+  - single_agent_llm
+  - reactive_recovery
+  - full_multi_agent
+
+hardware_spec:
+  cpu: "Intel Core i7 / AMD Ryzen (x86_64)"
+  os: "Microsoft Windows 11"
+  python_version: "3.12.10"
+  ortools_version: "9.11"
+  scikit_learn_version: "1.5.2"
+  langgraph_version: "0.2.38"
+

@@ -176,7 +176,7 @@ def test_max_rounds_escalation():
             "type": "fog",
             "airport": "VOBL",
             "affected_flight_id": "6E-101",
-            "candidate_tail": "VT-BLR15"
+            "avoid_cancellation": True
         },
         "base_schedule": base_schedule,
         "active_crew": crew_roster,

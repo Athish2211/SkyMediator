@@ -1,0 +1,16 @@
+[
+  {
+    "mode": "Predictive (Sentinel 3.5h Lead Time)",
+    "mean_cost": 7888.888888888889,
+    "std_cost": 5918.181783444184,
+    "mean_delay": 11.851851851851851,
+    "std_delay": 9.863636305740302
+  },
+  {
+    "mode": "Reactive (Zero Lead Time)",
+    "mean_cost": 107824.07407407407,
+    "std_cost": 260358.55205619894,
+    "mean_delay": 100.55555555555556,
+    "std_delay": 61.21184972914706
+  }
+]

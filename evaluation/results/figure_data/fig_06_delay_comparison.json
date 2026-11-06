@@ -1,0 +1,17 @@
+[
+  {
+    "system": "Google OR-Tools Solver",
+    "mean_delay": 1.7307692307692308,
+    "std_delay": 8.687323439989088
+  },
+  {
+    "system": "Greedy Recovery Heuristic",
+    "mean_delay": 61.53846153846154,
+    "std_delay": 60.629278091990116
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "mean_delay": 72.3076923076923,
+    "std_delay": 69.96996544518738
+  }
+]

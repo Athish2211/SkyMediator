@@ -1,0 +1,50 @@
+{"query": "What is the maximum FDP for two pilots on daytime duty with 2 landings?", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "How many hours of flight duty are permitted for a flight starting at 0300 IST in the WOCL?", "expected_clause_id": "CAR-7-J-III-Para-6.2"}
+{"query": "What is the maximum block hours flight time allowed in a single duty period?", "expected_clause_id": "CAR-7-J-III-Para-5.1"}
+{"query": "What is the statutory minimum rest required for a crew member before flight duty?", "expected_clause_id": "CAR-7-J-III-Para-7.1"}
+{"query": "Can flight duty period be extended if crew has a 3-hour ground break in a hotel?", "expected_clause_id": "CAR-7-J-III-Para-8.1"}
+{"query": "What are the night duty limits under the revised 2024 DGCA FDTL guidelines?", "expected_clause_id": "CAR-7-J-III-2024-Para-6.1"}
+{"query": "Are airlines obligated to provide meals when a flight is delayed by 2 hours?", "expected_clause_id": "CAR-3-M-IV-Para-3.1"}
+{"query": "When must an airline provide hotel accommodation to stranded passengers?", "expected_clause_id": "CAR-3-M-IV-Para-3.2"}
+{"query": "Is statutory passenger compensation required when flights are cancelled due to severe fog?", "expected_clause_id": "CAR-3-M-IV-Para-3.3"}
+{"query": "What is the maximum FDP limit for 4 domestic sectors during daytime?", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 1] maximum allowable duty time for pilot starting duty at 0800", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 1] limits on pilot duty hours touching 0200 to 0600 morning window", "expected_clause_id": "CAR-7-J-III-Para-6.2"}
+{"query": "[Var 1] is 9 hours of block flight time legal for captain", "expected_clause_id": "CAR-7-J-III-Para-5.1"}
+{"query": "[Var 1] pre duty rest period requirement for first officer at base", "expected_clause_id": "CAR-7-J-III-Para-7.1"}
+{"query": "[Var 1] extension rules for split duty with ground rest", "expected_clause_id": "CAR-7-J-III-Para-8.1"}
+{"query": "[Var 1] 48 hour weekly rest requirement under DGCA CAR", "expected_clause_id": "CAR-7-J-III-2024-Para-6.1"}
+{"query": "[Var 1] refreshment voucher entitlement for passengers delayed 3 hours", "expected_clause_id": "CAR-3-M-IV-Para-3.1"}
+{"query": "[Var 1] passenger hotel accommodation rights for overnight delay", "expected_clause_id": "CAR-3-M-IV-Para-3.2"}
+{"query": "[Var 1] force majeure fog exemption for flight cancellation compensation", "expected_clause_id": "CAR-3-M-IV-Para-3.3"}
+{"query": "[Var 1] legal maximum flight duty period for 2 domestic landings", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 2] maximum allowable duty time for pilot starting duty at 0800", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 2] limits on pilot duty hours touching 0200 to 0600 morning window", "expected_clause_id": "CAR-7-J-III-Para-6.2"}
+{"query": "[Var 2] is 9 hours of block flight time legal for captain", "expected_clause_id": "CAR-7-J-III-Para-5.1"}
+{"query": "[Var 2] pre duty rest period requirement for first officer at base", "expected_clause_id": "CAR-7-J-III-Para-7.1"}
+{"query": "[Var 2] extension rules for split duty with ground rest", "expected_clause_id": "CAR-7-J-III-Para-8.1"}
+{"query": "[Var 2] 48 hour weekly rest requirement under DGCA CAR", "expected_clause_id": "CAR-7-J-III-2024-Para-6.1"}
+{"query": "[Var 2] refreshment voucher entitlement for passengers delayed 3 hours", "expected_clause_id": "CAR-3-M-IV-Para-3.1"}
+{"query": "[Var 2] passenger hotel accommodation rights for overnight delay", "expected_clause_id": "CAR-3-M-IV-Para-3.2"}
+{"query": "[Var 2] force majeure fog exemption for flight cancellation compensation", "expected_clause_id": "CAR-3-M-IV-Para-3.3"}
+{"query": "[Var 2] legal maximum flight duty period for 2 domestic landings", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 3] maximum allowable duty time for pilot starting duty at 0800", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 3] limits on pilot duty hours touching 0200 to 0600 morning window", "expected_clause_id": "CAR-7-J-III-Para-6.2"}
+{"query": "[Var 3] is 9 hours of block flight time legal for captain", "expected_clause_id": "CAR-7-J-III-Para-5.1"}
+{"query": "[Var 3] pre duty rest period requirement for first officer at base", "expected_clause_id": "CAR-7-J-III-Para-7.1"}
+{"query": "[Var 3] extension rules for split duty with ground rest", "expected_clause_id": "CAR-7-J-III-Para-8.1"}
+{"query": "[Var 3] 48 hour weekly rest requirement under DGCA CAR", "expected_clause_id": "CAR-7-J-III-2024-Para-6.1"}
+{"query": "[Var 3] refreshment voucher entitlement for passengers delayed 3 hours", "expected_clause_id": "CAR-3-M-IV-Para-3.1"}
+{"query": "[Var 3] passenger hotel accommodation rights for overnight delay", "expected_clause_id": "CAR-3-M-IV-Para-3.2"}
+{"query": "[Var 3] force majeure fog exemption for flight cancellation compensation", "expected_clause_id": "CAR-3-M-IV-Para-3.3"}
+{"query": "[Var 3] legal maximum flight duty period for 2 domestic landings", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 4] maximum allowable duty time for pilot starting duty at 0800", "expected_clause_id": "CAR-7-J-III-Para-6.1"}
+{"query": "[Var 4] limits on pilot duty hours touching 0200 to 0600 morning window", "expected_clause_id": "CAR-7-J-III-Para-6.2"}
+{"query": "[Var 4] is 9 hours of block flight time legal for captain", "expected_clause_id": "CAR-7-J-III-Para-5.1"}
+{"query": "[Var 4] pre duty rest period requirement for first officer at base", "expected_clause_id": "CAR-7-J-III-Para-7.1"}
+{"query": "[Var 4] extension rules for split duty with ground rest", "expected_clause_id": "CAR-7-J-III-Para-8.1"}
+{"query": "[Var 4] 48 hour weekly rest requirement under DGCA CAR", "expected_clause_id": "CAR-7-J-III-2024-Para-6.1"}
+{"query": "[Var 4] refreshment voucher entitlement for passengers delayed 3 hours", "expected_clause_id": "CAR-3-M-IV-Para-3.1"}
+{"query": "[Var 4] passenger hotel accommodation rights for overnight delay", "expected_clause_id": "CAR-3-M-IV-Para-3.2"}
+{"query": "[Var 4] force majeure fog exemption for flight cancellation compensation", "expected_clause_id": "CAR-3-M-IV-Para-3.3"}
+{"query": "[Var 4] legal maximum flight duty period for 2 domestic landings", "expected_clause_id": "CAR-7-J-III-Para-6.1"}

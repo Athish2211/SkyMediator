@@ -1,0 +1,1352 @@
+[
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.213,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.067,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.067,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.067,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.068,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.067,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.066,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.058,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.18,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.057,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.054,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.059,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.066,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.065,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.063,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.066,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.063,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.063,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.064,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.067,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.066,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.06,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.17,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.06,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.056,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.066,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.067,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.067,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.06,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.191,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.068,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.062,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.065,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.077,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.071,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.077,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.071,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.089,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.06,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.175,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.065,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.059,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.071,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.071,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.07,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.178,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.063,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.066,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.062,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.071,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.087,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.077,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.088,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.078,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.069,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.184,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.063,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.062,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.07,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.07,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.079,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.077,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.084,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.079,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.078,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.077,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.066,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.174,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.061,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.06,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.063,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.08,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.082,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.078,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.075,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.072,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.065,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.203,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.079,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.087,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.101,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.114,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.103,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.099,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.101,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.096,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.109,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.115,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.101,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.297,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.142,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.128,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.092,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.103,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.077,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.074,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.123,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.075,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.073,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.06,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.172,
+    "tokens_est": 5550.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.064,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "latency_s": 0.061,
+    "tokens_est": 1850.0
+  },
+  {
+    "system": "Single-Agent Monolith",
+    "latency_s": 0.0,
+    "tokens_est": 620.0
+  }
+]

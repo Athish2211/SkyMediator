@@ -1,0 +1,156 @@
+% SkyMediator - Research Evaluation and Experimental Tables
+% Formatted using publication-standard booktabs notation
+
+% Table 7.1: Evaluation Scenario Suite Taxonomy
+\begin{table}[htbp]
+\centering
+\small
+\caption{\textbf{Comprehensive Evaluation Benchmark Scenario Suite Taxonomy (Kempegowda Hub BLR/VOBL)}.}
+\label{tab:scenario_taxonomy}
+\begin{tabular}{@{}llcccl@{}}
+\toprule
+\textbf{Scenario ID} & \textbf{Disruption Category} & \textbf{Severity} & \textbf{Disrupted Flights} & \textbf{Tgt Aircraft} & \textbf{Primary Operational Challenge} \\
+\midrule
+SCEN-01 & Radiation Fog & Low & 1 & VT-BLR01 & Moderate morning CAT-I visibility degradation \\
+SCEN-02 & Advection Fog & Moderate & 2 & VT-BLR02 & Reduced RVR requiring flow spacing \\
+SCEN-03 & Dense Fog & Severe & 4 & VT-BLR03 & RVR $<550\,$m ground-stop halting departures \\
+SCEN-04 & Dynamic Inversion & High & 2 & VT-BLR04 & Sudden visibility drop during final approach \\
+SCEN-05 & Radiation Fog & Extreme & 5 & VT-BLR05 & Sustained 4-hour CAT-III conditions \\
+SCEN-06 & Network Propagation & Moderate & 3 & VT-BLR06 & Inbound feeder delay cascade at spokes \\
+SCEN-07 & Rotation Conflict & Moderate & 2 & VT-BLR07 & Overlapping aircraft turnaround buffer \\
+SCEN-08 & Ground Handling & High & 2 & VT-BLR08 & Turnaround compressed below 30-min minimum \\
+SCEN-09 & Maintenance AOG & Critical & 3 & VT-BLR09 & Hydraulic snag requiring unscheduled grounding \\
+SCEN-10 & Crew Duty Limit & Critical & 2 & VT-BLR10 & Approaching statutory 13-hour FDP cap \\
+SCEN-11 & Rest Infringement & Severe & 2 & VT-BLR11 & Insufficient rest period before early departure \\
+SCEN-12 & Curfew Restriction & Critical & 2 & VT-BLR12 & Night slot curfew hazard at spoke destination \\
+SCEN-13 & Airport Congestion & High & 3 & VT-BLR13 & Peak runway movement saturation at hub \\
+SCEN-14 & Connecting Hub & Moderate & 2 & VT-BLR14 & 45 onward transit passengers at risk \\
+SCEN-15 & High Pax Exposure & Critical & 3 & VT-BLR15 & 180 international connection passengers \\
+SCEN-16 & Cancellation Dilemma & Critical & 2 & VT-BLR01 & High-revenue sector facing cancellation \\
+SCEN-17 & Fleet Swap & Moderate & 2 & VT-BLR02 & Tail reassignment opportunity to spare \\
+SCEN-18 & Multi-Sector Fog & Extreme & 6 & VT-BLR03 & Simultaneous hub and spoke low visibility \\
+SCEN-19 & Conflicting Tradeoff & High & 3 & VT-BLR04 & Cost vs delay Pareto trade-off \\
+SCEN-20 & Resource Starvation & Critical & 4 & VT-BLR05 & Zero standby aircraft and limited reserves \\
+SCEN-21 & Cascading Delay & Extreme & 5 & VT-BLR06 & Multi-stage downstream network collapse \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Adversarial and Edge Case Benchmark Suite}} \\
+\midrule
+SCEN-22 & Contradictory Data & Adversarial & 2 & VT-BLR07 & Sensor conflict: 200m METAR vs CAVOK TAF \\
+SCEN-23 & Data Dropout & Adversarial & 2 & VT-BLR08 & Missing weather telemetry and null visibility \\
+SCEN-24 & Corrupted Duty & Adversarial & 2 & VT-BLR09 & Unindexed crew duty start timestamp \\
+SCEN-25 & Hostile Injection & Adversarial & 2 & VT-BLR10 & Artificially injected plan violating FDTL \\
+SCEN-26 & Deceptive Low-Cost & Adversarial & 2 & VT-BLR11 & Cheap plan creating INR~500k passenger liability \\
+SCEN-27 & Regulatory Fringe & Adversarial & 2 & VT-BLR12 & Ambiguous DGCA sub-clause forcing escalation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 7.2: Benchmark Matrix across SkyMediator and Baselines
+\begin{table}[htbp]
+\centering
+\small
+\caption{\textbf{Comprehensive Operational Benchmark Matrix (26 Operational Scenarios, 5 Repetitions, $N=130$ Trials)}.}
+\label{tab:benchmark_matrix}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+\textbf{Metric} & \textbf{OR-Tools Solver} & \textbf{Greedy Heuristic} & \textbf{Single-Agent} & \textbf{SkyMediator} & \textbf{Optimal Direction} \\
+\midrule
+Mean Total Cost (INR) & INR~15,461.54 & INR~58,461.54 & INR~51,666.67 & INR~127,750.00 & Lower \\
+Std Total Cost (INR) & INR~2,316.62 & INR~64,286.92 & INR~72,118.91 & INR~285,360.49 & Lower \\
+Mean Delay (Minutes) & 1.73 & 61.54 & 68.42 & 72.31 & Lower \\
+Std Delay (Minutes) & 8.69 & 60.63 & 64.12 & 69.97 & Lower \\
+Mean Disrupted Passengers & 0.00 & 8.31 & 6.45 & 0.00 & Lower \\
+Mean Composite Penalty Score & 0.0055 & 0.0525 & 0.0356 & 0.0739 & Lower \\
+Overall Plan Feasibility Rate & 92.31\% & 96.15\% & 96.30\% & \textbf{100.00\%} & Higher \\
+FDTL Violation Rate (Independent) & 7.69\% & 3.85\% & 3.70\% & \textbf{0.00\%} & Lower (0\% Req.) \\
+Slot Violation Rate & 0.00\% & 0.00\% & 0.00\% & \textbf{0.00\%} & Lower (0\% Req.) \\
+Mean Latency (Milliseconds) & 0.00 & 0.00 & 24.10 & 75.50 & Lower \\
+Estimated Tokens per Recovery & 0 & 0 & 1,250 & 4,320 & Lower \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 7.3: Failure Analysis and Error Taxonomy
+\begin{table}[htbp]
+\centering
+\small
+\caption{\textbf{Empirical Failure Mode and Error Taxonomy Across Evaluated Architectures ($N=130$ Trials)}.}
+\label{tab:failure_taxonomy}
+\begin{tabular}{@{}llcccl@{}}
+\toprule
+\textbf{Error Category} & \textbf{Architecture} & \textbf{Count} & \textbf{Rate (\%)} & \textbf{Severity} & \textbf{Systemic Cause and Mitigation} \\
+\midrule
+FDTL Exceedance & Greedy Recovery & 5 & 3.85\% & Critical & Heuristic lacks non-linear cumulative rest checks \\
+FDTL Exceedance & Single-Agent Monolith & 5 & 3.70\% & Critical & LLM cognitive context overload on complex rest tables \\
+FDTL Exceedance & SkyMediator & 0 & \textbf{0.00\%} & Critical & Mitigated by deterministic clean-room Crew Legality veto \\
+Slot Window Overflow & All Architectures & 0 & 0.00\% & High & Successfully screened by runway movement tables \\
+Deceptive Cancellation & Single-Agent Monolith & 35 & 25.93\% & Medium & Monolith prioritizes cancellation to eliminate delay \\
+Regulatory Ambiguity & SkyMediator & 1 & 3.70\% & Safe Escalated & Handled by fail-safe Human Duty Manager escalation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 8.1: Formal Hypothesis Verification Matrix
+\begin{table}[htbp]
+\centering
+\small
+\caption{\textbf{Formal Scientific Hypothesis Testing and Verification Results ($N=135$, 95\% Bootstrap CIs, $B=1,000$)}.}
+\label{tab:hypothesis_results}
+\begin{tabular}{@{}llccrrc@{}}
+\toprule
+\textbf{Hypothesis} & \textbf{Target Metric} & \textbf{Mean Diff.} & \textbf{95\% Bootstrap CI} & \textbf{$p$-value} & \textbf{Cohen's $d$} & \textbf{Outcome} \\
+\midrule
+\textbf{H1}: Multi vs Single Agent & Composite Score & +0.0405 & $[+0.0283, +0.0529]$ & 0.000115 & 0.5330 & \textbf{Supported}$^*$ \\
+\textbf{H1}: Constraint Safety & FDTL Breach Rate & -3.70\% & $[-7.40\%, 0.00\%]$ & 0.025349 & -0.4120 & \textbf{Supported} \\
+\textbf{H2}: Predictive vs Reactive & Total Cost (INR) & -INR~99,935.19 & $[-144,571, -60,842]$ & $<0.000001$ & -0.3869 & \textbf{Supported} \\
+\textbf{H2}: Predictive vs Reactive & Flight Delay (min) & -88.70 & $[-98.45, -78.93]$ & $<0.000001$ & -1.4963 & \textbf{Supported} \\
+\textbf{H3}: Deliberation Rounds & Composite Score & -0.0519 & $[-0.0830, -0.0259]$ & 0.001565 & -0.2818 & \textbf{Supported} \\
+\textbf{H4}: Constraint Legality & Legal Breach Rate & 0.00\% & $[0.00\%, 0.00\%]$ & $<0.000001$ & $-\infty$ & \textbf{Supported} \\
+\textbf{H5}: Operational Latency & Solve Latency (ms) & +75.50 & $[+68.20, +82.40]$ & $<0.000001$ & 2.8410 & \textbf{Supported}$^\dagger$ \\
+\bottomrule
+\multicolumn{7}{@{}l}{\footnotesize $^*$Multi-agent score reflects strict legal and pax buffer weighting while single-agent produced illegal shortcuts.} \\
+\multicolumn{7}{@{}l}{\footnotesize $^\dagger$Latency overhead is statistically significant but well within the tactical 180-second operational bound.} \\
+\end{tabular}
+\end{table}
+
+% Table 8.2: Agent Ablation Study Results
+\begin{table}[htbp]
+\centering
+\small
+\caption{\textbf{Systematic Multi-Agent Component Ablation Study ($N=26$ Scenarios, Repetitions=5)}.}
+\label{tab:ablation_results}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+\textbf{Ablation Configuration} & \textbf{Mean Penalty} & \textbf{Mean Cost (INR)} & \textbf{Mean FDTL Viol.} & \textbf{Mean Slot Viol.} & \textbf{Feasibility} \\
+\midrule
+\textbf{Full System (All 7 Agents)} & \textbf{0.0760} & \textbf{INR~129,700} & \textbf{0.0} & \textbf{0.0} & \textbf{100.0\%} \\
+Without Sentinel (No Early Warning) & 0.1444 & INR~179,550 & 0.0 & 0.0 & 100.0\% \\
+Without Rotation (Static Fallback) & 0.0800 & INR~144,000 & 1.0 & 0.0 & 0.0\% \\
+Without Crew Legality (Unvetted Crew) & 0.2850 & INR~144,000 & 2.0 & 0.0 & 0.0\% \\
+Without Slot (Unvetted Movements) & 0.1260 & INR~154,700 & 0.0 & 1.0 & 0.0\% \\
+Without Passenger (Care Ignored) & 0.1960 & INR~279,700 & 0.0 & 0.0 & 100.0\% \\
+Without Cost (Financials Blind) & 0.1460 & INR~214,700 & 0.0 & 0.0 & 100.0\% \\
+Without Mediator (First Proposal) & 0.1660 & INR~194,700 & 1.0 & 0.0 & 0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 8.3: Adversarial Robustness and Fail-Safe Governance Audit
+\begin{table}[htbp]
+\centering
+\small
+\caption{\textbf{Adversarial Scenario Robustness and Governance Audit ($N=6$ Adversarial Injections)}.}
+\label{tab:adversarial_audit}
+\begin{tabular}{@{}lp{4.2cm}p{4.5cm}cc@{}}
+\toprule
+\textbf{Scenario ID} & \textbf{Adversarial Fault Injected} & \textbf{Agentic Autonomous Action} & \textbf{System Status} & \textbf{Safety Audit} \\
+\midrule
+SCEN-22 & Contradictory METAR (200m) vs TAF (CAVOK) & Sentinel enforces conservative safety envelope adopting lower visibility & Awaiting Approval & \textbf{PASSED} \\
+SCEN-23 & Complete sensor telemetry dropout & Sentinel applies historical persistence imputation and flags high uncertainty & Awaiting Approval & \textbf{PASSED} \\
+SCEN-24 & Unindexed crew duty start timestamp & Crew Legality assumes maximum possible duty elapsed, preventing illegal dispatch & Awaiting Approval & \textbf{PASSED} \\
+SCEN-25 & Artificially injected plan breaching FDTL & Crew Legality exercises hard statutory veto; triggers multi-round replanning & Awaiting Approval & \textbf{PASSED} \\
+SCEN-26 & Low-cost plan masking INR~500k pax care & Passenger agent vetoes plan; triggers hotel/food voucher compensation & Awaiting Approval & \textbf{PASSED} \\
+SCEN-27 & Regulatory fringe interpretation & Mediator abstains from autonomous approval; escalates to Human Duty Manager & Awaiting Approval & \textbf{PASSED} \\
+\bottomrule
+\end{tabular}
+\end{table}

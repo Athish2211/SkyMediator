@@ -1,0 +1,64 @@
+\documentclass[11pt,a4paper,oneside]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\title{\textbf{\LARGE SkyMediator: Predictive Multi-Agent System for Airline Disruption Recovery}\\[0.5em]
+\Large Complete Experimental Evaluation, Benchmarking, and Empirical Research Report\\[0.3em]
+\large Chapters 7 \& 8: Observability, Evaluation, and Empirical Validation}
+
+\author{\textbf{Team:}\\[0.2em]
+Athish Raj (Team Lead \& Data/Tools)\\
+Dinesh K (Agents \& Orchestration)\\
+Sanchit Rajesh (Tracing \& Evaluation)\\[0.8em]
+\textbf{Faculty Guide:} Dr. Kalyan Nagaraj\\[0.3em]
+Department of Computer Science and Engineering (Data Science)\\
+B.M.S. College of Engineering, Bengaluru (BMSCE)\\
+\textit{Course: Agentic AI (26CD7PEAAI)}}
+
+\date{November 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Airline disruption recovery is a high-stakes, time-critical optimization challenge characterized by non-linear operational dynamics, strict civil aviation safety regulations, and conflicting multi-stakeholder priorities. Conventional disruption management relies either on centralized operations research solvers that struggle with real-time non-linear statutory constraints or on manual human dispatching prone to cascading delays. 
+
+This report presents a comprehensive, reproducible experimental evaluation of \textbf{SkyMediator}, a predictive multi-agent system designed for airline disruption recovery centered at Kempegowda International Airport, Bengaluru (BLR/VOBL). SkyMediator orchestrates specialized autonomous agents (Sentinel, Rotation, Crew Legality, Slot, Passenger, Cost, and Mediator) operating over LangGraph state machines with deterministic verification tools and absolute hard-veto authorities.
+
+Using a rigorous benchmark suite of 27 distinct operational scenarios evaluated across 5 independent repetitions ($N=135$ experimental trials per suite), SkyMediator was benchmarked against a Greedy Rule-Based Heuristic, a Google OR-Tools Mixed-Integer Programming solver, and a Single-Agent LLM monolith. The empirical results demonstrate: (1) predictive disruption forecasting yields a 92.7\% reduction in total recovery cost and an 88.2\% reduction in flight delays ($p < 0.000001$); (2) multi-round negotiation achieves a 40.5\% quality improvement over single-round heuristics ($p = 0.001565$); (3) SkyMediator guarantees 100.0\% plan feasibility and exactly 0.00\% statutory crew flight duty period (FDTL) breaches, compared to 7.69\% violations in unconstrained MIP solvers and 3.70\% in monolithic LLMs; and (4) average operational latency remains under 80 milliseconds, well within real-time airline dispatch constraints.
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\clearpage
+
+% Include Chapter 7: Observability and Evaluation
+\input{chapter_7.tex}
+
+\clearpage
+
+% Include Chapter 8: Experimentation
+\input{chapter_8.tex}
+
+\clearpage
+\section*{Complete Experimental Research Figures (Figures 1--15)}
+\addcontentsline{toc}{section}{Complete Experimental Research Figures}
+
+\input{figure_captions.tex}
+
+\clearpage
+\section*{Complete Evaluation Benchmark Tables}
+\addcontentsline{toc}{section}{Complete Evaluation Benchmark Tables}
+
+\input{tables.tex}
+
+\end{document}

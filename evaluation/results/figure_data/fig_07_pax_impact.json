@@ -1,0 +1,14 @@
+[
+  {
+    "system": "Google OR-Tools Solver",
+    "mean_pax_disrupted": 0.0
+  },
+  {
+    "system": "Greedy Recovery Heuristic",
+    "mean_pax_disrupted": 8.307692307692308
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "mean_pax_disrupted": 0.0
+  }
+]

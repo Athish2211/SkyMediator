@@ -1,0 +1,18 @@
+[
+  {
+    "rounds_setting": "1 Round (No Negotiation)",
+    "mean_score": 0.12794074074074072,
+    "std_score": 0.2554920001365514,
+    "mean_cost": 88814.81481481482,
+    "feasibility_rate": 92.5925925925926,
+    "mean_latency": 0.05332592592592592
+  },
+  {
+    "rounds_setting": "3 Rounds (Iterative Deliberation)",
+    "mean_score": 0.07608888888888889,
+    "std_score": 0.08957666329443831,
+    "mean_cost": 126962.96296296296,
+    "feasibility_rate": 100.0,
+    "mean_latency": 0.05876296296296296
+  }
+]

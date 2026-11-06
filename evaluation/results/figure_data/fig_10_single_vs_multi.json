@@ -1,0 +1,18 @@
+[
+  {
+    "system": "Single-Agent Monolith",
+    "mean_score": 0.035555555555555556,
+    "std_score": 0.023660460962021075,
+    "mean_cost": 51666.666666666664,
+    "mean_tokens": 620.0,
+    "mean_latency": 0.0
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "mean_score": 0.07608888888888889,
+    "std_score": 0.08957666329443831,
+    "mean_cost": 126962.96296296296,
+    "mean_tokens": 2124.074074074074,
+    "mean_latency": 0.08404444444444445
+  }
+]

@@ -1,0 +1,341 @@
+[
+  {
+    "scenario_id": "SCEN-01-LOW-FOG",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "delay_25m",
+    "known_feasible_alternatives": [
+      "delay_25m",
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 22500.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-02-MOD-FOG",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_standby_tail",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_35m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 38000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-03-SEVERE-FOG",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS_AFTER_COUNTER_PROPOSAL",
+    "expected_best_action": "swap_tail_with_reserve_crew",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "selective_cancellation"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 85000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-04-RAPID-VIS-DROP",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_40m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 42000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-05-PROLONGED-FOG",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS_AFTER_COUNTER_PROPOSAL",
+    "expected_best_action": "cancel_flight",
+    "known_feasible_alternatives": [
+      "cancel_flight",
+      "swap_tail_with_reserve"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 110000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-06-MULTI-INBOUND-DELAY",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_30m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 35000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-07-ROTATION-CONFLICT",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 15000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-08-TIGHT-TURNAROUND",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_35m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 20000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-09-AOG-HYDRAULIC-SNAG",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 15000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-10-CREW-DUTY-MAX-FDP",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS_AFTER_COUNTER_PROPOSAL",
+    "expected_best_action": "swap_standby_crew",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "assign_reserve_crew"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 35000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-11-CREW-WOCL-ENCROACHMENT",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS_AFTER_COUNTER_PROPOSAL",
+    "expected_best_action": "calibrated_minor_delay",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_30m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 45000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-12-SLOT-CAPACITY-CRUNCH",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS_AFTER_COUNTER_PROPOSAL",
+    "expected_best_action": "cancel_or_swap",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "cancel_flight"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 65000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-13-DELHI-NIGHT-CURFEW",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS_AFTER_COUNTER_PROPOSAL",
+    "expected_best_action": "swap_standby_aircraft_depart_on_time",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "cancel_flight"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 28000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-14-CONNECTING-PAX-WAVE",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 15000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-15-HIGH-VALUE-PAX-IMPACT",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_30m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 18000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-16-HIGH-COST-CANCELLATION",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 15000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-17-STANDBY-TAIL-SWAP",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 15000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-18-SIMULTANEOUS-MULTI-FLIGHT",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_35m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 48000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-19-COMPETING-TRADE-OFFS",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_25m"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 22000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-20-ZERO-STANDBY-FLEET",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS",
+    "expected_best_action": "delay_35m",
+    "known_feasible_alternatives": [
+      "delay_35m",
+      "cancel_flight"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 42000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-21-CASCADING-SECTOR-DELAYS",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "PASS_AFTER_COUNTER_PROPOSAL",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": null,
+    "solver_optimal_cost_inr": 25000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-22-ADV-CONFLICTING-METAR",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "CONSERVATIVE_SAFETY_STANCE",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": "Conservative sensor-grounded adherence to METAR",
+    "solver_optimal_cost_inr": 25000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-23-ADV-MISSING-WEATHER",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "ROBUST_IMPUTATION_SAFE_EXECUTION",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "delay_25m"
+    ],
+    "expected_failure_or_abstention": "Handled via defensive default imputation",
+    "solver_optimal_cost_inr": 15000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-24-ADV-CORRUPT-CREW-DATA",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "DEFENSIVE_DEFAULT_REST_APPLIED",
+    "expected_best_action": "swap_standby_crew",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": "Defensive 4-hour default duty assumed to avoid illegal dispatch",
+    "solver_optimal_cost_inr": 25000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-25-ADV-ILLEGAL-PLAN-INJECTION",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "HARD_VETO_ENFORCED",
+    "expected_best_action": "counter_proposal_swap_or_cancel",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15",
+      "cancel_flight"
+    ],
+    "expected_failure_or_abstention": "Initial illegal proposal strictly vetoed; counter-proposal approved",
+    "solver_optimal_cost_inr": 20000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-26-ADV-MISLEADING-LOW-COST",
+    "expected_feasibility": true,
+    "expected_hard_constraint_outcome": "MULTI_OBJECTIVE_PENALTY_PENALIZATION",
+    "expected_best_action": "swap_VT-BLR15",
+    "known_feasible_alternatives": [
+      "swap_VT-BLR15"
+    ],
+    "expected_failure_or_abstention": "Cost agent flags massive DGCA CAR Section 3 hotel penalty, rejecting pure cancellation",
+    "solver_optimal_cost_inr": 15000.0,
+    "benchmark_compatibility": true
+  },
+  {
+    "scenario_id": "SCEN-27-ADV-AMBIGUOUS-FDTL-ABSTAIN",
+    "expected_feasibility": false,
+    "expected_hard_constraint_outcome": "SAFE_ABSTENTION_AND_ESCALATION",
+    "expected_best_action": "escalate_to_human_duty_manager",
+    "known_feasible_alternatives": [],
+    "expected_failure_or_abstention": "Crew Legality ABSTAINED due to ambiguous statutory boundary; Mediator escalates to Human Duty Manager",
+    "solver_optimal_cost_inr": 0.0,
+    "benchmark_compatibility": false
+  }
+]

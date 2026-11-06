@@ -1,0 +1,17 @@
+[
+  {
+    "system": "Google OR-Tools Solver",
+    "mean_cost": 15461.538461538461,
+    "std_cost": 2316.619583997091
+  },
+  {
+    "system": "Greedy Recovery Heuristic",
+    "mean_cost": 58461.53846153846,
+    "std_cost": 64286.923917403874
+  },
+  {
+    "system": "SkyMediator (Multi-Agent)",
+    "mean_cost": 127750.0,
+    "std_cost": 285360.4921237631
+  }
+]

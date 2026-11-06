@@ -1,0 +1,66 @@
+[
+  {
+    "ablation_mode": "Full System (All 7 Agents)",
+    "mean_score": 0.07599,
+    "mean_cost": 129700.0,
+    "mean_fdtl_violations": 0.0,
+    "mean_slot_violations": 0.0,
+    "feasibility_rate": 100.0
+  },
+  {
+    "ablation_mode": "Without Cost (Blind to Financials)",
+    "mean_score": 0.14599,
+    "mean_cost": 214700.0,
+    "mean_fdtl_violations": 0.0,
+    "mean_slot_violations": 0.0,
+    "feasibility_rate": 100.0
+  },
+  {
+    "ablation_mode": "Without Crew Legality (Unvetted Crew)",
+    "mean_score": 0.285,
+    "mean_cost": 144000.0,
+    "mean_fdtl_violations": 2.0,
+    "mean_slot_violations": 0.0,
+    "feasibility_rate": 0.0
+  },
+  {
+    "ablation_mode": "Without Mediator (First Proposal)",
+    "mean_score": 0.16599,
+    "mean_cost": 194700.0,
+    "mean_fdtl_violations": 1.0,
+    "mean_slot_violations": 0.0,
+    "feasibility_rate": 0.0
+  },
+  {
+    "ablation_mode": "Without Passenger (Care Ignored)",
+    "mean_score": 0.19599,
+    "mean_cost": 279700.0,
+    "mean_fdtl_violations": 0.0,
+    "mean_slot_violations": 0.0,
+    "feasibility_rate": 100.0
+  },
+  {
+    "ablation_mode": "Without Rotation (Static Fallback)",
+    "mean_score": 0.08,
+    "mean_cost": 144000.0,
+    "mean_fdtl_violations": 1.0,
+    "mean_slot_violations": 0.0,
+    "feasibility_rate": 0.0
+  },
+  {
+    "ablation_mode": "Without Sentinel (No Early Warning)",
+    "mean_score": 0.14443999999999999,
+    "mean_cost": 179550.0,
+    "mean_fdtl_violations": 0.0,
+    "mean_slot_violations": 0.0,
+    "feasibility_rate": 100.0
+  },
+  {
+    "ablation_mode": "Without Slot (Unvetted Movements)",
+    "mean_score": 0.12599,
+    "mean_cost": 154700.0,
+    "mean_fdtl_violations": 0.0,
+    "mean_slot_violations": 1.0,
+    "feasibility_rate": 0.0
+  }
+]

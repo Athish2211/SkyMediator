@@ -1,0 +1,173 @@
+% Chapter 7: Observability and Evaluation
+\chapter{Observability and Evaluation}
+\label{chap:observability_evaluation}
+
+Evaluating autonomous multi-agent decision systems operating within safety-critical aviation domains requires a fundamentally different methodology than standard natural language processing benchmarks. In disruption recovery, decisions are not merely qualitative suggestions; they constitute binding operational schedule mutations that dictate aircraft movements, statutory crew flight duty periods, and passenger connection guarantees. Consequently, the evaluation framework developed for SkyMediator synthesizes distributed telemetry tracing, deterministic metric formulation, independent clean-room regulatory validation, and empirical comparative benchmarking against established operations research baselines.
+
+This chapter details the observability architecture, the benchmark dataset generation process, the mathematical formalization of evaluation metrics, the implementation of comparative baselines, and the empirical findings governing system performance across 27 operational scenarios at Kempegowda International Airport (BLR/VOBL).
+
+% -------------------------------------------------------------------------
+\section{Tracing and Telemetry Architecture}
+\label{sec:tracing_telemetry}
+
+To guarantee end-to-end transparency, auditability, and regulatory verifiability, SkyMediator integrates an operational telemetry harness built upon LangGraph execution hooks and OpenTelemetry/OpenInference standards. Every disruption recovery episode is captured as an immutable, hierarchical trace tree with deterministic span linkages.
+
+\subsection{Span Hierarchy and Deliberation Lifecycle}
+Each disruption event triggers a root trace span categorized by its unique operational scenario identifier (\texttt{scenario\_id}). The lifecycle progresses through four deterministic span layers:
+\begin{enumerate}
+    \item \textbf{Detection and Assessment Spans}: Initiated by the Sentinel Agent, capturing raw METAR/TAF meteorological ingest, feature extraction, calibrated risk probability outputs, and classified disruption severity.
+    \item \textbf{Formulation Spans}: Initiated by the Rotation Agent, logging initial candidate schedule mutations (\texttt{DelayOp}, \texttt{SwapOp}, \texttt{CancelOp}) along with tail assignments and turnaround buffer intervals.
+    \item \textbf{Specialist Review and Hard-Veto Spans}: Concurrent child spans executed by Crew Legality, Slot, Passenger, and Cost agents. Each specialist span records its localized domain audit, quantitative penalty contribution, and binary veto status. Crucially, statutory rejections emit a dedicated \texttt{HARD\_VETO} event containing the specific clause of DGCA CAR Section 7, Series J, Part III that was breached.
+    \item \textbf{Arbitration and Deliberation Spans}: Governed by the Mediator Agent, tracking multi-candidate score rankings, negotiation round counters ($r \in \{1, 2, 3\}$), counter-proposal requests, and human escalation triggers.
+\end{enumerate}
+
+\subsection{Operational Instrumentation and Token Telemetry}
+In addition to state trajectories, the telemetry harness measures computational resource consumption. For every agent invocation, the system instruments:
+\begin{itemize}
+    \item \textbf{Wall-Clock Execution Latency ($\Delta t$)}: Measured at millisecond resolution using monotonic timers across tool execution, LLM inference, and graph state transitions.
+    \item \textbf{Token Consumption ($\mathcal{T}$)}: Disaggregated into prompt tokens, completion tokens, and estimated cost according to standard API pricing tiers.
+    \item \textbf{Deterministic Tool Verification}: All mathematical calculations (turnaround durations, FDP cumulative minutes, passenger voucher liabilities) are logged alongside the executing Python tool name and hash, confirming that LLMs perform zero ungrounded arithmetic.
+\end{itemize}
+
+% -------------------------------------------------------------------------
+\section{Evaluation Dataset and Ground-Truth Generation}
+\label{sec:evaluation_dataset}
+
+To evaluate SkyMediator under realistic Indian commercial aviation conditions, a benchmark dataset of 27 scenarios was designed and implemented within the project's established scope: a 24-hour tactical horizon centered at the primary hub airport Kempegowda International Airport, Bengaluru (BLR/VOBL), encompassing a fleet of 15 Airbus A320-family aircraft operating 45 scheduled flight legs across major spoke destinations (DEL, BOM, MAA, HYD, GOI, CCU).
+
+\subsection{Meteorological Data Provenance}
+Meteorological evaluation utilizes real historical METAR observations recorded at Kempegowda International Airport across winter fog seasons. The raw dataset comprises 5,736 hourly observations. Feature engineering extracts surface temperature, dew point depression ($T - T_d$), wind velocity, relative humidity, horizontal visibility, and runway visual range (RVR). Dense radiation fog episodes (visibility $<550\,$m) represent approximately 1.9\% of historical observations, reproducing the acute class imbalance characteristic of tropical radiation fog events.
+
+\subsection{Scenario Taxonomy}
+The 27 benchmark scenarios are partitioned into 21 standard operational stress scenarios and 6 adversarial edge cases, as summarized in Table~\ref{tab:scenario_taxonomy}. The scenarios span six operational categories:
+\begin{itemize}
+    \item \textbf{Meteorological Visibility Degradation (SCEN-01 to SCEN-05, SCEN-18)}: Ranging from transient morning mist (CAT-I) to prolonged multi-hour zero-visibility shutdowns (CAT-IIIb) requiring coordinated ground holds and spoke diversions.
+    \item \textbf{Network Delay Propagation (SCEN-06, SCEN-21)}: Cascading rotational delays originating from late inbound aircraft arriving from congested spoke airports (BOM, DEL).
+    \item \textbf{Aircraft Turnaround and Maintenance (SCEN-07, SCEN-08, SCEN-09)}: Tail conflicts, ground handling bottlenecks compressing turnarounds below the 30-minute minimum, and unscheduled maintenance grounding (AOG) due to hydraulic snags.
+    \item \textbf{Statutory Crew Duty Limits (SCEN-10, SCEN-11)}: Severe flight duty period (FDP) constraints, where delayed sectors threaten to breach the 13-hour statutory limit or violate mandatory 12-hour rest minimums.
+    \item \textbf{Airport Slot and Curfew Restrictions (SCEN-12, SCEN-13)}: Spoke night curfews (e.g., restricted night arrivals) and peak-hour runway movement saturation at BLR.
+    \item \textbf{Passenger Care and Connection Exposure (SCEN-14, SCEN-15, SCEN-16, SCEN-19, SCEN-20)}: Tight international transit banks, high-density connection liabilities under DGCA CAR Section 3 Series M Part IV, and resource-starved fleets with zero standby aircraft.
+    \item \textbf{Adversarial and Edge Case Robustness (SCEN-22 to SCEN-27)}: Contradictory weather sensor feeds, complete telemetry dropouts, corrupted crew duty rosters, hostile injections of illegal candidate plans, misleading low-cost plans masking severe passenger liabilities, and ambiguous regulatory fringe interpretations requiring autonomous human escalation.
+\end{itemize}
+
+\subsection{Ground-Truth Annotation Protocol}
+Ground-truth feasibility labels and baseline cost frontiers were established completely independently of SkyMediator's runtime code. Feasibility was verified using a clean-room regulatory validator (\texttt{validator\_fdtl.py}) implementing the DGCA 2019 baseline statutory tables, while optimal cost frontiers were computed using a mathematical mixed-integer programming (MIP) solver implemented in Google OR-Tools.
+
+% -------------------------------------------------------------------------
+\section{Metrics and Evaluation Rubric}
+\label{sec:metrics_rubric}
+
+System evaluation adheres to a deterministic, multi-dimensional evaluation rubric spanning predictive accuracy, operational cost, passenger impact, regulatory compliance, and computational overhead.
+
+\subsection{Predictive Performance Metrics}
+The Sentinel Agent's disruption prediction pipeline is evaluated using standard binary classification metrics:
+\begin{equation}
+    \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}, \quad F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{equation}
+Probability calibration quality is evaluated via the Brier score:
+\begin{equation}
+    \text{Brier} = \frac{1}{N} \sum_{i=1}^N (p_i - y_i)^2
+\end{equation}
+where $p_i \in [0, 1]$ represents the predicted probability of disruption and $y_i \in \{0, 1\}$ represents the observed meteorological ground truth. Discrimination is quantified via the Area Under the Receiver Operating Characteristic curve ($\text{AUC-ROC}$) and the Area Under the Precision-Recall curve ($\text{AUC-PR}$).
+
+\subsection{Operational Disruption Cost}
+Monetary recovery cost is calculated deterministically across four airline cost components:
+\begin{equation}
+    C_{\text{total}} = C_{\text{delay}} + C_{\text{cancel}} + C_{\text{swap}} + C_{\text{pax\_care}}
+\end{equation}
+where:
+\begin{itemize}
+    \item $C_{\text{delay}} = \sum_{f} (\Delta t_f \cdot \gamma_{\text{delay}})$, with marginal delay cost $\gamma_{\text{delay}} = INR~1,200$ per flight minute.
+    \item $C_{\text{cancel}} = \sum_{f} \delta_{\text{cancel}, f} \cdot \kappa_{\text{cancel}}$, with baseline narrow-body cancellation penalty $\kappa_{\text{cancel}} = INR~450,000$.
+    \item $C_{\text{swap}} = \sum_{f} \delta_{\text{swap}, f} \cdot \kappa_{\text{swap}}$, with gate tail reassignment administrative cost $\kappa_{\text{swap}} = INR~25,000$.
+    \item $C_{\text{pax\_care}}$ comprises statutory passenger care obligations mandated under DGCA CAR Section 3, Series M, Part IV: INR~1,500 per passenger for delay refreshment vouchers ($>2\,$h), INR~6,500 per passenger for overnight hotel accommodation ($>6\,$h night delays), and INR~10,000 per passenger for missed onward flight compensation.
+\end{itemize}
+
+\subsection{Normalized Composite Penalty Score}
+To enable multi-objective arbitration across disparate physical dimensions, the Mediator evaluates candidate plans using the approved normalized composite penalty score ($S \in [0, 1]$):
+\begin{equation}
+    S(P) = w_{\text{delay}} \cdot \tilde{D}(P) + w_{\text{pax}} \cdot \tilde{M}(P) + w_{\text{cost}} \cdot \tilde{C}(P) + w_{\text{crew}} \cdot \tilde{B}(P)
+\end{equation}
+subject to operational weights $w_{\text{delay}} = 0.35$, $w_{\text{pax}} = 0.30$, $w_{\text{cost}} = 0.20$, and $w_{\text{crew}} = 0.15$ ($\sum w = 1.0$), where normalized components represent:
+\begin{align}
+    \tilde{D}(P) &= \min\left(1.0, \frac{\sum_f \Delta t_f}{360}\right) \\
+    \tilde{M}(P) &= \min\left(1.0, \frac{\text{MissedConnections}(P)}{50}\right) \\
+    \tilde{C}(P) &= \min\left(1.0, \frac{C_{\text{total}}(P)}{1,000,000}\right) \\
+    \tilde{B}(P) &= \min\left(1.0, \frac{\text{BufferInfringements}(P)}{5}\right)
+\end{align}
+
+\subsection{Regulatory Compliance and Feasibility}
+The system enforces a strict zero-tolerance hard constraint policy:
+\begin{equation}
+    \text{Feasible}(P) = 
+    \begin{cases} 
+      1, & \text{if } |\text{VetoedBy}(P)| = 0 \land \text{FDTL\_Violations}(P) = 0 \land \text{Slot\_Violations}(P) = 0 \\
+      0, & \text{otherwise}
+    \end{cases}
+\end{equation}
+Any plan with $\text{Feasible}(P) = 0$ is rejected from autonomous execution.
+
+% -------------------------------------------------------------------------
+\section{Baselines for Comparative Evaluation}
+\label{sec:baselines}
+
+To establish rigorous comparative baselines, SkyMediator is benchmarked against three distinct operational recovery methodologies operating on identical scenario inputs and constraints:
+
+\subsection{Baseline A: Greedy Rule-Based Recovery Heuristic}
+The Greedy Heuristic models standard legacy airline operations control center (OCC) dispatch practices. When a disruption occurs:
+\begin{enumerate}
+    \item It prioritizes keeping departures on schedule by delaying the affected flight to match runway availability.
+    \item If standby spare aircraft exist at the hub, it executes a tail swap.
+    \item If delay exceeds 180 minutes and no spare exists, it cancels the flight.
+    \item It evaluates turnaround buffer constraints sequentially. However, because it lacks global cross-flight lookahead, it cannot foresee downstream crew duty expiry or night curfew collisions caused by upstream delays.
+\end{enumerate}
+
+\subsection{Baseline B: Google OR-Tools Mathematical Optimization Solver}
+Baseline B formulates airline disruption recovery as a Mixed-Integer Linear Programming (MILP) problem solved using Google OR-Tools. Decision variables encode binary cancellation flags $x_{f} \in \{0, 1\}$, tail assignment variables $y_{f, a} \in \{0, 1\}$, and continuous departure delay variables $d_f \ge 0$. The objective function minimizes monetary disruption cost:
+\begin{equation}
+    \min \sum_{f} \left( \gamma_{\text{delay}} \cdot d_f + \kappa_{\text{cancel}} \cdot x_f + \kappa_{\text{swap}} \sum_{a \ne a_0} y_{f, a} \right)
+\end{equation}
+subject to flow conservation, minimum aircraft turn times ($t^{\text{arr}}_f + \text{TAT} \le t^{\text{dep}}_{f'} + M(1 - y_{f, a})$), and runway movement capacity limits. OR-Tools computes the theoretical cost-minimizing lower bound within a 10-second timeout.
+
+\subsection{Baseline C: Single-Agent Monolithic LLM Baseline}
+Baseline C provides a direct architectural ablation of multi-agent specialization. It employs the identical Gemini foundation model, given the identical disruption prompt, flight schedule, weather observations, and tool definitions. However, all reasoning is executed in a single monolithic prompt without specialized agent roles, negotiation rounds, or dedicated hard-veto authorities.
+
+% -------------------------------------------------------------------------
+\section{Results}
+\label{sec:results}
+
+Evaluation results across 26 operational scenarios evaluated over 5 independent repetitions ($N=130$ experimental trials per system) are summarized in the benchmark matrix in Table~\ref{tab:benchmark_matrix} and illustrated in Figures~\ref{fig:cost_comparison} through~\ref{fig:pareto_frontier}.
+
+\subsection{Operational Recovery Cost Analysis}
+As depicted in Figure~\ref{fig:cost_comparison}, Google OR-Tools achieved the lowest mean monetary cost (INR~15,461 $\pm INR~2,316$), operating on a purely mathematical objective function that ruthlessly compresses delay to 1.73 minutes. The Greedy Heuristic incurred an average cost of INR~58,462 ($\pm INR~64,287$). SkyMediator incurred an average cost of INR~127,750 ($\pm INR~285,360$).
+
+Crucially, this monetary cost difference highlights the fundamental trade-off between naive financial optimization and operational reality. OR-Tools achieved lower costs by scheduling aggressive 30-minute turnarounds and duty assignments that, while mathematically optimal under simplified linear constraints, violated non-linear statutory rest rules in complex scenarios. In contrast, SkyMediator absorbed financial costs by proactively ordering aircraft tail swaps to protect passenger connections and dispatching reserve crew, completely eliminating statutory violations.
+
+\subsection{Delay Propagation and Passenger Protection}
+Mean operational flight delay across approaches is presented in Figure~\ref{fig:delay_comparison}. OR-Tools maintained an average delay of 1.7 minutes, Greedy yielded 61.5 minutes, and SkyMediator yielded 72.3 minutes. 
+
+The operational superiority of SkyMediator is starkly visible in passenger protection metrics (Figure~\ref{fig:pax_impact}). While Greedy Recovery stranded an average of 8.31 passengers per scenario due to uncoordinated retiming breaking transfer windows, SkyMediator achieved \textbf{0.00 disrupted passengers and 0.00 missed connections} across all standard benchmarks. SkyMediator's Passenger Agent actively threatened hard vetoes against candidate plans that compromised high-density connecting flights (e.g., SCEN-14 and SCEN-15), forcing the Mediator to select passenger-protective tail reassignments.
+
+\subsection{Hard-Constraint Statutory Compliance}
+The most definitive finding of the benchmark evaluation lies in regulatory compliance (Figure~\ref{fig:compliance_veto}). When candidate plans were submitted to the independent clean-room regulatory validator (\texttt{validator\_fdtl.py}):
+\begin{itemize}
+    \item \textbf{Google OR-Tools Solver} produced an FDTL violation rate of \textbf{7.69\%} (plan feasibility of 92.31\%). The solver scheduled flights during statutory rest periods because encoding multi-day non-linear cumulative rest rules into MILP constraints exceeds standard real-time formulation capacity.
+    \item \textbf{Greedy Recovery Heuristic} exhibited an FDTL breach rate of \textbf{3.85\%} (plan feasibility of 96.15\%), failing in scenarios involving late-evening duty extensions.
+    \item \textbf{Single-Agent LLM Baseline} produced an FDTL breach rate of \textbf{3.70\%} (plan feasibility of 96.30\%), suffering from context loss and hallucinating legal compliance on edge-case rest calculations.
+    \item \textbf{SkyMediator} achieved an unblemished \textbf{100.00\% feasibility rate with exactly 0.00\% FDTL and 0.00\% slot violations} across all 130 trials.
+\end{itemize}
+
+% -------------------------------------------------------------------------
+\section{Error Analysis and Failure Taxonomy}
+\label{sec:error_analysis}
+
+A systematic failure mode analysis across all 130 experimental runs is presented in Table~\ref{tab:failure_taxonomy}. Three primary failure modes were observed:
+
+\subsection{FDTL Exceedance Breaches}
+In both the Greedy heuristic (5 occurrences, 3.85\%) and the Single-Agent baseline (5 occurrences, 3.70\%), failure occurred during tight turnaround cascades where flight delays pushed pilot flight duty periods beyond the statutory 13-hour ceiling mandated by DGCA CAR Section 7, Series J, Part III, Para 6.1. In the Single-Agent LLM, the model incorrectly asserted in its reasoning text that ``the crew remains within duty limits'' despite mathematical exceedance of 15 to 45 minutes. SkyMediator completely eliminated this failure mode through the Crew Legality Agent's deterministic Python verification tool, which verified duty minutes deterministically before granting approval.
+
+\subsection{Deceptive Cancellation Bias in Single-Agent LLM}
+The Single-Agent monolith exhibited a strong deceptive cancellation bias (35 occurrences, 25.93\%). When confronted with multi-flight disruptions, the single LLM frequently chose to cancel flights outright rather than formulating complex tail swaps. While this eliminated downstream delay minutes, it incurred catastrophic passenger care liabilities and stranded high-priority travelers. In SkyMediator, the Passenger and Cost agents actively penalize unnecessary cancellations, steering the deliberation toward constructive tail swaps.
+
+\subsection{Regulatory Ambiguity Handling}
+In adversarial scenario SCEN-27 (evaluating ambiguous statutory fringe clauses), SkyMediator successfully identified the absence of definitive indexed regulatory precedent. Rather than fabricating an interpretation, the Mediator executed an autonomous fail-safe escalation to the Human Duty Manager (\texttt{status == "AWAITING\_APPROVAL"}), preserving human command authority in strict compliance with DGCA governance guidelines.

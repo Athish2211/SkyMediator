@@ -1,0 +1,8 @@
+error_category,system,occurrences,rate_pct,severity,mitigation
+FDTL Exceedance Breach,Greedy Recovery,5,3.8461538461538463,CRITICAL,Enforce Crew Legality hard veto
+FDTL Exceedance Breach,Single-Agent Monolith,5,3.7037037037037033,CRITICAL,Multi-agent consensus check
+FDTL Exceedance Breach,SkyMediator,0,0.0,CRITICAL,Certified 0.00% by independent validator
+Airport Slot Window Overflow,Greedy Recovery,0,0.0,HIGH,Slot agent movement capacity check
+Airport Slot Window Overflow,SkyMediator,0,0.0,HIGH,Slot agent hard veto filtering
+Deceptive Cancellation Bias,Single-Agent Monolith,35,25.925925925925924,MEDIUM,Passenger agent care liability weighting
+Ambiguous Statutory Fringe Case,SkyMediator,1,3.7,SAFE_HANDLED,Agentic RAG abstention & Human Duty Manager escalation

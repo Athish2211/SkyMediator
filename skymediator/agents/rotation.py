@@ -43,6 +43,12 @@ class RotationAgent:
         is_crew = any(w in dis_type for w in ["crew", "pilot", "captain", "officer", "fdtl", "timeout", "fatigue", "rest"])
         is_slot = any(w in dis_type for w in ["slot", "runway", "curfew", "holding", "atc", "capacity", "gridlock"])
 
+        avoid_cancel = (
+            disruption.get("avoid_cancellation", False)
+            or disruption.get("do_not_cancel", False)
+            or any("avoid cancellation" in (c.get("reason") or "").lower() or "do not cancel" in (c.get("reason") or "").lower() for c in constraints_log)
+        )
+
         # Check for Human Replan Directive (PROP-04 Replan Loop)
         human_revisions = [c for c in constraints_log if c.get("constraint_type") == "HUMAN_REVISION"]
         stacked = disruption.get("stacked_disruptions") or []
@@ -216,20 +222,7 @@ class RotationAgent:
                 ]
                 rationale = f"Cancel flight {affected_id} per Duty Manager operational dispatch directive."
 
-            elif init_action == "excessive_delay" or is_weather:
-                delay_min = disruption.get("delay_minutes", 180)
-                plan_diff = [
-                    DelayOp(
-                        flight_id=affected_id,
-                        delay_minutes=delay_min,
-                        new_std=std_dt + timedelta(minutes=delay_min),
-                        new_sta=sta_dt + timedelta(minutes=delay_min),
-                        reason=f"Round 1: Initial tactical delay of {delay_min}m for {dis_type.upper()} clearance at {disruption.get('airport', 'VOBL')}"
-                    ).model_dump()
-                ]
-                rationale = f"Tactical delay on flight {affected_id} by {delay_min}m allowing runway visual range recovery."
-
-            elif is_aog or init_action == "swap_tail":
+            elif init_action == "swap_tail" or (is_aog and disruption.get("candidate_tail")):
                 target_tail = disruption.get("candidate_tail", "VT-BLR15")
                 val = swap_tail(affected_id, target_tail, base_schedule)
                 plan_diff = [
@@ -241,6 +234,19 @@ class RotationAgent:
                     ).model_dump()
                 ]
                 rationale = f"Swap aircraft on flight {affected_id} to standby tail {target_tail} (Turnaround: {val.get('turnaround_margin_minutes', 0)}m)."
+
+            elif init_action == "excessive_delay" or is_weather:
+                delay_min = max(15, int(disruption.get("delay_minutes") or 45))
+                plan_diff = [
+                    DelayOp(
+                        flight_id=affected_id,
+                        delay_minutes=delay_min,
+                        new_std=std_dt + timedelta(minutes=delay_min),
+                        new_sta=sta_dt + timedelta(minutes=delay_min),
+                        reason=f"Round 1: Initial tactical delay of {delay_min}m for {dis_type.upper()} clearance at {disruption.get('airport', 'VOBL')}"
+                    ).model_dump()
+                ]
+                rationale = f"Tactical delay on flight {affected_id} by {delay_min}m allowing runway visual range recovery."
 
             elif is_crew:
                 plan_diff = [
@@ -269,8 +275,8 @@ class RotationAgent:
 
         elif "FDTL" in vetoed_types:
             # Counter-proposal responding to Crew Legality Veto
-            # In Round 3 (or if delay already vetoed), decisively propose cancellation to prevent illegal exceedance
-            if disruption.get("counter_action") == "cancel" or round_number >= 3:
+            # In Round 3 (or if delay already vetoed), decisively propose cancellation to prevent illegal exceedance unless forbidden
+            if not avoid_cancel and (disruption.get("counter_action") == "cancel" or round_number >= 3):
                 plan_diff = [
                     CancelOp(
                         flight_id=affected_id,
@@ -278,7 +284,7 @@ class RotationAgent:
                     ).model_dump()
                 ]
                 rationale = f"Counter-proposal (Round {round_number}): Selectively cancel {affected_id} to respect statutory crew duty limits under DGCA CAR Section 7."
-            elif is_aog:
+            elif is_aog and not disruption.get("no_standby_aircraft"):
                 # If AOG was vetoed for crew, reassign to standby tail with reserve crew
                 target_tail = disruption.get("candidate_tail", "VT-BLR15")
                 val = swap_tail(affected_id, target_tail, base_schedule)
@@ -306,13 +312,26 @@ class RotationAgent:
 
         elif "SLOT" in vetoed_types:
             # Counter-proposal responding to Slot capacity / Curfew Veto:
-            plan_diff = [
-                CancelOp(
-                    flight_id=affected_id,
-                    reason="Counter-proposal responding to Slot veto: Cancel flight to eliminate slot window overflow"
-                ).model_dump()
-            ]
-            rationale = f"Counter-proposal: Cancel {affected_id} to relieve slot saturation."
+            if not avoid_cancel:
+                plan_diff = [
+                    CancelOp(
+                        flight_id=affected_id,
+                        reason="Counter-proposal responding to Slot veto: Cancel flight to eliminate slot window overflow"
+                    ).model_dump()
+                ]
+                rationale = f"Counter-proposal: Cancel {affected_id} to relieve slot saturation."
+            else:
+                counter_delay = disruption.get("counter_delay_minutes", 60)
+                plan_diff = [
+                    DelayOp(
+                        flight_id=affected_id,
+                        delay_minutes=counter_delay,
+                        new_std=std_dt + timedelta(minutes=counter_delay),
+                        new_sta=sta_dt + timedelta(minutes=counter_delay),
+                        reason=f"Counter-proposal (Round {round_number}): Adjusted delay under no-cancellation directive"
+                    ).model_dump()
+                ]
+                rationale = f"Counter-proposal: Delay {affected_id} by {counter_delay}m avoiding cancellation."
 
         else:
             # Default fallback: calibrated tactical delay
